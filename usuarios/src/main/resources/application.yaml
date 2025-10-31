@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: usuarios
+  datasource:
+    url: jdbc:postgresql://localhost:6432/usuarios_db
+    username: usuarios
+    password: usuarios
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8090
+
+#security:
+#    oauth2:
+#        resourceserver:
+#            jwt:
+#                issuer-uri: http://keycloak:8081/realms/tpi-backend
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

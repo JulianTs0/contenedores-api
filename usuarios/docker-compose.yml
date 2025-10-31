@@ -1,0 +1,13 @@
+services:
+    db_usuarios:
+        image: postgres:16-alpine
+        container_name: db_usuarios
+        restart: always
+        environment:
+            POSTGRES_DB: usuarios_db
+            POSTGRES_USER: usuarios
+            POSTGRES_PASSWORD: usuarios
+        ports:
+            - "6432:5432"
+        volumes:
+            - ./usuarios_db:/var/lib/postgresql/data
