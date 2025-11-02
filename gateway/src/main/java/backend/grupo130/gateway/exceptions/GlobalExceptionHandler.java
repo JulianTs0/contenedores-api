@@ -1,14 +1,15 @@
-package backend.grupo130.usuarios.config.exceptions;
+package backend.grupo130.gateway.exceptions;
 
+import backend.grupo130.gateway.exceptions.errors.ServiceError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceError.class)

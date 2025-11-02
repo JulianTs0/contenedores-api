@@ -1,0 +1,32 @@
+package backend.grupo130.gateway.Beans;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class GatewayBeans {
+
+    @Bean
+    public RouteLocator configuradorDeRutas(
+        RouteLocatorBuilder builder,
+        @Value("${server.uri.usuarios}") String uriUsuarios,
+        @Value("${server.uri.echo}") String uriEcho
+    )
+    {
+        return builder.routes()
+            .route(r -> r
+                .path("/api/usuarios/**")
+                .uri(uriUsuarios)
+            )
+            .route("echo_route", r -> r
+                .path("/echo/**")
+                .filters(f -> f.stripPrefix(1))
+                .uri(uriEcho)
+            )
+            .build();
+    }
+
+}
