@@ -20,43 +20,47 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.valueOf(ex.getHttpCode());
 
         Map<String, Object> errorDetails = new HashMap<>();
+
         errorDetails.put("status", ex.getHttpCode());
         errorDetails.put("message", ex.getMessage());
 
         return ResponseEntity.status(status).body(errorDetails);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
-        Map<String, String> errors = new HashMap<>();
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("status", 400);
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
 
             String fieldName = ((org.springframework.validation.FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
 
-            errors.put(fieldName, errorMessage);
+            errorDetails.put(fieldName, errorMessage);
         });
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorDetails);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
 
-        Map<String, String> errors = new HashMap<>();
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("status", 400);
 
         ex.getConstraintViolations().forEach(violation -> {
 
             String propertyPath = violation.getPropertyPath().toString();
             String message = violation.getMessage();
 
-            errors.put(propertyPath, message);
+            errorDetails.put(propertyPath, message);
         });
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorDetails);
     }
 
 }
