@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,27 +27,18 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-            // Configura la autorización de las peticiones
             .authorizeExchange(exchanges -> exchanges
-                // RUTA PÚBLICA: Permite el acceso sin autenticación a /publico/** y a las rutas de salud/información.
-                .pathMatchers("/publico/**", "/actuator/health", "/actuator/info")
+
+                // RUTA PÚBLICA PARA REGISTRO: Permite el acceso sin autenticación para crear nuevos usuarios.
+                .pathMatchers( "/api/login/oauth2/code/keycloak")
                 .permitAll()
 
                 // RUTA PROTEGIDA (Usuarios Genéricos): Requiere autenticación y CUALQUIERA de los roles del TPI.
                 // Roles permitidos: Administrador, Cliente o Transportista.
                 // Nota: hasAnyRole() espera los roles sin el prefijo "ROLE_"
-                .pathMatchers("/protegido-usuarios/**", "/api/usuarios/**")
+                .pathMatchers("/gateway/usuarios/**")
                 .hasAnyRole("ADMINISTRADOR", "CLIENTE", "TRANSPORTISTA")
 
-                // Si hubiera una ruta que solo Administrador pudiera usar:
-                // .pathMatchers("/protegido-administradores/**").hasRole("ADMINISTRADOR")
-
-                // Si hubiera una ruta que requiriera GET por un rol y POST por otro:
-                // .pathMatchers(HttpMethod.GET, "/protegido-mixto/**").hasAnyRole("CLIENTE","ADMINISTRADOR")
-                // .pathMatchers(HttpMethod.POST, "/protegido-mixto/**").hasRole("ADMINISTRADOR")
-
-                // REGLA POR DEFECTO: Cualquier otra petición que no coincida con las anteriores,
-                // debe estar autenticada (tener un token JWT válido).
                 .anyExchange().authenticated()
             )
 

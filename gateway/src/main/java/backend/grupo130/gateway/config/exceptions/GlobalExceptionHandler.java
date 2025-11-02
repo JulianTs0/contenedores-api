@@ -1,6 +1,5 @@
-package backend.grupo130.gateway.exceptions;
+package backend.grupo130.gateway.config.exceptions;
 
-import backend.grupo130.gateway.exceptions.errors.ServiceError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

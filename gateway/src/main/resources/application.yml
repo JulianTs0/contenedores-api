@@ -7,35 +7,29 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: http://localhost:8081/realms/TPI-Backend
+            client:
+                provider:
+                    keycloak:
+                        token-uri: http://localhost:8081/realms/TPI-Backend/protocol/openid-connect/token
+                registration:
+                    keycloak:
+                        client-id: tpi-backend-client
+                        authorization-grant-type: authorization_code
+                        redirect-uri: "{baseUrl}/gateway/login/oauth2/code/keycloak"
 
     cloud:
         gateway:
             routes:
-                - id: ejemplo-publico
-                  uri: https://postman-echo.com
-                  predicates:
-                      - Path=/publico/**
-                  filters:
-                      - RewritePath=/publico/(?<segment>.*), /${segment}
-
-                - id: ejemplo-protegido
-                  uri: https://postman-echo.com
-                  predicates:
-                      - Path=/protegido-usuarios/**
-                  filters:
-                      - RewritePath=/protegido-usuarios/(?<segment>.*), /${segment}
-
                 - id: ms-usuarios
                   uri: http://localhost:8090
                   predicates:
-                      - Path=/api/usuarios/**
+                      - Path=/gateway/usuarios/**
                   filters:
-                      - RewritePath=/api/usuarios/(?<segment>.*), /api/usuarios/${segment}
+                      - RewritePath=/gateway/usuarios/(?<segment>.*), /api/usuarios/${segment}
 server:
     port: 8082
     uri:
         usuarios: http://localhost:8090
-        echo: https://postman-echo.com
 
 logging:
     level:

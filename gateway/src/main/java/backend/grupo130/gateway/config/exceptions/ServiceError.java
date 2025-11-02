@@ -1,4 +1,4 @@
-package backend.grupo130.gateway.exceptions.errors;
+package backend.grupo130.gateway.config.exceptions;
 
 import lombok.Getter;
 

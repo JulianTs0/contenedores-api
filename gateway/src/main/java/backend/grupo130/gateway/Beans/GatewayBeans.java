@@ -12,19 +12,13 @@ public class GatewayBeans {
     @Bean
     public RouteLocator configuradorDeRutas(
         RouteLocatorBuilder builder,
-        @Value("${server.uri.usuarios}") String uriUsuarios,
-        @Value("${server.uri.echo}") String uriEcho
+        @Value("${server.uri.usuarios}") String uriUsuarios
     )
     {
         return builder.routes()
             .route(r -> r
                 .path("/api/usuarios/**")
                 .uri(uriUsuarios)
-            )
-            .route("echo_route", r -> r
-                .path("/echo/**")
-                .filters(f -> f.stripPrefix(1))
-                .uri(uriEcho)
             )
             .build();
     }
