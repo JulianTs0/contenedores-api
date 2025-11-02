@@ -5,29 +5,33 @@ import backend.grupo130.usuarios.data.models.Usuario;
 import backend.grupo130.usuarios.dto.request.GetByIdRequest;
 import backend.grupo130.usuarios.dto.response.GetByIdResponse;
 import backend.grupo130.usuarios.service.UsuarioService;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
+@Validated
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<GetByIdResponse> getById(@PathVariable String id) {
+    public ResponseEntity<GetByIdResponse> getById(
+        @NotNull(message = "El ID de usuario no puede ser nulo")
+        @Min(value = 1, message = "El ID de usuario debe ser un número positivo")
+        @PathVariable Integer id
+    ) {
 
-        GetByIdRequest request = this.toRequest(id);
+        GetByIdRequest request = new GetByIdRequest(id);
 
         Usuario usuario = this.usuarioService.getById(request);
 
         return ResponseEntity.ok(this.toResponse(usuario));
-
     }
 
     // Respuestas
@@ -40,27 +44,6 @@ public class UsuarioController {
             usuario.getEmail(),
             usuario.getRol().name()
         );
-    }
-
-    // Peticiones
-
-    private GetByIdRequest toRequest(String idParam) {
-
-        try {
-            Integer usuarioId = Integer.parseInt(idParam);
-
-            if (usuarioId < 0) {
-                throw new ServiceError("La id del usuario es invalida", 400);
-            }
-
-            return new GetByIdRequest(
-                usuarioId
-            );
-
-        } catch (NumberFormatException ex) {
-            throw new ServiceError("La id del usuario debe ser un numero", 400);
-        }
-
     }
 
 }
