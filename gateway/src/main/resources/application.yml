@@ -30,7 +30,11 @@ server:
     port: 8082
     uri:
         usuarios: http://localhost:8090
-
+        contenedores: http://localhost:8091
+        tramos: http://localhost:8092
+        camiones: http://localhost:8093
+        ubicaciones: http://localhost:8094
+        envios: http://localhost:8095
 logging:
     level:
         org.springframework.cloud.gateway: DEBUG

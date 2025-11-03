@@ -1,0 +1,13 @@
+services:
+  db_contenedores:
+    image: postgres:16-alpine
+    container_name: db_contenedores
+    restart: always
+    environment:
+      POSTGRES_DB: contenedores_db
+      POSTGRES_USER: contenedores
+      POSTGRES_PASSWORD: contedores
+    ports:
+      - "6433:5432"
+    volumes:
+      - ./contenedores_db:/var/lib/postgresql/data

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: envios
+  datasource:
+    url: jdbc:postgresql://localhost:6437/envios_db
+    username: envios
+    password: envios
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8095
+
+#security:
+#    oauth2:
+#        resourceserver:
+#            jwt:
+#                issuer-uri: http://keycloak:8081/realms/tpi-backend
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

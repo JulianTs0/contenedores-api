@@ -1,0 +1,13 @@
+services:
+  db_ubicaciones:
+    image: postgres:16-alpine
+    container_name: db_ubicaciones
+    restart: always
+    environment:
+      POSTGRES_DB: ubicaciones_db
+      POSTGRES_USER: ubicaciones
+      POSTGRES_PASSWORD: ubicaciones
+    ports:
+      - "6436:5432"
+    volumes:
+      - ./ubicaciones_db:/var/lib/postgresql/data

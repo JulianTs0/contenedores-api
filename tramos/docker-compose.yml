@@ -1,0 +1,13 @@
+services:
+  db_tramos:
+    image: postgres:16-alpine
+    container_name: db_tramos
+    restart: always
+    environment:
+      POSTGRES_DB: tramos_db
+      POSTGRES_USER: tramos
+      POSTGRES_PASSWORD: tramos
+    ports:
+      - "6434:5432"
+    volumes:
+      - ./tramos_db:/var/lib/postgresql/data

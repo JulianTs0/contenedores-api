@@ -1,0 +1,13 @@
+services:
+  db_camiones:
+    image: postgres:16-alpine
+    container_name: db_camiones
+    restart: always
+    environment:
+      POSTGRES_DB: camiones_db
+      POSTGRES_USER: camiones
+      POSTGRES_PASSWORD: camiones
+    ports:
+      - "6435:5432"
+    volumes:
+      - ./camiones_db:/var/lib/postgresql/data
