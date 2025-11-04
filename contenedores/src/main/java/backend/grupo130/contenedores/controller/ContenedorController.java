@@ -1,6 +1,7 @@
 package backend.grupo130.contenedores.controller;
 
 import backend.grupo130.contenedores.data.models.Contenedor;
+import backend.grupo130.contenedores.dto.request.CambioDeEstadoRequest;
 import backend.grupo130.contenedores.dto.request.EditRequest;
 import backend.grupo130.contenedores.dto.request.GetByIdRequest;
 import backend.grupo130.contenedores.dto.request.RegisterRequest;
@@ -66,6 +67,16 @@ public class ContenedorController {
         Contenedor contenedor = this.contenedorService.edit(request);
 
         return ResponseEntity.ok(this.toResponsePatch(contenedor));
+    }
+
+    @PatchMapping("/cambioDeEstado")
+    public ResponseEntity<EditResponse> cambioDeEstado(
+        @RequestBody @Valid CambioDeEstadoRequest request
+    ) {
+
+        this.contenedorService.cambioDeEstado(request);
+
+        return ResponseEntity.ok().build();
     }
 
     // Respuestas
