@@ -1,0 +1,15 @@
+package backend.grupo130.contenedores.client.usuarios;
+
+import backend.grupo130.contenedores.client.usuarios.responses.GetUserByIdResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(name = "usuarios", url = "${spring.usuarios.url}")
+public interface UsuarioClient {
+
+    @GetMapping("/getById/{id}")
+    GetUserByIdResponse getBYId(@PathVariable("id") Integer id);
+
+}

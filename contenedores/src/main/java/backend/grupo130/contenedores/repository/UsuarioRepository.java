@@ -1,7 +1,9 @@
 package backend.grupo130.contenedores.repository;
 
-import backend.grupo130.contenedores.data.models.Contenedor;
-import backend.grupo130.contenedores.data.repository.PostgresContenedorRepositoryI;
+import backend.grupo130.contenedores.client.usuarios.UsuarioClient;
+import backend.grupo130.contenedores.client.usuarios.models.Usuario;
+import backend.grupo130.contenedores.client.usuarios.responses.GetUserByIdResponse;
+import backend.grupo130.contenedores.config.exceptions.ServiceError;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,28 +11,31 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class ContenedorRepository {
+public class UsuarioRepository {
 
-    private final PostgresContenedorRepositoryI contenedorRepository;
+    private final UsuarioClient usuarioRepository;
 
-    public Contenedor getById(Integer usuarioId){
-        Contenedor model = this.contenedorRepository.findById(usuarioId).orElse(null);
-        return model;
-    }
+    public Usuario getById(Integer usuarioId){
 
-    public List<Contenedor> getAll() {
-        List<Contenedor> models = this.contenedorRepository.findAll();
-        return models;
-    }
+        try {
 
-    public Contenedor save(Contenedor contenedor) {
-        Contenedor saved = this.contenedorRepository.save(contenedor);
-        return saved;
-    }
+            GetUserByIdResponse response = this.usuarioRepository.getBYId(usuarioId);
 
-    public Contenedor update(Contenedor conte) {
-        Contenedor updated = this.contenedorRepository.save(conte);
-        return updated;
+            Usuario usuario = new Usuario(
+                usuarioId,
+                response.getNombre(),
+                response.getApellido(),
+                response.getTelefono(),
+                response.getEmail(),
+                response.getRol()
+            );
+
+            return usuario;
+
+        } catch (Exception ex){
+            throw new ServiceError("Error interno", 500);
+        }
+
     }
 
 }

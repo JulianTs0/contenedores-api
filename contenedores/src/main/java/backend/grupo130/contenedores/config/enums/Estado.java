@@ -4,8 +4,18 @@ import lombok.ToString;
 
 @ToString
 public enum Estado {
-//  BORRADOR,
+    BORRADOR,
     PROGRAMADO,
     EN_TRANSITO,
-    ENTREGADO
+    EN_DEPOSITO,
+    ENTREGADO;
+
+    public static Estado fromString(String text) {
+        for (Estado b : Estado.values()) {
+            if (b.name().equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

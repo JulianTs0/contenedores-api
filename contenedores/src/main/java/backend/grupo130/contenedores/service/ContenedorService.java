@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.service;
 
+import backend.grupo130.contenedores.client.usuarios.models.Usuario;
 import backend.grupo130.contenedores.config.enums.Estado;
 import backend.grupo130.contenedores.config.exceptions.ServiceError;
 import backend.grupo130.contenedores.data.models.Contenedor;
@@ -7,6 +8,7 @@ import backend.grupo130.contenedores.dto.request.EditRequest;
 import backend.grupo130.contenedores.dto.request.GetByIdRequest;
 import backend.grupo130.contenedores.dto.request.RegisterRequest;
 import backend.grupo130.contenedores.repository.ContenedorRepository;
+import backend.grupo130.contenedores.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,18 +20,24 @@ import java.util.List;
 @Transactional
 public class ContenedorService {
 
-    private final ContenedorRepository usuarioRepository;
+    private final ContenedorRepository contenedorRepository;
+
+    private final UsuarioRepository usuarioRepository;
 
     public Contenedor getById(GetByIdRequest request) throws ServiceError {
         try {
 
-            Contenedor usuario = this.usuarioRepository.getById(request.getUsuarioId());
+            Contenedor contenedor = this.contenedorRepository.getById(request.getIdContenedor());
 
-            if (usuario == null) {
-                throw new ServiceError("Usuario no encontrado", 404);
+            if (contenedor == null) {
+                throw new ServiceError("Contenedor no encontrado", 404);
             }
 
-            return usuario;
+            Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+
+            contenedor.setUsuario(usuario);
+
+            return contenedor;
         } catch (ServiceError ex) {
             throw ex;
         }
@@ -41,9 +49,14 @@ public class ContenedorService {
     public List<Contenedor> getAll() throws ServiceError {
         try {
 
-            List<Contenedor> usuarios = this.usuarioRepository.getAll();
+            List<Contenedor> contenedores = this.contenedorRepository.getAll();
 
-            return usuarios;
+            for(Contenedor contenedor : contenedores){
+                Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+                contenedor.setUsuario(usuario);
+            }
+
+            return contenedores;
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
@@ -58,23 +71,15 @@ public class ContenedorService {
 
             contenedor.setPeso(request.getPeso());
             contenedor.setVolumen(request.getVolumen());
+
+            Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+
+            contenedor.setUsuario(usuario);
             contenedor.setIdCliente(request.getIdCliente());
-            contenedor.setEstado(Estado.PROGRAMADO);
-            usuario.se(request.getNombre());
-            usuario.setApellido(request.getApellido());
-            usuario.setTelefono(request.getTelefono());
-            usuario.setEmail(request.getEmail());
 
-            Rol rol = Rol.fromString(request.getRol());
+            contenedor.setEstado(Estado.BORRADOR);
 
-            if (rol == null){
-                throw new ServiceError("El rol es invalido", 400);
-            }
-
-            usuario.setRol(rol);
-
-
-            this.usuarioRepository.save(usuario);
+            this.contenedorRepository.save(contenedor);
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
@@ -82,31 +87,31 @@ public class ContenedorService {
         }
     }
 
-    public Usuario edit(EditRequest request) throws ServiceError {
+    public Contenedor edit(EditRequest request) throws ServiceError {
         try {
 
-            Usuario usuario = this.usuarioRepository.getById(request.getId());
+            Contenedor contenedor = this.contenedorRepository.getById(request.getId());
 
-            if (usuario == null) {
-                throw new ServiceError("Usuario no encontrado", 404);
-            }
-
-            if (request.getNombre() != null) {
-                usuario.setNombre(request.getNombre());
-            }
-            if (request.getApellido() != null) {
-                usuario.setApellido(request.getApellido());
-            }
-            if (request.getTelefono() != null) {
-                usuario.setTelefono(request.getTelefono());
-            }
-            if (request.getEmail() != null) {
-                usuario.setEmail(request.getEmail());
+            if (contenedor == null) {
+                throw new ServiceError("Contenedor no encontrado", 404);
             }
 
-            this.usuarioRepository.update(usuario);
+            if (request.getPeso() != null) {
+                contenedor.setPeso(request.getPeso());
+            }
+            if (request.getVolumen() != null) {
+                contenedor.setVolumen(request.getVolumen());
+            }
+            if (request.getIdCliente() != null) {
+                Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
 
-            return usuario;
+                contenedor.setUsuario(usuario);
+                contenedor.setIdCliente(request.getIdCliente());
+            }
+
+            this.contenedorRepository.update(contenedor);
+
+            return contenedor;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {

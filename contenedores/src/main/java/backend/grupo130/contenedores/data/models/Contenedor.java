@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.data.models;
 
+import backend.grupo130.contenedores.client.usuarios.models.Usuario;
 import backend.grupo130.contenedores.config.enums.Estado;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -36,4 +37,8 @@ public class Contenedor {
     @Enumerated(EnumType.STRING)
     @Column(name = "Estado", nullable = false)
     private Estado estado;
+
+    @Transient
+    private Usuario usuario;
+
 }
