@@ -24,6 +24,8 @@ public class GlobalExceptionHandler {
         errorDetails.put("status", ex.getHttpCode());
         errorDetails.put("message", ex.getMessage());
 
+        ex.printStackTrace();
+
         return ResponseEntity.status(status).body(errorDetails);
     }
 

@@ -16,7 +16,7 @@ spring:
         format_sql: true
   clients:
     usuarios:
-      url: http://localhost:8090/api/usuarios;
+      url: http://localhost:8090/api/usuarios
 
 server:
     port: 8091

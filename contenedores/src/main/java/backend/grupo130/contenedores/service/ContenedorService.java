@@ -74,7 +74,7 @@ public class ContenedorService {
             contenedor.setPeso(request.getPeso());
             contenedor.setVolumen(request.getVolumen());
 
-            Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+            Usuario usuario = this.usuarioRepository.getById(request.getIdCliente());
 
             contenedor.setUsuario(usuario);
             contenedor.setIdCliente(request.getIdCliente());
@@ -105,7 +105,7 @@ public class ContenedorService {
                 contenedor.setVolumen(request.getVolumen());
             }
             if (request.getIdCliente() != null) {
-                Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+                Usuario usuario = this.usuarioRepository.getById(request.getIdCliente());
 
                 contenedor.setUsuario(usuario);
                 contenedor.setIdCliente(request.getIdCliente());

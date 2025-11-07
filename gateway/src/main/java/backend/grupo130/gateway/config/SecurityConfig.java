@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .pathMatchers("/gateway/usuarios/**")
                 .hasAnyRole("ADMINISTRADOR", "CLIENTE", "TRANSPORTISTA")
 
+                .pathMatchers("/gateway/contenedores/**")
+                .hasAnyRole("ADMINISTRADOR", "CLIENTE", "TRANSPORTISTA")
+
                 .anyExchange().authenticated()
             )
 

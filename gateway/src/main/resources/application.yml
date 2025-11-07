@@ -26,6 +26,13 @@ spring:
                       - Path=/gateway/usuarios/**
                   filters:
                       - RewritePath=/gateway/usuarios/(?<segment>.*), /api/usuarios/${segment}
+                -   id: ms-contenedores
+                    uri: http://localhost:8091
+                    predicates:
+                        - Path=/gateway/contenedores/**
+                    filters:
+                        - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
+
 server:
     port: 8082
     uri:
