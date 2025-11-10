@@ -1,7 +1,6 @@
 package backend.grupo130.contenedores.dto.response;
 
-import backend.grupo130.contenedores.config.enums.Estado;
-import jakarta.persistence.*;
+import backend.grupo130.contenedores.client.usuarios.models.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,7 +16,7 @@ public class GetByIdResponse {
 
     private final BigDecimal volumen;
 
-    private final Integer idCliente;
+    private final Usuario cliente;
 
     private final String estado;
 

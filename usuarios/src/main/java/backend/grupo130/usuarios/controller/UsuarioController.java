@@ -1,6 +1,5 @@
 package backend.grupo130.usuarios.controller;
 
-import backend.grupo130.usuarios.config.exceptions.ServiceError;
 import backend.grupo130.usuarios.data.models.Usuario;
 import backend.grupo130.usuarios.dto.request.EditRequest;
 import backend.grupo130.usuarios.dto.request.GetByIdRequest;

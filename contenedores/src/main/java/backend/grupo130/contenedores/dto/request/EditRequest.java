@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class EditRequest {
 
     @NotNull(message = "La id es obligatoria")
+    @Positive(message = "El ID del contenedor debe ser un número positivo")
     private final Integer id;
 
     @Positive(message = "El peso debe ser un número positivo")

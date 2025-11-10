@@ -86,7 +86,7 @@ public class ContenedorController {
             contenedor.getIdContenedor(),
             contenedor.getPeso(),
             contenedor.getVolumen(),
-            contenedor.getIdCliente(),
+            contenedor.getUsuario(),
             contenedor.getEstado().name()
         );
     }
