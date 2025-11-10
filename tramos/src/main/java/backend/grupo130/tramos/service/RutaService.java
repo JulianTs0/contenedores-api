@@ -21,10 +21,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,8 +32,6 @@ public class RutaService {
     private final RutaRepository rutaRepository;
 
     private final TramoRepository tramoRepository;
-
-    private final TramoService tramoService;
 
     private final EnviosRepository enviosRepository;
 
@@ -104,18 +100,23 @@ public class RutaService {
 
             this.rutaRepository.save(ruta);
 
+            Map<Integer,Ubicacion> ubicaciones =
+                this.ubicacionesRepository.getUbicacionAll().stream()
+                    .collect(Collectors.toMap(
+                        Ubicacion::getIdUbicacion,
+                            ubicacion -> ubicacion));
             List<Tramo> tramos = new ArrayList<>();
             Set<Integer> depositos = new HashSet<>();
 
-            for (int orden = 0; orden < request.getUbicaciones().size(); orden++){
+            for (int orden = 0; orden < request.getUbicaciones().size() - 1; orden++){
 
-                Ubicacion origen = this.ubicacionesRepository.getUbicacionById(request.getUbicaciones().get(orden));
+                Ubicacion origen = ubicaciones.get(request.getUbicaciones().get(orden));
 
                 if (origen == null){
                     throw new ServiceError("Los tramos son invalidos debido a su ubicacion", 404);
                 }
 
-                Ubicacion destino = this.ubicacionesRepository.getUbicacionById(request.getUbicaciones().get(orden+1));
+                Ubicacion destino = ubicaciones.get(request.getUbicaciones().get(orden+1));
 
                 if (destino == null){
                     throw new ServiceError("Los tramos son invalidos debido a su ubicacion", 404);
