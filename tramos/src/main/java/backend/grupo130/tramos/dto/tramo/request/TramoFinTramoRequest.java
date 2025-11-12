@@ -20,7 +20,4 @@ public class TramoFinTramoRequest {
     @NotBlank(message = "El dominio no puede estar vacio")
     private final String dominioCamion;
 
-    @NotNull(message = "La fecha Hora Fin Real es obligatorio")
-    private LocalDateTime fechaHoraFinReal;
-
 }

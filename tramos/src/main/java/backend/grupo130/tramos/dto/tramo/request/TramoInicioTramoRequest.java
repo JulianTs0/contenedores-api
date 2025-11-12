@@ -20,7 +20,4 @@ public class TramoInicioTramoRequest {
     @NotBlank(message = "El dominio no puede estar vacio")
     private final String dominioCamion;
 
-    @NotNull(message = "La fecha Hora Inicio Real es obligatorio")
-    private LocalDateTime fechaHoraInicioReal;
-
 }

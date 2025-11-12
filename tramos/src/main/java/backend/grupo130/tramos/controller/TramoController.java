@@ -1,10 +1,13 @@
 package backend.grupo130.tramos.controller;
 
 import backend.grupo130.tramos.data.models.Tramo;
-import backend.grupo130.tramos.dto.tramo.request.TramoGetByIdRequest;
+import backend.grupo130.tramos.dto.ruta.request.RutaRegisterRequest;
+import backend.grupo130.tramos.dto.tramo.request.*;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;
 import backend.grupo130.tramos.service.TramoService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +40,55 @@ public class TramoController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<TramoGetAllResponse> getAll() {
 
-            List<Tramo> tramos = this.tramoService.getAll();
+        List<Tramo> tramos = this.tramoService.getAll();
 
         return ResponseEntity.ok(this.toResponseGet(tramos));
+    }
+
+    @PatchMapping("/asignarCamion")
+    public ResponseEntity<?> asignarCamion(
+        @RequestBody @Valid TramoAsignacionCamionRequest request
+    ) {
+
+        this.tramoService.asignarCamion(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/getByTransportista/{dominio}")
+    public ResponseEntity<TramoGetAllResponse> getByTransportista(
+        @NotNull(message = "El dominio no puede ser nulo")
+        @NotEmpty(message = "El dominio del tramo no puede estar vacio")
+        @PathVariable String dominio
+    ) {
+
+        TramoGetByTransportistaRequest request = new TramoGetByTransportistaRequest(dominio);
+
+        List<Tramo> tramos = this.tramoService.getByTransportista(request);
+
+        return ResponseEntity.ok(this.toResponseGet(tramos));
+    }
+
+    @PatchMapping("/registrarInicio")
+    public ResponseEntity<?> registrarInicio(
+        @RequestBody @Valid TramoInicioTramoRequest request
+    ) {
+
+        this.tramoService.registrarInicioTramo(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/registrarFin")
+    public ResponseEntity<?> registrarFin(
+        @RequestBody @Valid TramoFinTramoRequest request
+    ) {
+
+        this.tramoService.registrarFinTramo(request);
+
+        return ResponseEntity.ok().build();
     }
 
     /* @PostMapping("/register")

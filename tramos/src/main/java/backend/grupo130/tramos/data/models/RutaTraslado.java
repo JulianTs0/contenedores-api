@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "ruta_traslado")
@@ -31,6 +32,9 @@ public class RutaTraslado {
 
     @Column(name = "id_solicitud", nullable = false)
     private Integer idSolicitud;
+
+    @OneToMany(mappedBy = "rutaTraslado", fetch = FetchType.LAZY)
+    private List<Tramo> tramos;
 
     @Transient
     private SolicitudTraslado solicitud;

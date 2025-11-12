@@ -4,10 +4,16 @@ import lombok.ToString;
 
 @ToString
 public enum Estado {
+
+    // Tramo
     ESTIMADO,
     ASIGNADO,
     INICIADO,
-    FINALZADO;
+    FINALZADO,
+
+    // Camion
+    LIBRE,
+    OCUPADO;
 
     public static Estado fromString(String text) {
         for (Estado b : Estado.values()) {

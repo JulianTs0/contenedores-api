@@ -13,14 +13,13 @@ public class CamionesRepository {
 
     private final CamionClient camionRepository;
 
-    public Camion getById(Integer camionId){
+    public Camion getById(String camionId){
 
         try {
 
             GetCamionByIdResponse response = this.camionRepository.getBYId(camionId);
 
-            Camion camion = new Camion(
-            );
+            Camion camion = new Camion();
 
             return camion;
 

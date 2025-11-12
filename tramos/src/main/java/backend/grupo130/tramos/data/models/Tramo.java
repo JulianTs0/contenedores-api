@@ -77,4 +77,16 @@ public class Tramo {
     @Transient
     private Ubicacion destino;
 
+    public boolean esEstimado(){
+        return estado.equals(Estado.ESTIMADO);
+    }
+
+    public boolean esAsignado() {
+        return  estado.equals(Estado.ASIGNADO);
+    }
+
+    public boolean esIniciado() {
+        return  estado.equals(Estado.INICIADO);
+    }
+
 }

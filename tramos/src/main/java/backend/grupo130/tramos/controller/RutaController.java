@@ -1,10 +1,12 @@
 package backend.grupo130.tramos.controller;
 
 import backend.grupo130.tramos.data.models.RutaTraslado;
+import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaRegisterRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
+import backend.grupo130.tramos.dto.tramo.request.TramoAsignacionCamionRequest;
 import backend.grupo130.tramos.service.RutaService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -52,6 +54,16 @@ public class RutaController {
     ) {
 
         this.rutaService.register(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/asignarSolicitud")
+    public ResponseEntity<?> asignarSolicitud(
+        @RequestBody @Valid RutaAsignarSolicitudRequest request
+    ) {
+
+        this.rutaService.asignarSolicitud(request);
 
         return ResponseEntity.ok().build();
     }

@@ -15,12 +15,12 @@ public class RutaRepository {
     private final PostgresRutaRepositoryI rutaRepository;
 
     public RutaTraslado getById(Integer rutaId){
-        RutaTraslado model = this.rutaRepository.findById(rutaId).orElse(null);
+        RutaTraslado model = this.rutaRepository.findByIdWithTramos(rutaId);
         return model;
     }
 
     public List<RutaTraslado> getAll() {
-        List<RutaTraslado> models = this.rutaRepository.findAll();
+        List<RutaTraslado> models = this.rutaRepository.findWithTramos();
         return models;
     }
 
