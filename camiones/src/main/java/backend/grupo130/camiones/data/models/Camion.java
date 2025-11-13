@@ -34,4 +34,7 @@ public class Camion {
 
     @Column(name = "costo_km", nullable = false)
     private Double costoKm;
+    // ✅ NUEVO CAMPO
+    @Column(name = "observaciones", columnDefinition = "TEXT")
+    private String observaciones;
 }

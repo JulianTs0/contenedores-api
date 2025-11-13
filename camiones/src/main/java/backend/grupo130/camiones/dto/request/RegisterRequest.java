@@ -1,22 +1,32 @@
 
 package backend.grupo130.camiones.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class RegisterRequest {
-    @NotNull
-    @Size(min = 1, max = 50)
-    private String codigo;
+
+    @NotBlank
+    private String dominio;
+
+    @NotBlank
+    private String nombreTransportista;
+
+    private String telefonoContacto;
 
     @NotNull
-    private Double pesoMaximo;
+    private Double capacidadPeso;
 
     @NotNull
-    private Double volumenMaximo;
+    private Double capacidadVolumen;
 
-    private String ubicacionActual;
+    @NotNull
+    private Double consumoKm;
+
+    @NotNull
+    private Double costoKm;
+
     private String observaciones;
 }

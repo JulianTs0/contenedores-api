@@ -1,6 +1,5 @@
 package backend.grupo130.contenedores.repository;
 
-import backend.grupo130.contenedores.client.usuarios.models.Usuario;
 import backend.grupo130.contenedores.data.models.Contenedor;
 import backend.grupo130.contenedores.data.repository.PostgresContenedorRepositoryI;
 import lombok.AllArgsConstructor;
