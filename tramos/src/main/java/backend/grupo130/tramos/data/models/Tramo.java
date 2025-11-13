@@ -89,4 +89,16 @@ public class Tramo {
         return  estado.equals(Estado.INICIADO);
     }
 
+    public boolean esFinalizado(){
+        return  estado.equals(Estado.FINALZADO);
+    }
+
+    public boolean esUltimo(){
+        return this.rutaTraslado.getTramos().getLast().equals(this);
+    }
+
+    public boolean esPrimero(){
+        return this.rutaTraslado.getTramos().getFirst().equals(this);
+    }
+
 }

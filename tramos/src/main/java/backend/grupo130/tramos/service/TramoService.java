@@ -1,16 +1,14 @@
 package backend.grupo130.tramos.service;
 
 import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import backend.grupo130.tramos.config.enums.Estado;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
 import backend.grupo130.tramos.dto.tramo.request.*;
-import backend.grupo130.tramos.repository.CamionesRepository;
-import backend.grupo130.tramos.repository.RutaRepository;
-import backend.grupo130.tramos.repository.TramoRepository;
-import backend.grupo130.tramos.repository.UbicacionesRepository;
+import backend.grupo130.tramos.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,7 @@ public class TramoService {
 
     private final UbicacionesRepository ubicacionesRepository;
 
-    private final RutaRepository rutaRepository;
+    private final EnviosRepository enviosRepository;
 
     public Tramo getById(TramoGetByIdRequest request) throws ServiceError {
         try {
@@ -135,6 +133,16 @@ public class TramoService {
             tramo.setEstado(Estado.ASIGNADO);
 
             this.tramoRepository.update(tramo);
+
+            List<Tramo> tramosDeLaRuta = tramo.getRutaTraslado().getTramos();
+
+            boolean todosAsignados = tramosDeLaRuta.stream()
+                .allMatch(Tramo::esAsignado);
+
+            if (todosAsignados) {
+                // Cambiar solicitud a programada
+            }
+
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
@@ -159,6 +167,27 @@ public class TramoService {
                 throw new ServiceError("No esta autorizado a registrar esta accion", 401);
             }
 
+            RutaTraslado ruta = tramo.getRutaTraslado();
+
+            SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+
+            if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
+                throw new ServiceError("No se puede registar el inicio de un tramo de una solicitud que no esta programada", 400);
+            }
+
+            List<Tramo> tramosDeLaRuta = ruta.getTramos();
+
+            int ordenActual = tramo.getOrden();
+
+            if (ordenActual > 0) {
+
+                Tramo tramoAnterior = tramosDeLaRuta.get(ordenActual - 1);
+
+                if (!tramoAnterior.esFinalizado()) {
+                    throw new ServiceError("No se puede iniciar este tramo. El tramo anterior aún no ha sido terminado.", 400);
+                }
+            }
+
             Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
             if (camion == null) {
@@ -174,6 +203,11 @@ public class TramoService {
             tramo.setEstado(Estado.INICIADO);
 
             this.tramoRepository.update(tramo);
+
+            if(tramo.getOrden() == 0){
+                // Cambiar Solicitud a Iniciada
+            }
+
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
@@ -198,6 +232,14 @@ public class TramoService {
                 throw new ServiceError("No esta autorizado a registrar esta accion", 401);
             }
 
+            RutaTraslado ruta = tramo.getRutaTraslado();
+
+            SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+
+            if(!solicitudTraslado.esEntransito()){
+                throw new ServiceError("No se puede registar el fin de un tramo de una solicitud que no esta iniciada", 400);
+            }
+
             Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
             if (camion == null) {
@@ -220,64 +262,5 @@ public class TramoService {
             throw new ServiceError("Error interno", 500);
         }
     }
-
-    /* public void register(TramoRegisterRequest request) throws ServiceError {
-        try {
-
-            Tramo tramo = new Tramo();
-
-            TipoTramo tipo = TipoTramo.fromString(request.getTipoTramo());
-            if (tipo == null){
-                throw new ServiceError("Tipo de tramo no encontrado", 404);
-            }
-
-            tramo.setTipoTramo(tipo);
-            tramo.setCostoAproximado(request.getCostoAproximado());
-            tramo.setFechaHoraInicioEstimado(request.getFechaHoraInicioEstimado());
-            tramo.setFechaHoraFinEstimado(request.getFechaHoraFinEstimado());
-
-            tramo.setEstado(Estado.ESTIMADO);
-
-            tramo.setOrden(0);
-
-            this.tramoRepository.save(tramo);
-        } catch (ServiceError ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
-        }
-    } */
-
-    /*public Contenedor edit(EditRequest request) throws ServiceError {
-        try {
-
-            Contenedor contenedor = this.contenedorRepository.getById(request.getId());
-
-            if (contenedor == null) {
-                throw new ServiceError("Contenedor no encontrado", 404);
-            }
-
-            if (request.getPeso() != null) {
-                contenedor.setPeso(request.getPeso());
-            }
-            if (request.getVolumen() != null) {
-                contenedor.setVolumen(request.getVolumen());
-            }
-            if (request.getIdCliente() != null) {
-                Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
-
-                contenedor.setUsuario(usuario);
-                contenedor.setIdCliente(request.getIdCliente());
-            }
-
-            this.contenedorRepository.update(contenedor);
-
-            return contenedor;
-        } catch (ServiceError ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
-        }
-    }*/
 
 }

@@ -13,7 +13,13 @@ public enum Estado {
 
     // Camion
     LIBRE,
-    OCUPADO;
+    OCUPADO,
+
+    // Solicitud
+    BORRADOR,
+    PROGRAMADA,
+    ENTRANSITO,
+    ENTREGADA;
 
     public static Estado fromString(String text) {
         for (Estado b : Estado.values()) {
