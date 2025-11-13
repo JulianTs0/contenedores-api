@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar bases de datos locales
+usuarios/usuarios_db/
+ubicaciones/ubicaciones_db/
+*/usuarios_db/
+*/ubicaciones_db/
+*.log
+*.tmp
