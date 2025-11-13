@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class GetByIdRequest {
+
     @NotNull
-    private Long id;
+    private String dominio;  // <-- CAMBIA el tipo y el nombre del campo
 }

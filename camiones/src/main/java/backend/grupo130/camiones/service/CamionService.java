@@ -1,46 +1,115 @@
 package backend.grupo130.camiones.service;
 
+import backend.grupo130.camiones.config.exceptions.ServiceError;
 import backend.grupo130.camiones.data.models.Camion;
+import backend.grupo130.camiones.dto.request.EditRequest;
+import backend.grupo130.camiones.dto.request.GetByIdRequest;
+import backend.grupo130.camiones.dto.request.RegisterRequest;
 import backend.grupo130.camiones.repository.CamionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@AllArgsConstructor
+@Transactional
 public class CamionService {
 
-    private final CamionRepository repository;
+    private final CamionRepository camionRepository;
 
-    @Autowired
-    public CamionService(CamionRepository repository) {
-        this.repository = repository;
+    // Obtener un camión por dominio (patente)
+    public Camion getById(GetByIdRequest request) throws ServiceError {
+        try {
+            Camion camion = this.camionRepository.getByDominio(request.getDominio());
+
+            if (camion == null) {
+                throw new ServiceError("Camión no encontrado, 404");
+            }
+
+            return camion;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError("Error interno, 500");
+        }
     }
 
-    public List<Camion> findAll() {
-        return repository.findAll();
+    // Obtener todos los camiones
+    public List<Camion> getAll() throws ServiceError {
+        try {
+            return this.camionRepository.getAll();
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError("Error interno, 500");
+        }
     }
 
-    public Optional<Camion> findById(String dominio) {
-        return repository.findById(dominio);
+    // Registrar un nuevo camión
+    public void register(RegisterRequest request) throws ServiceError {
+        try {
+            Camion camion = new Camion();
+
+            camion.setDominio(request.getDominio());
+            camion.setNombreTransportista(request.getNombreTransportista());
+            camion.setTelefonoContacto(request.getTelefonoContacto());
+            camion.setCapacidadPeso(request.getCapacidadPeso());
+            camion.setCapacidadVolumen(request.getCapacidadVolumen());
+            camion.setConsumoKm(request.getConsumoKm());
+            camion.setCostoKm(request.getCostoKm());
+            camion.setDisponible(true);
+            camion.setObservaciones(request.getObservaciones());
+
+            this.camionRepository.save(camion);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError("Error interno, 500");
+        }
     }
 
-    public List<Camion> findAvailable() {
-        return repository.findByDisponibleTrue();
-    }
+    // Editar camión existente
+    public Camion edit(EditRequest request) throws ServiceError {
+        try {
+            Camion camion = this.camionRepository.getByDominio(request.getDominio());
 
-    @Transactional
-    public Camion save(Camion camion) {
-        return repository.save(camion);
-    }
+            if (camion == null) {
+                throw new ServiceError("Camión no encontrado, 404");
+            }
 
-    @Transactional
-    public void deleteById(String dominio) {
-        repository.deleteById(dominio);
-    }
+            if (request.getNombreTransportista() != null) {
+                camion.setNombreTransportista(request.getNombreTransportista());
+            }
+            if (request.getTelefonoContacto() != null) {
+                camion.setTelefonoContacto(request.getTelefonoContacto());
+            }
+            if (request.getCapacidadPeso() != null) {
+                camion.setCapacidadPeso(request.getCapacidadPeso());
+            }
+            if (request.getCapacidadVolumen() != null) {
+                camion.setCapacidadVolumen(request.getCapacidadVolumen());
+            }
+            if (request.getConsumoKm() != null) {
+                camion.setConsumoKm(request.getConsumoKm());
+            }
+            if (request.getCostoKm() != null) {
+                camion.setCostoKm(request.getCostoKm());
+            }
+            if (request.getDisponible() != null) {
+                camion.setDisponible(request.getDisponible());
+            }
+            if (request.getObservaciones() != null) {
+                camion.setObservaciones(request.getObservaciones());
+            }
 
-    public List<Camion> findAptosParaTraslado(Double peso, Double volumen) {
-        return repository.findByCapacidadPesoGreaterThanEqualAndCapacidadVolumenGreaterThanEqual(peso, volumen);
+            this.camionRepository.save(camion);
+            return camion;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError("Error interno, 500");
+        }
     }
 }

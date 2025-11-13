@@ -1,10 +1,17 @@
 
 package backend.grupo130.camiones.data.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import backend.grupo130.camiones.data.models.Camion;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
+@Repository
+public interface PostgresCamionRepositoryI extends JpaRepository<Camion, String> {
 
-public interface PostgresCamionRepositoryI extends JpaRepository<Camion, Integer> {
+    List<Camion> findByDisponibleTrue();
+
+    List<Camion> findByCapacidadPesoGreaterThanEqualAndCapacidadVolumenGreaterThanEqual(
+            Double peso, Double volumen
+    );
 }
-

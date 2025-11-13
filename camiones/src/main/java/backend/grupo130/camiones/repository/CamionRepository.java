@@ -1,36 +1,47 @@
-package backend.grupo130.camiones.repository;
 
+package backend.grupo130.camiones.repository;
 
 import backend.grupo130.camiones.data.models.Camion;
 import backend.grupo130.camiones.data.repository.PostgresCamionRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 @AllArgsConstructor
 public class CamionRepository {
 
-    private final PostgresCamionRepositoryI camionRepository;
+    // Inyección del repositorio JPA
+    private final PostgresCamionRepositoryI postgresRepository;
 
-    public Camion getById(Integer camionId) {
-        return this.camionRepository.findById(camionId).orElse(null);
+    // Obtener camión por dominio
+    public Camion getByDominio(String dominio) {
+        return postgresRepository.findById(dominio).orElse(null);
     }
 
+    // Obtener todos los camiones
     public List<Camion> getAll() {
-        return this.camionRepository.findAll();
+        return postgresRepository.findAll();
     }
 
+    // Guardar o actualizar un camión
     public Camion save(Camion camion) {
-        return this.camionRepository.save(camion);
+        return postgresRepository.save(camion);
     }
 
-    public Camion update(Camion camion) {
-        return this.camionRepository.save(camion);
+    // Eliminar un camión por dominio
+    public void deleteByDominio(String dominio) {
+        postgresRepository.deleteById(dominio);
     }
 
-    public void delete(Integer camionId) {
-        this.camionRepository.deleteById(camionId);
+    // Obtener solo camiones disponibles
+    public List<Camion> getDisponibles() {
+        return postgresRepository.findByDisponibleTrue();
+    }
+
+    // Obtener camiones aptos para traslado (por capacidad mínima)
+    public List<Camion> getAptos(Double peso, Double volumen) {
+        return postgresRepository
+                .findByCapacidadPesoGreaterThanEqualAndCapacidadVolumenGreaterThanEqual(peso, volumen);
     }
 }
