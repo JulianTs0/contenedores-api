@@ -10,38 +10,27 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class CamionRepository {
-
-    // Inyección del repositorio JPA
+    
     private final PostgresCamionRepositoryI postgresRepository;
 
-    // Obtener camión por dominio
-    public Camion getByDominio(String dominio) {
-        return postgresRepository.findById(dominio).orElse(null);
+    public Camion getById(String dominio){
+        Camion model = this.postgresRepository.findById(dominio).orElse(null);
+        return model;
     }
 
-    // Obtener todos los camiones
     public List<Camion> getAll() {
-        return postgresRepository.findAll();
+        List<Camion> models = this.postgresRepository.findAll();
+        return models;
     }
 
-    // Guardar o actualizar un camión
     public Camion save(Camion camion) {
-        return postgresRepository.save(camion);
+        Camion saved = this.postgresRepository.save(camion);
+        return saved;
     }
 
-    // Eliminar un camión por dominio
-    public void deleteByDominio(String dominio) {
-        postgresRepository.deleteById(dominio);
+    public Camion update(Camion camion) {
+        Camion updated = this.postgresRepository.save(camion);
+        return updated;
     }
-
-    // Obtener solo camiones disponibles
-    public List<Camion> getDisponibles() {
-        return postgresRepository.findByDisponibleTrue();
-    }
-
-    // Obtener camiones aptos para traslado (por capacidad mínima)
-    public List<Camion> getAptos(Double peso, Double volumen) {
-        return postgresRepository
-                .findByCapacidadPesoGreaterThanEqualAndCapacidadVolumenGreaterThanEqual(peso, volumen);
-    }
+    
 }

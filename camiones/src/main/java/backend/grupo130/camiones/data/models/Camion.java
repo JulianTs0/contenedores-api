@@ -1,40 +1,41 @@
 package backend.grupo130.camiones.data.models;
 
+import backend.grupo130.camiones.client.usuarios.models.Usuario;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "camiones")
-@Data
-@EqualsAndHashCode(of = "dominio")
+@Table(name = "Camion")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Camion {
 
     @Id
-    @Column(length = 50)
+    @Column(name = "dominio", length = 80, nullable = false, unique = true)
     private String dominio;
 
-    @Column(name = "transportista_nombre", length = 100, nullable = false)
-    private String nombreTransportista;
+    @Column(name = "capacidad_peso", precision = 10, scale = 2, nullable = false)
+    private BigDecimal capacidadPeso;
 
-    @Column(name = "capacidad_peso", nullable = false)
-    private Double capacidadPeso;
+    @Column(name = "capacidad_volumen", precision = 10, scale = 2, nullable = false)
+    private BigDecimal capacidadVolumen;
 
-    @Column(name = "capacidad_volumen", nullable = false)
-    private Double capacidadVolumen;
+    @Column(name = "consumo_combustible", precision = 10, scale = 2, nullable = false)
+    private BigDecimal consumoCombustible;
 
-    @Column(name = "consumo_km", nullable = false)
-    private Double consumoKm;
+    @Column(name = "costo_traslado_base", precision = 10, scale = 2, nullable = false)
+    private BigDecimal costoTrasladoBase;
 
-    @Column(name = "disponibilidad", nullable = false)
-    private Boolean disponible;
+    @Column(name = "estado", precision = 10, scale = 2, nullable = false)
+    private Boolean estado;
 
-    @Column(name = "telefono_contacto", length = 30)
-    private String telefonoContacto;
+    @Column(name = "id_transportista")
+    private Integer idTransportista;
 
-    @Column(name = "costo_km", nullable = false)
-    private Double costoKm;
-    // ✅ NUEVO CAMPO
-    @Column(name = "observaciones", columnDefinition = "TEXT")
-    private String observaciones;
+    @Transient
+    private Usuario transportista;
+
 }
