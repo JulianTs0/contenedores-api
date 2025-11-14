@@ -1,31 +1,70 @@
 
 package backend.grupo130.ubicaciones.config.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceError.class)
-    public ResponseEntity<Object> handleServiceError(ServiceError ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    public ResponseEntity<Map<String, Object>> handleServiceError(ServiceError ex) {
+
+        HttpStatus status = HttpStatus.valueOf(ex.getHttpCode());
+
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("status", ex.getHttpCode());
+        errorDetails.put("message", ex.getMessage());
+
+        ex.printStackTrace();
+
+        return ResponseEntity.status(status).body(errorDetails);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleOtherExceptions(Exception ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("status", 400);
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+
+            String fieldName = ((org.springframework.validation.FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+
+            errorDetails.put(fieldName, errorMessage);
+        });
+
+        return ResponseEntity.badRequest().body(errorDetails);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("status", 400);
+
+        ex.getConstraintViolations().forEach(violation -> {
+
+            String propertyPath = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+
+            errorDetails.put(propertyPath, message);
+        });
+
+        return ResponseEntity.badRequest().body(errorDetails);
+    }
+
 }

@@ -1,68 +1,99 @@
-
 package backend.grupo130.ubicaciones.controller;
 
-import backend.grupo130.ubicaciones.config.exceptions.ServiceError;
 import backend.grupo130.ubicaciones.data.models.Deposito;
+import backend.grupo130.ubicaciones.dto.deposito.request.DepositoEditRequest;
+import backend.grupo130.ubicaciones.dto.deposito.request.DepositoGetByIdRequest;
+import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
 import backend.grupo130.ubicaciones.service.DepositoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/depositos")
+@RequiredArgsConstructor
+@Validated
 public class DepositoController {
 
-    private final DepositoService service;
+    private final DepositoService depositoService;
 
-    @Autowired
-    public DepositoController(DepositoService service) {
-        this.service = service;
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<DepositoGetByIdResponse> getById(
+        @NotNull(message = "El ID de deposito no puede ser nulo")
+        @Positive(message = "El ID del deposito debe ser un número positivo")
+        @PathVariable Integer id
+    ) {
+
+        DepositoGetByIdRequest request = new DepositoGetByIdRequest(id);
+
+        Deposito deposito = this.depositoService.getById(request);
+
+        return ResponseEntity.ok(this.toResponseGet(deposito));
     }
 
-    // Obtener todos los depósitos
-    @GetMapping
-    public ResponseEntity<List<Deposito>> getAll() {
-        List<Deposito> depositos = service.findAll();
-        return ResponseEntity.ok(depositos);
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+
+        List<Deposito> depositos = this.depositoService.getAll();
+
+        return ResponseEntity.ok(this.toResponseGet(depositos));
     }
 
-    // Obtener depósito por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Deposito> getById(@PathVariable Integer id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ServiceError("Depósito no encontrado con id: " + id));
+    @PostMapping("/register")
+    public ResponseEntity<DepositoRegisterRequest> register(
+        @RequestBody @Valid DepositoRegisterRequest request
+    ) {
+
+        this.depositoService.register(request);
+
+        return ResponseEntity.ok().build();
     }
 
-    // Crear un nuevo depósito
-    @PostMapping
-    public ResponseEntity<Deposito> create(@RequestBody Deposito deposito) {
-        Deposito creado = service.create(deposito);
-        return ResponseEntity.ok(creado);
+    @PatchMapping("/edit")
+    public ResponseEntity<DepositoEditResponse> edit(
+        @RequestBody @Valid DepositoEditRequest request
+    ) {
+
+        Deposito deposito = this.depositoService.edit(request);
+
+        return ResponseEntity.ok(this.toResponsePatch(deposito));
     }
 
-    // Actualizar un depósito existente
-    @PutMapping("/{id}")
-    public ResponseEntity<Deposito> update(@PathVariable Integer id, @RequestBody Deposito cambios) {
-        Deposito actualizado = service.update(id, cambios);
-        return ResponseEntity.ok(actualizado);
+    // Respuestas
+
+    private DepositoGetByIdResponse toResponseGet(Deposito deposito) {
+        return new DepositoGetByIdResponse(
+            deposito.getIdDeposito(),
+            deposito.getNombre(),
+            deposito.getCostoEstadiaDiario(),
+            deposito.getUbicacion().getIdUbicacion()
+        );
     }
 
-    // Eliminar un depósito por ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    private DepositoGetAllResponse toResponseGet(List<Deposito> depositos) {
+        return new DepositoGetAllResponse(
+            depositos.stream().map(this::toResponseGet).toList()
+        );
     }
 
-    // Calcular costo de estadía
-    @GetMapping("/{id}/costo")
-    public ResponseEntity<Double> calcularCostoEstadia(
-            @PathVariable Integer id,
-            @RequestParam int dias) {
-        double costo = service.calcularCostoEstadia(id, dias);
-        return ResponseEntity.ok(costo);
+    private DepositoEditResponse toResponsePatch(Deposito deposito) {
+        return new DepositoEditResponse(
+            deposito.getIdDeposito(),
+            deposito.getNombre(),
+            deposito.getCostoEstadiaDiario(),
+            deposito.getUbicacion().getIdUbicacion()
+        );
     }
+
 }
+

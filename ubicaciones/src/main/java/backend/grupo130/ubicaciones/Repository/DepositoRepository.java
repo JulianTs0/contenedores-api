@@ -1,6 +1,8 @@
 package backend.grupo130.ubicaciones.Repository;
 
 import backend.grupo130.ubicaciones.data.models.Deposito;
+import backend.grupo130.ubicaciones.data.models.Ubicacion;
+import backend.grupo130.ubicaciones.data.repository.PostgresDepositoRepositoryI;
 import backend.grupo130.ubicaciones.data.repository.PostgresUbicacionRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,29 +14,26 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DepositoRepository {
 
-    private final PostgresUbicacionRepositoryI depositoRepository;
+    private final PostgresDepositoRepositoryI depositoRepositoryI;
 
-    public List<Deposito> findAll() {
-        return depositoRepository.findAll();
+    public Deposito getById(Integer depositoId){
+        Deposito model = this.depositoRepositoryI.findById(depositoId).orElse(null);
+        return model;
     }
 
-    public Optional<Deposito> findById(Integer id) {
-        return depositoRepository.findById(id);
-    }
-
-    public Optional<Deposito> findByNombre(String nombre) {
-        return depositoRepository.findByNombre(nombre);
-    }
-
-    public boolean existsById(Integer id) {
-        return depositoRepository.existsById(id);
+    public List<Deposito> getAll() {
+        List<Deposito> models = this.depositoRepositoryI.findAll();
+        return models;
     }
 
     public Deposito save(Deposito deposito) {
-        return depositoRepository.save(deposito);
+        Deposito saved = this.depositoRepositoryI.save(deposito);
+        return saved;
     }
 
-    public void deleteById(Integer id) {
-        depositoRepository.deleteById(id);
+    public Deposito update(Deposito deposito) {
+        Deposito updated = this.depositoRepositoryI.save(deposito);
+        return updated;
     }
+
 }

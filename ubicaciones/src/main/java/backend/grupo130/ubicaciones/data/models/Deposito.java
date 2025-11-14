@@ -1,41 +1,33 @@
 
 package backend.grupo130.ubicaciones.data.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "depositos")
-@Data
-@EqualsAndHashCode(of = "id")
+@Table(name = "Deposito")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Deposito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_deposito")
+    private Integer idDeposito;
 
-    @Column(name = "nombre", nullable = false, length = 150)
-    @NotNull
+    @Column(name = "nombre", nullable = false, length = 30)
     private String nombre;
 
-    @Column(name = "direccion", nullable = false, length = 300)
-    @NotNull
-    private String direccion;
+    @Column(name = "costo_estadia_diario", precision = 10, scale = 2)
+    private BigDecimal costoEstadiaDiario;
 
-    @Column(name = "latitud", nullable = false)
-    @NotNull
-    private Double latitud;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ubicacion", referencedColumnName = "id_ubicacion", nullable = false, unique = true)
+    private Ubicacion ubicacion;
 
-    @Column(name = "longitud", nullable = false)
-    @NotNull
-    private Double longitud;
-
-    @Column(name = "costo_estadia_diario", nullable = false)
-    @NotNull
-    private Double costoEstadiaDiario;
-
-    @Column(name = "observaciones", length = 500)
-    private String observaciones;
 }

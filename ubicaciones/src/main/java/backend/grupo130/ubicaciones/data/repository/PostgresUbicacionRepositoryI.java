@@ -1,9 +1,7 @@
 package backend.grupo130.ubicaciones.data.repository;
 
+import backend.grupo130.ubicaciones.data.models.Ubicacion;
 import org.springframework.data.jpa.repository.JpaRepository;
-import backend.grupo130.ubicaciones.data.models.Deposito;
-import java.util.Optional;
 
-public interface PostgresUbicacionRepositoryI extends JpaRepository<Deposito, Integer> {
-    Optional<Deposito> findByNombre(String nombre);
+public interface PostgresUbicacionRepositoryI extends JpaRepository<Ubicacion, Integer> {
 }
