@@ -8,27 +8,23 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RegisterRequest {
 
-    @NotNull(message = "El nombre es obligatorio")
-    @NotBlank(message = "El nombre no puede estar vacio")
-    @Size(max = 30, message = "El nombre no puede exceder los 30 caracteres")
+    @NotBlank(message = "{error.nombre.notBlank}")
+    @Size(max = 30, message = "{error.nombre.max}")
     private String nombre;
 
-    @NotNull(message = "El apellido es obligatorio")
-    @NotBlank(message = "El apellido no puede estar vacio")
-    @Size(max = 30, message = "El apellido no puede exceder los 30 caracteres")
+    @NotBlank(message = "{error.apellido.notBlank}")
+    @Size(max = 30, message = "{error.apellido.max}")
     private String apellido;
 
-    @Size(max = 30, message = "El teléfono no puede exceder los 30 caracteres")
+    @Size(max = 30, message = "{error.telefono.max}")
     private String telefono;
 
-    @NotNull(message = "El email es obligatorio")
-    @NotBlank(message = "El email no puede estar vacio")
-    @Email(message = "Formato de email inválido")
-    @Size(max = 60, message = "El email no puede exceder los 60 caracteres")
+    @NotBlank(message = "{error.email.notBlank}")
+    @Email(message = "{error.email.format}")
+    @Size(max = 60, message = "{error.email.max}")
     private String email;
 
-    @NotNull(message = "El rol es obligatorio")
-    @NotBlank(message = "El rol es obligatorio")
+    @NotBlank(message = "{error.rol.notBlank}")
     private String rol;
 
 }

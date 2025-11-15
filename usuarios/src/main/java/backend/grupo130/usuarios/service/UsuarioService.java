@@ -1,11 +1,16 @@
 package backend.grupo130.usuarios.service;
 
+import backend.grupo130.usuarios.config.enums.Errores;
 import backend.grupo130.usuarios.config.enums.Rol;
 import backend.grupo130.usuarios.config.exceptions.ServiceError;
 import backend.grupo130.usuarios.data.models.Usuario;
+import backend.grupo130.usuarios.dto.UsuarioMapperDto;
 import backend.grupo130.usuarios.dto.request.EditRequest;
 import backend.grupo130.usuarios.dto.request.GetByIdRequest;
 import backend.grupo130.usuarios.dto.request.RegisterRequest;
+import backend.grupo130.usuarios.dto.response.EditResponse;
+import backend.grupo130.usuarios.dto.response.GetAllResponse;
+import backend.grupo130.usuarios.dto.response.GetByIdResponse;
 import backend.grupo130.usuarios.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -20,36 +25,44 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public Usuario getById(GetByIdRequest request) throws ServiceError {
+    // GET
+
+    public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
         try {
 
             Usuario usuario = this.usuarioRepository.getById(request.getUsuarioId());
 
             if (usuario == null) {
-                throw new ServiceError("Usuario no encontrado", 404);
+                throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
             }
 
-            return usuario;
+            GetByIdResponse response = UsuarioMapperDto.toResponseGet(usuario);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }
         catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public List<Usuario> getAll() throws ServiceError {
+    public GetAllResponse getAll() throws ServiceError {
         try {
 
             List<Usuario> usuarios = this.usuarioRepository.getAll();
 
-            return usuarios;
+            GetAllResponse response = UsuarioMapperDto.toResponseGet(usuarios);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
+
+    // POST
 
     public void register(RegisterRequest request) throws ServiceError {
         try {
@@ -64,27 +77,28 @@ public class UsuarioService {
             Rol rol = Rol.fromString(request.getRol());
 
             if (rol == null){
-                throw new ServiceError("El rol es invalido", 400);
+                throw new ServiceError("", Errores.ROL_INVALIDO, 400);
             }
 
             usuario.setRol(rol);
-
 
             this.usuarioRepository.save(usuario);
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public Usuario edit(EditRequest request) throws ServiceError {
+    // PATCH
+
+    public EditResponse edit(EditRequest request) throws ServiceError {
         try {
 
             Usuario usuario = this.usuarioRepository.getById(request.getId());
 
             if (usuario == null) {
-                throw new ServiceError("Usuario no encontrado", 404);
+                throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
             }
 
             if (request.getNombre() != null) {
@@ -102,11 +116,13 @@ public class UsuarioService {
 
             this.usuarioRepository.update(usuario);
 
-            return usuario;
+            EditResponse response = UsuarioMapperDto.toResponsePatch(usuario);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 

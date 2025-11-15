@@ -13,7 +13,7 @@ public class UsuarioRepository {
 
     private final PostgresUsuarioRepositoryI usuarioRepository;
 
-    public Usuario getById(Integer usuarioId){
+    public Usuario getById(Long usuarioId){
         Usuario model = this.usuarioRepository.findById(usuarioId).orElse(null);
         return model;
     }

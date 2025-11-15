@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GetAllResponse {
 
-    private final List<Usuario> usuarios;
+    private final List<GetByIdResponse> usuarios;
 
 }

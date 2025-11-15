@@ -8,25 +8,25 @@ import lombok.Getter;
 @AllArgsConstructor
 public class EditRequest {
 
-    @NotNull(message = "La id es obligatoria")
-    @Min(value = 1, message = "El ID de usuario debe ser un número positivo")
-    private final Integer id;
+    @NotNull(message = "{error.id.notNull}")
+    @Positive(message = "{error.id.positive}")
+    private final Long id;
 
-    @Size(max = 30, message = "El nombre no puede exceder los 30 caracteres")
-    @Size(min = 1, message = "El email no puede estar vacio")
+    @Size(max = 30, message = "{error.nombre.max}")
+    @Size(min = 1, message = "{error.nombre.notBlank}")
     private String nombre;
 
-    @Size(max = 30, message = "El apellido no puede exceder los 30 caracteres")
-    @Size(min = 1, message = "El email no puede estar vacio")
+    @Size(max = 30, message = "{error.apellido.max}")
+    @Size(min = 1, message = "{error.apellido.notBlank}")
     private final String apellido;
 
-    @Size(max = 30, message = "El teléfono no puede exceder los 30 caracteres")
-    @Size(min = 1, message = "El email no puede estar vacio")
+    @Size(max = 30, message = "{error.telefono.max}")
+    @Size(min = 1, message = "{error.telefono.notBlank}")
     private final String telefono;
 
-    @Email(message = "Formato de email inválido")
-    @Size(max = 60, message = "El email no puede exceder los 60 caracteres")
-    @Size(min = 1, message = "El email no puede estar vacio")
+    @Email(message = "{error.email.format}")
+    @Size(max = 30, message = "{error.email.max}")
+    @Size(min = 1, message = "{error.email.notBlank}")
     private final String email;
 
 }

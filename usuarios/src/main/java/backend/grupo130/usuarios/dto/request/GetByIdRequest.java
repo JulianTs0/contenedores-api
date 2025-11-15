@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetByIdRequest {
 
-    private final Integer usuarioId;
+    private final Long usuarioId;
 
 }
