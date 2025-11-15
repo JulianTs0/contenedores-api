@@ -3,6 +3,7 @@ package backend.grupo130.contenedores.service;
 import backend.grupo130.contenedores.client.usuarios.models.Usuario;
 import backend.grupo130.contenedores.config.enums.Errores;
 import backend.grupo130.contenedores.config.enums.Estado;
+import backend.grupo130.contenedores.config.enums.Rol;
 import backend.grupo130.contenedores.config.exceptions.ServiceError;
 import backend.grupo130.contenedores.data.models.Contenedor;
 import backend.grupo130.contenedores.dto.ContenedorMapperDto;
@@ -38,7 +39,13 @@ public class ContenedorService {
                 throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
             }
 
-            Usuario usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+            Usuario usuario = null;
+
+            if(contenedor.getIdCliente() != null){
+
+                usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+
+            }
 
             GetByIdResponse response = ContenedorMapperDto.toResponseGet(contenedor, usuario);
 
@@ -196,6 +203,10 @@ public class ContenedorService {
             }
 
             Usuario usuario = this.usuarioRepository.getById(request.getIdCliente());
+
+            if(!(usuario.getRol().equals(Rol.CLIENTE.name()))){
+                throw new ServiceError("", Errores.USUARIO_NO_CLIENTE, 400);
+            }
 
             contenedor.setIdCliente(usuario.getIdUsuario());
             contenedor.setEstado(Estado.PROGRAMADO);

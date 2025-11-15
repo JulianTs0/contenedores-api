@@ -23,6 +23,11 @@ public class CamionRepository {
         return models;
     }
 
+    public List<Camion> findDisponibilidad(){
+        List<Camion> models = this.postgresRepository.findByEstadoTrue();
+        return models;
+    }
+
     public Camion save(Camion camion) {
         Camion saved = this.postgresRepository.save(camion);
         return saved;
@@ -31,6 +36,11 @@ public class CamionRepository {
     public Camion update(Camion camion) {
         Camion updated = this.postgresRepository.save(camion);
         return updated;
+    }
+
+    public void delete(String dominio){
+        this.postgresRepository.deleteById(dominio);
+        return;
     }
     
 }

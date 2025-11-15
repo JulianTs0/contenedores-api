@@ -1,15 +1,20 @@
 package backend.grupo130.camiones.service;
 
 import backend.grupo130.camiones.client.usuarios.models.Usuario;
+import backend.grupo130.camiones.config.enums.Errores;
+import backend.grupo130.camiones.config.enums.Rol;
 import backend.grupo130.camiones.config.exceptions.ServiceError;
 import backend.grupo130.camiones.data.models.Camion;
-import backend.grupo130.camiones.dto.request.EditRequest;
-import backend.grupo130.camiones.dto.request.GetByIdRequest;
-import backend.grupo130.camiones.dto.request.RegisterRequest;
+import backend.grupo130.camiones.dto.CamionesMapperDto;
+import backend.grupo130.camiones.dto.request.*;
+import backend.grupo130.camiones.dto.response.EditResponse;
+import backend.grupo130.camiones.dto.response.GetAllResponse;
+import backend.grupo130.camiones.dto.response.GetByIdResponse;
 import backend.grupo130.camiones.repository.CamionRepository;
 import backend.grupo130.camiones.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,56 +22,66 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class CamionService {
 
     private final CamionRepository camionRepository;
 
     private final UsuarioRepository usuarioRepository;
 
-    public Camion getById(GetByIdRequest request) throws ServiceError {
+    public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
         try {
             Camion camion = this.camionRepository.getById(request.getDominio());
 
             if (camion == null) {
-                throw new ServiceError("Camión no encontrado", 404);
+                throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
             }
+
+            Usuario usuario = null;
 
             if(camion.getIdTransportista() != null){
 
-                Usuario usuario = this.usuarioRepository.getById(camion.getIdTransportista());
-
-                camion.setTransportista(usuario);
+                usuario = this.usuarioRepository.getById(camion.getIdTransportista());
 
             }
 
-            return camion;
+            GetByIdResponse response = CamionesMapperDto.toResponseGet(camion, usuario);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public List<Camion> getAll() throws ServiceError {
+    public GetAllResponse getAll() throws ServiceError {
         try {
 
             List<Camion> camiones = this.camionRepository.getAll();
 
-            for (Camion camion : camiones){
-                if(camion.getIdTransportista() != null){
+            GetAllResponse response = CamionesMapperDto.toResponseGet(camiones);
 
-                    Usuario usuario = this.usuarioRepository.getById(camion.getIdTransportista());
-
-                    camion.setTransportista(usuario);
-
-                }
-            }
-
-            return camiones;
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+    public GetAllResponse getDisponibles() throws ServiceError {
+        try {
+
+            List<Camion> camiones = this.camionRepository.findDisponibilidad();
+
+            GetAllResponse response = CamionesMapperDto.toResponseGet(camiones);
+
+            return response;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
@@ -76,26 +91,56 @@ public class CamionService {
             Camion camion = new Camion();
 
             camion.setDominio(request.getDominio());
+
             camion.setCapacidadPeso(request.getCapacidadPeso());
+
             camion.setCapacidadVolumen(request.getCapacidadVolumen());
+
             camion.setConsumoCombustible(request.getConsumoCombustible());
+
             camion.setCostoTrasladoBase(request.getCostoTrasladoBase());
+
             camion.setEstado(true);
 
             this.camionRepository.save(camion);
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public Camion edit(EditRequest request) throws ServiceError {
+    public EditResponse cambiarDisponibilidad(CambiarDisponibilidadRequest request) throws ServiceError {
         try {
             Camion camion = this.camionRepository.getById(request.getDominio());
 
             if (camion == null) {
-                throw new ServiceError("Camión no encontrado", 404);
+                throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
+            }
+
+            camion.setEstado(request.getEstado());
+
+            this.camionRepository.update(camion);
+
+            EditResponse response = CamionesMapperDto.toResponsePatch(camion);
+
+            return response;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+    public EditResponse edit(EditRequest request) throws ServiceError {
+        try {
+            Camion camion = this.camionRepository.getById(request.getDominio());
+
+            if (camion == null) {
+                throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
+            }
+            if (!camion.getEstado()){
+                throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
             }
 
             if (request.getCapacidadPeso() != null) {
@@ -110,18 +155,66 @@ public class CamionService {
             if (request.getCostoTrasladoBase() != null) {
                 camion.setCostoTrasladoBase(request.getCostoTrasladoBase());
             }
-            if (request.getIdTransportista() != null) {
-                Usuario usuario = this.usuarioRepository.getById(camion.getIdTransportista());
-
-                camion.setTransportista(usuario);
-            }
 
             this.camionRepository.update(camion);
-            return camion;
+
+            EditResponse response = CamionesMapperDto.toResponsePatch(camion);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
+
+    public void asignarTransportista(AsignarTransportistaRequest request) throws ServiceError {
+        try {
+
+            Camion camion = this.camionRepository.getById(request.getDominio());
+
+            if (camion == null) {
+                throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
+            }
+            if (!camion.getEstado()){
+                throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
+            }
+
+            Usuario usuario = this.usuarioRepository.getById(request.getIdTransportista());
+
+            if(!(usuario.getRol().equals(Rol.TRANSPORTISTA.name()))){
+                throw new ServiceError("", Errores.USUARIO_NO_TRANSPORTISTA, 400);
+            }
+
+            camion.setIdTransportista(usuario.getIdUsuario());
+
+            this.camionRepository.update(camion);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
+        }
+    }
+
+    public void delete(DeleteRequest request) throws ServiceError {
+        try {
+
+            Camion camion = this.camionRepository.getById(request.getDominio());
+
+            if (camion == null) {
+                throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
+            }
+            if (!camion.getEstado()){
+                throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
+            }
+
+            this.camionRepository.delete(camion.getDominio());
+        } catch (ServiceError ex) {
+            throw ex;
+        }
+        catch (Exception ex) {
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
+        }
+    }
+
 }

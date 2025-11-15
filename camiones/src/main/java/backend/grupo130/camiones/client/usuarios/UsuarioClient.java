@@ -1,6 +1,6 @@
 package backend.grupo130.camiones.client.usuarios;
 
-import backend.grupo130.camiones.client.usuarios.responses.GetUserByIdResponse;
+import backend.grupo130.camiones.client.usuarios.responses.UsuarioGetByIdResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UsuarioClient {
 
     @GetMapping("/getById/{id}")
-    GetUserByIdResponse getBYId(@PathVariable("id") Long id);
+    UsuarioGetByIdResponse getBYId(@PathVariable("id") Long id);
 
 }

@@ -35,7 +35,5 @@ public class Camion {
     @Column(name = "id_transportista")
     private Long idTransportista;
 
-    @Transient
-    private Usuario transportista;
 
 }

@@ -21,12 +21,6 @@ spring:
 server:
   port: 8093
 
-#security:
-#    oauth2:
-#        resourceserver:
-#            jwt:
-#                issuer-uri: http://keycloak:8081/realms/tpi-backend
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
