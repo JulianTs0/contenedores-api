@@ -13,7 +13,7 @@ public class UsuarioRepository {
 
     private final UsuarioClient usuarioRepository;
 
-    public Usuario getById(Integer usuarioId){
+    public Usuario getById(Long usuarioId){
 
         try {
 

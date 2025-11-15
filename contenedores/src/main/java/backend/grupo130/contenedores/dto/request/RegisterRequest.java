@@ -24,6 +24,6 @@ public class RegisterRequest {
 
     @NotNull(message = "La id es obligatoria")
     @Positive(message = "El ID del cliente debe ser un número positivo")
-    private final Integer idCliente;
+    private final Long idCliente;
 
 }

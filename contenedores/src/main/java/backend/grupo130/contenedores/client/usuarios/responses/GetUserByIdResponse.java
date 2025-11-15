@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetUserByIdResponse {
 
+    private final Long id;
+
     private final String nombre;
 
     private final String apellido;
@@ -16,5 +18,6 @@ public class GetUserByIdResponse {
     private final String email;
 
     private final String rol;
+
 
 }

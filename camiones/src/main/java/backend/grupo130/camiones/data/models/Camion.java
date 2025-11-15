@@ -33,7 +33,7 @@ public class Camion {
     private Boolean estado;
 
     @Column(name = "id_transportista")
-    private Integer idTransportista;
+    private Long idTransportista;
 
     @Transient
     private Usuario transportista;

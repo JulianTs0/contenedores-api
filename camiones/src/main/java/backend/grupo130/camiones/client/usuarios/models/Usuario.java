@@ -1,5 +1,6 @@
 package backend.grupo130.camiones.client.usuarios.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Usuario {
 
-    private Integer idUsuario;
+    private Long idUsuario;
 
     private String nombre;
 

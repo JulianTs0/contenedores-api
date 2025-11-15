@@ -32,7 +32,7 @@ public class Contenedor {
     private BigDecimal volumen;
 
     @Column(name = "id_cliente", nullable = false)
-    private Integer idCliente;
+    private Long idCliente;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Estado", nullable = false)

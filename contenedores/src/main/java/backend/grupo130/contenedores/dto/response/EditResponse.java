@@ -13,6 +13,6 @@ public class EditResponse {
 
     private final BigDecimal volumen;
 
-    private final Integer idCliente;
+    private final Long idCliente;
 
 }

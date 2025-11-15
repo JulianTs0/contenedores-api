@@ -24,6 +24,6 @@ public class GetByIdResponse {
 
     private Boolean estado;
 
-    private Integer idTransportista;
+    private Long idTransportista;
 
 }
