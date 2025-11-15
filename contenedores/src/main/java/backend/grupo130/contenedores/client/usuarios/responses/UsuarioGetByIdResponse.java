@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GetUserByIdResponse {
+public class UsuarioGetByIdResponse {
 
     private final Long id;
 

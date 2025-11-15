@@ -10,19 +10,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class EditRequest {
 
-    @NotNull(message = "La id es obligatoria")
-    @Positive(message = "El ID del contenedor debe ser un número positivo")
-    private final Integer id;
+    @NotNull(message = "{error.idContenedor.notNull}")
+    @Positive(message = "{error.idContenedor.positive}")
+    private final Long id;
 
-    @Positive(message = "El peso debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del peso no es válido")
+    @Positive(message = "{error.peso.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
     private final BigDecimal peso;
 
-    @Positive(message = "El volumen debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del volumen no es válido")
+    @Positive(message = "{error.volumen.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
     private final BigDecimal volumen;
 
-    @Positive(message = "El ID del cliente debe ser un número positivo")
+    @Positive(message = "{error.idCliente.positive}")
     private final Long idCliente;
 
 }

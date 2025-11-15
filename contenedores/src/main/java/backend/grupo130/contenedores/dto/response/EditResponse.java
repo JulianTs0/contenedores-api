@@ -9,10 +9,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class EditResponse {
 
+    private final Long idContenedor;
+
     private final BigDecimal peso;
 
     private final BigDecimal volumen;
 
     private final Long idCliente;
+
+    private final String estado;
 
 }

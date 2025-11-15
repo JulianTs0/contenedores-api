@@ -7,14 +7,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CambioDeEstadoRequest {
+public class AsignarClienteRequest {
 
     @NotNull(message = "{error.idContenedor.notNull}")
     @Positive(message = "{error.idContenedor.positive}")
     private final Long id;
 
-    @NotNull(message = "{error.estado.notNull}")
-    private final String estado;
+    @NotNull(message = "{error.idCliente.notNull}")
+    @Positive(message = "{error.idCliente.positive}")
+    private final Long idCliente;
 
 }
-

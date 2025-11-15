@@ -21,10 +21,9 @@ public class GlobalExceptionHandler {
 
         Map<String, Object> errorDetails = new HashMap<>();
 
-        errorDetails.put("status", ex.getHttpCode());
+        errorDetails.put("httpCode", ex.getHttpCode());
         errorDetails.put("message", ex.getMessage());
-
-        ex.printStackTrace();
+        errorDetails.put("mensajeInterno", ex.getMensajeExterno());
 
         return ResponseEntity.status(status).body(errorDetails);
     }

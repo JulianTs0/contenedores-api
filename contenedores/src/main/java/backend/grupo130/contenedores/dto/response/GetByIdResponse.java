@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class GetByIdResponse {
 
-    private final Integer idContenedor;
+    private final Long idContenedor;
 
     private final BigDecimal peso;
 

@@ -1,6 +1,7 @@
 package backend.grupo130.contenedores.dto.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,19 +9,14 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class RegisterRequest {
+public class GetByPesoVolumenRequest {
 
-    @NotNull(message = "{error.peso.notNull}")
     @Positive(message = "{error.peso.positive}")
     @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
     private final BigDecimal peso;
 
-    @NotNull(message = "{error.volumen.notNull}")
     @Positive(message = "{error.volumen.positive}")
     @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
     private final BigDecimal volumen;
-
-    @Positive(message = "{error.idCliente.positive}")
-    private final Long idCliente;
 
 }

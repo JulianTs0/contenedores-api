@@ -1,13 +1,7 @@
 package backend.grupo130.contenedores.controller;
 
-import backend.grupo130.contenedores.data.models.Contenedor;
-import backend.grupo130.contenedores.dto.request.CambioDeEstadoRequest;
-import backend.grupo130.contenedores.dto.request.EditRequest;
-import backend.grupo130.contenedores.dto.request.GetByIdRequest;
-import backend.grupo130.contenedores.dto.request.RegisterRequest;
-import backend.grupo130.contenedores.dto.response.EditResponse;
-import backend.grupo130.contenedores.dto.response.GetAllResponse;
-import backend.grupo130.contenedores.dto.response.GetByIdResponse;
+import backend.grupo130.contenedores.dto.request.*;
+import backend.grupo130.contenedores.dto.response.*;
 import backend.grupo130.contenedores.service.ContenedorService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -29,28 +23,44 @@ public class ContenedorController {
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<GetByIdResponse> getById(
-        @NotNull(message = "El ID de contenedor no puede ser nulo")
-        @Positive(message = "El ID del contenedor debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idContenedor.notNull}")
+        @Positive(message = "{error.idContenedor.positive}")
+        @PathVariable Long id
     ) {
 
         GetByIdRequest request = new GetByIdRequest(id);
 
-        Contenedor contenedor = this.contenedorService.getById(request);
+        return ResponseEntity.ok(this.contenedorService.getById(request));
+    }
 
-        return ResponseEntity.ok(this.toResponseGet(contenedor));
+    @PostMapping("/getByPesoVolumen")
+    public ResponseEntity<GetByPesoVolumenResponse> getByPesoVolumen(
+        @RequestBody @Valid GetByPesoVolumenRequest request
+    ) {
+
+        return ResponseEntity.ok(this.contenedorService.getByPesoVolumen(request));
+    }
+
+    @GetMapping("/getByEstado/{estado}")
+    public ResponseEntity<GetAllResponse> getByEstado(
+        @NotNull(message = "{error.estado.notNull}")
+        @PathVariable String estado
+    ) {
+
+        GetByEstado request = new GetByEstado(estado);
+
+        return ResponseEntity.ok(this.contenedorService.getByEstado(request));
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getAll() {
 
-        List<Contenedor> contenedores = this.contenedorService.getAll();
 
-        return ResponseEntity.ok(this.toResponseGet(contenedores));
+        return ResponseEntity.ok(this.contenedorService.getAll());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<GetByIdResponse> register(
+    public ResponseEntity<?> register(
         @RequestBody @Valid RegisterRequest request
     ) {
 
@@ -64,45 +74,39 @@ public class ContenedorController {
         @RequestBody @Valid EditRequest request
     ) {
 
-        Contenedor contenedor = this.contenedorService.edit(request);
-
-        return ResponseEntity.ok(this.toResponsePatch(contenedor));
+        return ResponseEntity.ok(this.contenedorService.edit(request));
     }
 
     @PatchMapping("/cambioDeEstado")
-    public ResponseEntity<EditResponse> cambioDeEstado(
+    public ResponseEntity<CambioDeEstadoResponse> cambioDeEstado(
         @RequestBody @Valid CambioDeEstadoRequest request
     ) {
 
-        this.contenedorService.cambioDeEstado(request);
+        return ResponseEntity.ok(this.contenedorService.cambioDeEstado(request));
+    }
+
+    @PatchMapping("/asignarCliente")
+    public ResponseEntity<?> cambioDeEstado(
+        @RequestBody @Valid AsignarClienteRequest request
+    ) {
+
+        this.contenedorService.asignarCliente(request);
 
         return ResponseEntity.ok().build();
     }
 
-    // Respuestas
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(
+        @NotNull(message = "{error.idContenedor.notNull}")
+        @Positive(message = "{error.idContenedor.positive}")
+        @PathVariable Long id
+    ) {
 
-    private GetByIdResponse toResponseGet(Contenedor contenedor) {
-        return new GetByIdResponse(
-            contenedor.getIdContenedor(),
-            contenedor.getPeso(),
-            contenedor.getVolumen(),
-            contenedor.getUsuario(),
-            contenedor.getEstado().name()
-        );
-    }
+        DeleteRequest request = new DeleteRequest(id);
 
-    private GetAllResponse toResponseGet(List<Contenedor> contenedores) {
-        return new GetAllResponse(
-            contenedores
-        );
-    }
+        this.contenedorService.delete(request);
 
-    private EditResponse toResponsePatch(Contenedor contenedor) {
-        return new EditResponse(
-            contenedor.getPeso(),
-            contenedor.getPeso(),
-            contenedor.getIdCliente()
-        );
+        return ResponseEntity.ok().build();
     }
 
 }

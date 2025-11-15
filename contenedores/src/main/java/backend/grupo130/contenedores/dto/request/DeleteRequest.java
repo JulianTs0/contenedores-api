@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GetByIdRequest {
+public class DeleteRequest {
 
     private final Long idContenedor;
 

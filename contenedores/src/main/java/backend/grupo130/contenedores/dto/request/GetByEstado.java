@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GetByIdRequest {
+public class GetByEstado {
 
-    private final Long idContenedor;
+    private final String estado;
 
 }
