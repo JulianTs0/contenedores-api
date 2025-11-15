@@ -31,6 +31,9 @@ public class UbicacionService {
                 throw new ServiceError("Ubicacion no encontrado", 404);
             }
 
+            Integer idDeposito = this.depositoRepository.findByUbicacionId(ubicacion.getIdUbicacion());
+
+            ubicacion.setIdDeposito(idDeposito);
 
             return ubicacion;
         } catch (ServiceError ex) {
@@ -45,6 +48,12 @@ public class UbicacionService {
         try {
 
             List<Ubicacion> ubicaciones = this.ubicacionRepository.getAll();
+
+            for(Ubicacion ubicacion : ubicaciones){
+                Integer idDeposito = this.depositoRepository.findByUbicacionId(ubicacion.getIdUbicacion());
+
+                ubicacion.setIdDeposito(idDeposito);
+            }
 
             return ubicaciones;
         } catch (ServiceError ex) {

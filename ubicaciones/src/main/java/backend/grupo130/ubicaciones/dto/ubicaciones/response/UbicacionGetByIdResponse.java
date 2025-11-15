@@ -19,4 +19,6 @@ public class UbicacionGetByIdResponse {
 
     private final BigDecimal longitud;
 
+    private final Integer idDeposito;
+
 }

@@ -36,12 +36,12 @@ public class TramoGetByIdResponse {
 
     private Integer orden;
 
-    private Camion dominioCamion;
+    private String dominioCamion;
 
-    private RutaTraslado rutaTraslado;
+    private Integer rutaTraslado;
 
-    private Ubicacion idOrigen;
+    private Integer idOrigen;
 
-    private Ubicacion idDestino;
+    private Integer idDestino;
 
 }

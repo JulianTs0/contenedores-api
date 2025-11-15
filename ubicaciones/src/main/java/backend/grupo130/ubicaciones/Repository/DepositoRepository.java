@@ -36,4 +36,9 @@ public class DepositoRepository {
         return updated;
     }
 
+    public Integer findByUbicacionId(Integer ubicacionId){
+        Integer model = this.depositoRepositoryI.findDepositoIdByUbicacionId(ubicacionId).orElse(null);
+        return model;
+    }
+
 }

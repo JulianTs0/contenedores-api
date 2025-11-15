@@ -1,6 +1,9 @@
 package backend.grupo130.tramos.client.camiones.models;
 
 import backend.grupo130.tramos.config.enums.Estado;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +25,8 @@ public class Camion {
 
     private BigDecimal costoTrasladoBase;
 
-    private String estado;
+    private Boolean estado;
 
     private Integer idTransportista;
-
-    public Boolean estaDisponible(){
-        return estado.equals(Estado.LIBRE.toString());
-    }
 
 }

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ubicaciones", url = "${spring.clients.ubicaciones.url}")
 public interface UbicacionClient {
 
-    @GetMapping("/deposito/getById/{id}")
+    @GetMapping("/depositos/getById/{id}")
     GetDepositoByIdResponse getDepositoById(@PathVariable("id") Integer id);
 
-    @GetMapping("/ubicacion/getById/{id}")
+    @GetMapping("/ubicaciones/getById/{id}")
     GetUbicacionByIdResponse getUbicacionById(@PathVariable("id") Integer id);
 
-    @GetMapping("/ubicacion/getAll/{id}")
+    @GetMapping("/ubicaciones/getAll/{id}")
     GetUbicacionGetAllResponse getUbicacionAll();
 
 }

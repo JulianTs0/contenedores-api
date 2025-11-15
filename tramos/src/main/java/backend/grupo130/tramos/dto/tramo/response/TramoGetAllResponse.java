@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TramoGetAllResponse {
 
-    private final List<Tramo> tramos;
+    private final List<TramoGetByIdResponse> tramos;
 
 }

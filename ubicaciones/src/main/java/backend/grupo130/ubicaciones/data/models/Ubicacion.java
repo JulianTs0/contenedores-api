@@ -29,4 +29,7 @@ public class Ubicacion {
     @Column(name = "longitud", nullable = false, precision = 9, scale = 6)
     private BigDecimal longitud;
 
+    @Transient
+    private Integer idDeposito;
+
 }

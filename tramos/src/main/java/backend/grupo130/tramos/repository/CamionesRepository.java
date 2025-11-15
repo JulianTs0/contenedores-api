@@ -11,15 +11,23 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class CamionesRepository {
 
-    private final CamionClient camionRepository;
+    private final CamionClient camionClient;
 
     public Camion getById(String camionId){
 
         try {
 
-            GetCamionByIdResponse response = this.camionRepository.getBYId(camionId);
+            GetCamionByIdResponse response = this.camionClient.getBYId(camionId);
 
-            Camion camion = new Camion();
+            Camion camion = new Camion(
+                response.getDominio(),
+                response.getCapacidadPeso(),
+                response.getCapacidadVolumen(),
+                response.getConsumoCombustible(),
+                response.getCostoTrasladoBase(),
+                response.getEstado(),
+                response.getIdTransportista()
+            );
 
             return camion;
 

@@ -38,4 +38,9 @@ public class TramoRepository {
         return updated;
     }
 
+    public List<Tramo> buscarPorRuta(Integer idRuta){
+        List<Tramo> tramos = this.tramoRepository.buscarTodosPorIdRuta(idRuta);
+        return tramos;
+    }
+
 }

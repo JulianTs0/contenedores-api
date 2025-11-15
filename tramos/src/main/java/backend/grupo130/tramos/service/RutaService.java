@@ -18,6 +18,7 @@ import backend.grupo130.tramos.repository.TramoRepository;
 import backend.grupo130.tramos.repository.UbicacionesRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,13 +28,14 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class RutaService {
 
     private final RutaRepository rutaRepository;
 
     private final TramoRepository tramoRepository;
 
-    private final EnviosRepository enviosRepository;
+    // private final EnviosRepository enviosRepository;
 
     private final UbicacionesRepository ubicacionesRepository;
 
@@ -48,9 +50,9 @@ public class RutaService {
                 throw new ServiceError("Ruta no encontrada", 404);
             }
 
-            SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+            // SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
-            ruta.setSolicitud(solicitud);
+            // ruta.setSolicitud(solicitud);
 
             return ruta;
         } catch (ServiceError ex) {
@@ -66,10 +68,10 @@ public class RutaService {
 
             List<RutaTraslado> rutas = this.rutaRepository.getAll();
 
-            for(RutaTraslado ruta : rutas){
+            /*for(RutaTraslado ruta : rutas){
                 SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
                 ruta.setSolicitud(solicitud);
-            }
+            }*/
 
             return rutas;
         } catch (ServiceError ex) {
@@ -82,11 +84,11 @@ public class RutaService {
     public void register(RutaRegisterRequest request) throws ServiceError {
         try {
 
-            SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
+            // SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
 
-            if(solicitud == null){
-                throw new ServiceError("Solicitud no encontrada", 404);
-            }
+            //if(solicitud == null){
+            //    throw new ServiceError("Solicitud no encontrada", 404);
+            //}
 
             RutaTraslado ruta = new RutaTraslado();
 
@@ -100,23 +102,18 @@ public class RutaService {
 
             this.rutaRepository.save(ruta);
 
-            Map<Integer,Ubicacion> ubicaciones = this.ubicacionesRepository.getUbicacionAll()
-                .stream().collect(Collectors.toMap(
-                    Ubicacion::getIdUbicacion,
-                    ubicacion -> ubicacion));
-
             List<Tramo> tramos = new ArrayList<>();
             Set<Integer> depositos = new HashSet<>();
 
             for (int orden = 0; orden < request.getUbicaciones().size() - 1; orden++){
 
-                Ubicacion origen = ubicaciones.get(request.getUbicaciones().get(orden));
+                Ubicacion origen = this.ubicacionesRepository.getUbicacionById(request.getUbicaciones().get(orden));
 
                 if (origen == null){
                     throw new ServiceError("Los tramos son invalidos debido a su ubicacion", 404);
                 }
 
-                Ubicacion destino = ubicaciones.get(request.getUbicaciones().get(orden+1));
+                Ubicacion destino = this.ubicacionesRepository.getUbicacionById(request.getUbicaciones().get(orden + 1));
 
                 if (destino == null){
                     throw new ServiceError("Los tramos son invalidos debido a su ubicacion", 404);
@@ -138,11 +135,11 @@ public class RutaService {
 
                 tramo.setFechaHoraFinEstimado(finTramo);
 
-                tramo.setOrigen(origen);
+                tramo.setIdOrigen(origen.getIdUbicacion());
 
-                tramo.setDestino(destino);
+                tramo.setIdDestino(destino.getIdUbicacion());
 
-                if(origen.getIdDeposito() == null && destino.getIdDeposito() == null){
+                if(origen.getIdDeposito () == null && destino.getIdDeposito() == null){
                     tramo.setTipoTramo(TipoTramo.ORIGEN_DESTINO);
                 }
                 else if (origen.getIdDeposito() == null){
@@ -159,7 +156,7 @@ public class RutaService {
                     depositos.add(origen.getIdDeposito());
                 }
 
-                tramo.setOrden(orden);
+                tramo.setOrden(orden + 1);
 
                 tramo.setRutaTraslado(ruta);
 
@@ -180,6 +177,8 @@ public class RutaService {
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
@@ -193,13 +192,13 @@ public class RutaService {
                 throw new ServiceError("Ruta no encontrada", 404);
             }
 
-            SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
+            //SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
 
-            if(solicitud == null){
-                throw new ServiceError("Solicitud no encontrada", 404);
-            }
+            //if(solicitud == null){
+            //    throw new ServiceError("Solicitud no encontrada", 404);
+            //}
 
-            List<Tramo> tramos = ruta.getTramos();
+            List<Tramo> tramos = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
 
             if(tramos == null || tramos.isEmpty()){
                 throw new ServiceError("La ruta no se le han asignado los tramos todavia", 400);
@@ -211,7 +210,7 @@ public class RutaService {
                 }
             }
 
-            ruta.setIdSolicitud(solicitud.getIdSolicitud());
+            //ruta.setIdSolicitud(solicitud.getIdSolicitud());
 
             this.rutaRepository.update(ruta);
         } catch (ServiceError ex) {

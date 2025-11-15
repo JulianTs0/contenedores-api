@@ -34,17 +34,14 @@ public class TramoController {
 
         TramoGetByIdRequest request = new TramoGetByIdRequest(id);
 
-        Tramo tramo = this.tramoService.getById(request);
-
-        return ResponseEntity.ok(this.toResponseGet(tramo));
+        return ResponseEntity.ok(this.tramoService.getById(request));
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<TramoGetAllResponse> getAll() {
 
-        List<Tramo> tramos = this.tramoService.getAll();
 
-        return ResponseEntity.ok(this.toResponseGet(tramos));
+        return ResponseEntity.ok(this.tramoService.getAll());
     }
 
     @PatchMapping("/asignarCamion")
@@ -57,7 +54,7 @@ public class TramoController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/getByTransportista/{dominio}")
+    @GetMapping("/getByTransportista/{dominio}")
     public ResponseEntity<TramoGetAllResponse> getByTransportista(
         @NotNull(message = "El dominio no puede ser nulo")
         @NotEmpty(message = "El dominio del tramo no puede estar vacio")
@@ -66,9 +63,19 @@ public class TramoController {
 
         TramoGetByTransportistaRequest request = new TramoGetByTransportistaRequest(dominio);
 
-        List<Tramo> tramos = this.tramoService.getByTransportista(request);
+        return ResponseEntity.ok(this.tramoService.getByTransportista(request));
+    }
 
-        return ResponseEntity.ok(this.toResponseGet(tramos));
+    @GetMapping("/getByRuta/{id}")
+    public ResponseEntity<TramoGetAllResponse> getByRuta(
+        @NotNull(message = "La id de la ruta no puede ser nulo")
+        @Positive(message = "La id de la ruta debe ser un número positivo")
+        @PathVariable Integer id
+    ) {
+
+        TramoGetByRutaIdRequest request = new TramoGetByRutaIdRequest(id);
+
+        return ResponseEntity.ok(this.tramoService.getTramosDeRuta(request));
     }
 
     @PatchMapping("/registrarInicio")
@@ -110,33 +117,5 @@ public class TramoController {
 
         return ResponseEntity.ok(this.toResponsePatch(contenedor));
     }*/
-
-    // Respuestas
-
-    private TramoGetByIdResponse toResponseGet(Tramo tramo) {
-        return new TramoGetByIdResponse(
-            tramo.getIdTramo(),
-            tramo.getTipoTramo().name(),
-            tramo.getEstado().name(),
-            tramo.getCostoAproximado(),
-            tramo.getCostoReal(),
-            tramo.getFechaHoraInicioEstimado(),
-            tramo.getFechaHoraFinEstimado(),
-            tramo.getFechaHoraInicioReal(),
-            tramo.getFechaHoraFinReal(),
-            tramo.getOrden(),
-            tramo.getCamion(),
-            tramo.getRutaTraslado(),
-            tramo.getOrigen(),
-            tramo.getDestino()
-        );
-    }
-
-    private TramoGetAllResponse toResponseGet(List<Tramo> tramos) {
-        return new TramoGetAllResponse(
-            tramos
-        );
-    }
-
 
 }

@@ -4,6 +4,7 @@ import backend.grupo130.tramos.client.camiones.models.Camion;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import backend.grupo130.tramos.config.enums.Estado;
 import backend.grupo130.tramos.config.enums.TipoTramo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tramos")
@@ -56,7 +58,7 @@ public class Tramo {
     @Column(name = "dominio_camion", length = 80)
     private String dominioCamion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ruta", nullable = false)
     private RutaTraslado rutaTraslado;
 
@@ -90,15 +92,15 @@ public class Tramo {
     }
 
     public boolean esFinalizado(){
-        return  estado.equals(Estado.FINALZADO);
+        return  estado.equals(Estado.FINALIZADO);
     }
 
-    public boolean esUltimo(){
-        return this.rutaTraslado.getTramos().getLast().equals(this);
+    public boolean esUltimo(List<Tramo> tramos){
+        return tramos.getLast().getIdTramo().equals(this.idTramo);
     }
 
-    public boolean esPrimero(){
-        return this.rutaTraslado.getTramos().getFirst().equals(this);
+    public boolean esPrimero(List<Tramo> tramos){
+        return tramos.getFirst().getIdTramo().equals(this.idTramo);
     }
 
 }

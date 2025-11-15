@@ -9,7 +9,7 @@ public enum Estado {
     ESTIMADO,
     ASIGNADO,
     INICIADO,
-    FINALZADO,
+    FINALIZADO,
 
     // Camion
     LIBRE,

@@ -1,36 +1,41 @@
 package backend.grupo130.tramos.service;
 
 import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import backend.grupo130.tramos.config.enums.Estado;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.dto.tramo.TramoMapperDto;
 import backend.grupo130.tramos.dto.tramo.request.*;
+import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
+import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;
 import backend.grupo130.tramos.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class TramoService {
 
     private final TramoRepository tramoRepository;
+
+    private final RutaRepository rutaRepository;
 
     private final CamionesRepository camionesRepository;
 
     private final UbicacionesRepository ubicacionesRepository;
 
-    private final EnviosRepository enviosRepository;
+    // private final EnviosRepository enviosRepository;
 
-    public Tramo getById(TramoGetByIdRequest request) throws ServiceError {
+    public TramoGetByIdResponse getById(TramoGetByIdRequest request) throws ServiceError {
         try {
 
             Tramo tramo = this.tramoRepository.getById(request.getIdTramo());
@@ -39,24 +44,28 @@ public class TramoService {
                 throw new ServiceError("Tramo no encontrado", 404);
             }
 
-            Camion camion =  this.camionesRepository.getById(tramo.getDominioCamion());
-            tramo.setCamion(camion);
+            // Camion camion =  this.camionesRepository.getById(tramo.getDominioCamion());
+            // tramo.setCamion(camion);
 
             Ubicacion origen = this.ubicacionesRepository.getUbicacionById(tramo.getIdOrigen());
             Ubicacion destino = this.ubicacionesRepository.getUbicacionById(tramo.getIdDestino());
             tramo.setOrigen(origen);
             tramo.setDestino(destino);
 
-            return tramo;
+            TramoGetByIdResponse response = TramoMapperDto.toResponseGet(tramo);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }
         catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
 
-    public List<Tramo> getByTransportista(TramoGetByTransportistaRequest request) throws ServiceError {
+    public TramoGetAllResponse getByTransportista(TramoGetByTransportistaRequest request) throws ServiceError {
         try {
 
             List<Tramo> tramos = this.tramoRepository.getAll()
@@ -64,43 +73,48 @@ public class TramoService {
                 .filter(tramo -> tramo.getDominioCamion().equals(request.getDominioCamion()))
                 .toList();
 
-            for(Tramo tramo : tramos){
-                Camion camion =  this.camionesRepository.getById(tramo.getDominioCamion());
-                Ubicacion origen = this.ubicacionesRepository.getUbicacionById(tramo.getIdOrigen());
-                Ubicacion destino = this.ubicacionesRepository.getUbicacionById(tramo.getIdDestino());
+            TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramos);
 
-                tramo.setCamion(camion);
-                tramo.setOrigen(origen);
-                tramo.setDestino(destino);
-            }
-
-            return tramos;
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
 
-    public List<Tramo> getAll() throws ServiceError {
+    public TramoGetAllResponse getTramosDeRuta(TramoGetByRutaIdRequest request) throws ServiceError {
+        try {
+
+            List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(request.getIdRuta());
+
+            TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramosDeLaRuta);
+
+            return response;
+        } catch (ServiceError ex) {
+            throw ex;
+        }  catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
+            throw new ServiceError("Error interno", 500);
+        }
+    }
+
+    public TramoGetAllResponse getAll() throws ServiceError {
         try {
 
             List<Tramo> tramos = this.tramoRepository.getAll();
 
-            for(Tramo tramo : tramos){
-                Camion camion =  this.camionesRepository.getById(tramo.getDominioCamion());
-                Ubicacion origen = this.ubicacionesRepository.getUbicacionById(tramo.getIdOrigen());
-                Ubicacion destino = this.ubicacionesRepository.getUbicacionById(tramo.getIdDestino());
+            TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramos);
 
-                tramo.setCamion(camion);
-                tramo.setOrigen(origen);
-                tramo.setDestino(destino);
-            }
-
-            return tramos;
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
@@ -124,7 +138,7 @@ public class TramoService {
                 throw new ServiceError("Camion no encontrado", 404);
             }
 
-            if (!camion.estaDisponible()){
+            if (!camion.getEstado()){
                 throw new ServiceError("El camion no esta disponible", 400);
             }
 
@@ -134,18 +148,21 @@ public class TramoService {
 
             this.tramoRepository.update(tramo);
 
-            List<Tramo> tramosDeLaRuta = tramo.getRutaTraslado().getTramos();
+            List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(tramo.getRutaTraslado().getIdRuta());
 
             boolean todosAsignados = tramosDeLaRuta.stream()
                 .allMatch(Tramo::esAsignado);
 
             if (todosAsignados) {
+                log.warn("TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 // Cambiar solicitud a programada
             }
 
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
+            log.error(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
@@ -169,13 +186,14 @@ public class TramoService {
 
             RutaTraslado ruta = tramo.getRutaTraslado();
 
-            SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+            // SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
-            if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
-                throw new ServiceError("No se puede registar el inicio de un tramo de una solicitud que no esta programada", 400);
-            }
+            //if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
+            //    throw new ServiceError("No se puede registar el inicio de un tramo de una solicitud que no esta programada", 400);
+            //}
 
-            List<Tramo> tramosDeLaRuta = ruta.getTramos();
+            List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
+
 
             int ordenActual = tramo.getOrden();
 
@@ -194,7 +212,7 @@ public class TramoService {
                 throw new ServiceError("Camion no encontrado", 404);
             }
 
-            if (!camion.estaDisponible()){
+            if (!camion.getEstado()){
                 throw new ServiceError("El camion no esta disponible", 400);
             }
 
@@ -205,12 +223,15 @@ public class TramoService {
             this.tramoRepository.update(tramo);
 
             if(tramo.getOrden() == 0){
+                log.warn("INICIADADADADADADADADADADDAAAAAAAAAAAAAAA");
                 // Cambiar Solicitud a Iniciada
             }
 
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }
@@ -234,11 +255,11 @@ public class TramoService {
 
             RutaTraslado ruta = tramo.getRutaTraslado();
 
-            SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+            //SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
-            if(!solicitudTraslado.esEntransito()){
-                throw new ServiceError("No se puede registar el fin de un tramo de una solicitud que no esta iniciada", 400);
-            }
+            //if(!solicitudTraslado.esEntransito()){
+            //    throw new ServiceError("No se puede registar el fin de un tramo de una solicitud que no esta iniciada", 400);
+            //}
 
             Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
@@ -246,19 +267,22 @@ public class TramoService {
                 throw new ServiceError("Camion no encontrado", 404);
             }
 
-            tramo.setFechaHoraFinEstimado(LocalDateTime.now());
+            tramo.setFechaHoraFinReal(LocalDateTime.now());
 
-            tramo.setEstado(Estado.FINALZADO);
+            tramo.setEstado(Estado.FINALIZADO);
 
             this.tramoRepository.update(tramo);
 
-            if(tramo.getOrden().equals(tramo.getRutaTraslado().getCantidadTramos())){
+            if(tramo.getOrden().equals(ruta.getCantidadTramos())){
+                log.warn("entregadaentregadaentregadaentregadaentregadaentregadaentregada");
                 // Cambiar Solicitud a entregada
             }
 
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
+            log.warn(ex.getMessage());
+            ex.printStackTrace();
             throw new ServiceError("Error interno", 500);
         }
     }

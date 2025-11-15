@@ -76,7 +76,7 @@ public class CamionController {
                 camion.getConsumoCombustible(),
                 camion.getCostoTrasladoBase(),
                 camion.getEstado(),
-                camion.getTransportista()
+                camion.getIdTransportista()
         );
     }
 

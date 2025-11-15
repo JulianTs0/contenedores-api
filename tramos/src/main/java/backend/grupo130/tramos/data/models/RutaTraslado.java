@@ -1,6 +1,7 @@
 package backend.grupo130.tramos.data.models;
 
 import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,9 +33,6 @@ public class RutaTraslado {
 
     @Column(name = "id_solicitud", nullable = false)
     private Integer idSolicitud;
-
-    @OneToMany(mappedBy = "rutaTraslado", fetch = FetchType.LAZY)
-    private List<Tramo> tramos;
 
     @Transient
     private SolicitudTraslado solicitud;

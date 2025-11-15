@@ -15,13 +15,15 @@ public class OsrmApiClient {
 
     public OsrmRouteResponse calcularDistancia(Ubicacion origen, Ubicacion destino) throws ServiceError {
         try {
+
             final String URI_TEMPLATE = "${spring.clients.osrm.uri-template}";
+            final String PUBLIC_OSRM_URL = "http://router.project-osrm.org/route/v1/driving/{0};{1}";
 
             String origenCoords = origen.getLongitud() + "," + origen.getLatitud();
             String destinoCoords = destino.getLongitud() + "," + destino.getLatitud();
 
             OsrmRouteResponse response = osrmClient.get()
-                .uri(URI_TEMPLATE, origenCoords, destinoCoords)
+                .uri(PUBLIC_OSRM_URL, origenCoords, destinoCoords)
                 .retrieve()
                 .body(OsrmRouteResponse.class);
 

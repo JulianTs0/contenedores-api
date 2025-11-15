@@ -20,13 +20,11 @@ public class UbicacionRegisterRequest {
     private final String direccion;
 
     @NotNull(message = "La latitud es obligatoria")
-    @Positive(message = "La latitud debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del peso no es válido")
+    @Digits(integer = 8, fraction = 2, message = "El formato la latitud no es válido")
     private final BigDecimal latitud;
 
     @NotNull(message = "La longitudes obligatoria")
-    @Positive(message = "La longitud debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del peso no es válido")
+    @Digits(integer = 8, fraction = 2, message = "El formato la latitud no es válido")
     private final BigDecimal longitud;
 
 }

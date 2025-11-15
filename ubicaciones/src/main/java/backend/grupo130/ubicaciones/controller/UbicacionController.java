@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ubicaciones")
+@RequestMapping("/api/ubicaciones/ubicaciones")
 @RequiredArgsConstructor
 @Validated
 public class UbicacionController {
@@ -76,8 +76,9 @@ public class UbicacionController {
             ubicacion.getIdUbicacion(),
             ubicacion.getDireccionTextual(),
             ubicacion.getLatitud(),
-            ubicacion.getLongitud()
-        );
+            ubicacion.getLongitud(),
+            ubicacion.getIdDeposito()
+            );
     }
 
     private UbicacionGetAllResponse toResponseGet(List<Ubicacion> ubicaciones) {

@@ -15,6 +15,8 @@ spring:
       hibernate:
         format_sql: true
   clients:
+    usuarios:
+        url: http://localhost:8090/api/usuarios
     camiones:
         url: http://localhost:8093/api/camiones
     envios:
