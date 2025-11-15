@@ -2,10 +2,7 @@
 package backend.grupo130.ubicaciones.dto.ubicaciones.request;
 
 import backend.grupo130.ubicaciones.data.models.Deposito;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,19 +12,17 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UbicacionEditRequest {
 
-    @NotNull(message = "La id es obligatoria")
-    @Positive(message = "El ID del contenedor debe ser un número positivo")
-    private final Integer ubicacionId;
+    @NotNull(message = "{error.idUbicacion.notNull}")
+    @Positive(message = "{error.idUbicacion.positive}")
+    private final Long idUbicacion;
 
-    @NotBlank(message = "La direccion no puede estar vacia")
+    @Size(min = 1, message = "{error.direccion.notBlank}")
     private final String direccion;
 
-    @Positive(message = "La latitud debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del peso no es válido")
+    @Digits(integer = 10, fraction = 4, message = "{error.latitud.digits}")
     private final BigDecimal latitud;
 
-    @Positive(message = "La longitud debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del peso no es válido")
+    @Digits(integer = 10, fraction = 4, message = "{error.longitud.digits}")
     private final BigDecimal longitud;
 
 }

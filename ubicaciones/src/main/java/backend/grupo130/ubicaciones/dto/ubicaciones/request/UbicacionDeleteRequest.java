@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UbicacionGetByIdRequest {
+public class UbicacionDeleteRequest {
 
     private final Long idUbicacion;
 

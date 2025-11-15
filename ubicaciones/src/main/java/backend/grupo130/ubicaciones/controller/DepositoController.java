@@ -69,31 +69,5 @@ public class DepositoController {
         return ResponseEntity.ok(this.toResponsePatch(deposito));
     }
 
-    // Respuestas
-
-    private DepositoGetByIdResponse toResponseGet(Deposito deposito) {
-        return new DepositoGetByIdResponse(
-            deposito.getIdDeposito(),
-            deposito.getNombre(),
-            deposito.getCostoEstadiaDiario(),
-            deposito.getUbicacion().getIdUbicacion()
-        );
-    }
-
-    private DepositoGetAllResponse toResponseGet(List<Deposito> depositos) {
-        return new DepositoGetAllResponse(
-            depositos.stream().map(this::toResponseGet).toList()
-        );
-    }
-
-    private DepositoEditResponse toResponsePatch(Deposito deposito) {
-        return new DepositoEditResponse(
-            deposito.getIdDeposito(),
-            deposito.getNombre(),
-            deposito.getCostoEstadiaDiario(),
-            deposito.getUbicacion().getIdUbicacion()
-        );
-    }
-
 }
 

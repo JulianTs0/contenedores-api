@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UbicacionGetByIdResponse {
 
-    private final Integer ubicacionId;
+    private final Long idUbicacion;
 
     private final String direccion;
 
@@ -19,6 +19,6 @@ public class UbicacionGetByIdResponse {
 
     private final BigDecimal longitud;
 
-    private final Integer idDeposito;
+    private final Long idDeposito;
 
 }

@@ -18,18 +18,19 @@ public class Ubicacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ubicacion")
-    private Integer idUbicacion;
+    private Long idUbicacion;
 
     @Column(name = "direccion_textual", nullable = false, length = 60)
     private String direccionTextual;
 
-    @Column(name = "latitud", nullable = false, precision = 9, scale = 6)
+    @Column(name = "latitud", nullable = false, precision = 10, scale = 4)
     private BigDecimal latitud;
 
-    @Column(name = "longitud", nullable = false, precision = 9, scale = 6)
+    @Column(name = "longitud", nullable = false, precision = 10, scale = 4)
     private BigDecimal longitud;
 
-    @Transient
-    private Integer idDeposito;
+    @OneToOne
+    @JoinColumn(name = "id_deposito", referencedColumnName = "id_deposito", nullable = false, unique = true)
+    private Deposito deposito;
 
 }

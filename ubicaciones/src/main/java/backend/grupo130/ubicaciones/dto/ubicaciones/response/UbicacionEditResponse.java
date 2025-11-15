@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UbicacionEditResponse {
 
-    private final Integer ubicacionId;
+    private final Long idUbicacion;
 
     private final String direccion;
 

@@ -16,8 +16,8 @@ public class DepositoRepository {
 
     private final PostgresDepositoRepositoryI depositoRepositoryI;
 
-    public Deposito getById(Integer depositoId){
-        Deposito model = this.depositoRepositoryI.findById(depositoId).orElse(null);
+    public Deposito getById(Long idDeposito){
+        Deposito model = this.depositoRepositoryI.findById(idDeposito).orElse(null);
         return model;
     }
 
@@ -36,9 +36,9 @@ public class DepositoRepository {
         return updated;
     }
 
-    public Integer findByUbicacionId(Integer ubicacionId){
-        Integer model = this.depositoRepositoryI.findDepositoIdByUbicacionId(ubicacionId).orElse(null);
-        return model;
+    public void delete(Long idDeposito){
+        this.depositoRepositoryI.deleteById(idDeposito);
+        return;
     }
 
 }

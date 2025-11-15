@@ -18,16 +18,12 @@ public class Deposito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_deposito")
-    private Integer idDeposito;
+    private Long idDeposito;
 
     @Column(name = "nombre", nullable = false, length = 30)
     private String nombre;
 
     @Column(name = "costo_estadia_diario", precision = 10, scale = 2)
     private BigDecimal costoEstadiaDiario;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_ubicacion", referencedColumnName = "id_ubicacion", nullable = false, unique = true)
-    private Ubicacion ubicacion;
 
 }

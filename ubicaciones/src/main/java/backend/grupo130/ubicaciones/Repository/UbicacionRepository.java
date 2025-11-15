@@ -13,8 +13,8 @@ public class UbicacionRepository {
 
     private final PostgresUbicacionRepositoryI ubicacionRepository;
 
-    public Ubicacion getById(Integer ubicacionId){
-        Ubicacion model = this.ubicacionRepository.findById(ubicacionId).orElse(null);
+    public Ubicacion getById(Long idUbicacion){
+        Ubicacion model = this.ubicacionRepository.findById(idUbicacion).orElse(null);
         return model;
     }
 
@@ -31,6 +31,16 @@ public class UbicacionRepository {
     public Ubicacion update(Ubicacion ubicacion) {
         Ubicacion updated = this.ubicacionRepository.save(ubicacion);
         return updated;
+    }
+
+    public void delete(Long idUbicacion){
+        this.ubicacionRepository.deleteById(idUbicacion);
+        return;
+    }
+
+    public Long findByDepositoId(Long idDeposito){
+        Long idUbicacion = this.ubicacionRepository.findUbicacionIdByDepositoId(idDeposito).orElse(null);
+        return idUbicacion;
     }
 
 }

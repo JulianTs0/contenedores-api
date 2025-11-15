@@ -7,10 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface PostgresDepositoRepositoryI extends JpaRepository<Deposito, Integer> {
+public interface PostgresDepositoRepositoryI extends JpaRepository<Deposito, Long> {
 
     Optional<Deposito> findByNombre(String nombre);
 
-    @Query("SELECT d.idDeposito FROM Deposito d WHERE d.ubicacion.idUbicacion = :ubicacionId")
-    Optional<Integer> findDepositoIdByUbicacionId(@Param("ubicacionId") Integer ubicacionId);
 }

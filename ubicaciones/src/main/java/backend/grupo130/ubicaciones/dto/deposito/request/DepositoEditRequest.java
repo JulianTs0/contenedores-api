@@ -1,10 +1,7 @@
 
 package backend.grupo130.ubicaciones.dto.deposito.request;
 
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,17 +11,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DepositoEditRequest {
 
-    @Positive(message = "El ID del deposito debe ser un número positivo")
-    private final Integer idDeposito;
+    @NotNull(message = "{error.idDeposito.notNull}")
+    @Positive(message = "{error.idDeposito.positive}")
+    private final Long idDeposito;
 
-    @Size(min = 1, message = "El nombre no puede estar vacío")
+    @Size(min = 1, message = "{error.nombreDeposito.size}")
     private final String nombre;
 
-    @Positive(message = "El costo estadia diario debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del costo estadia diario no es válido")
+    @Positive(message = "{error.costoEstadiaDiario.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.costoEstadiaDiario.digits}")
     private final BigDecimal costoEstadiaDiario;
 
-    @Positive(message = "El ID del ubicacion debe ser un número positivo")
-    private final Integer idUbicacion;
+    @NotNull(message = "{error.idUbicacion.notNull}")
+    @Positive(message = "{error.idUbicacion.positive}")
+    private final Long idUbicacion;
 
 }

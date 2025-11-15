@@ -15,16 +15,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UbicacionRegisterRequest {
 
-    @NotNull(message = "La direccion es obligatoria")
-    @NotBlank(message = "La direccion no puede estar vacia")
+    @NotBlank(message = "{error.direccion.notBlank}")
     private final String direccion;
 
-    @NotNull(message = "La latitud es obligatoria")
-    @Digits(integer = 8, fraction = 2, message = "El formato la latitud no es válido")
+    @NotNull(message = "{error.latitud.notNull}")
+    @Digits(integer = 10, fraction = 4, message = "{error.latitud.digits}")
     private final BigDecimal latitud;
 
-    @NotNull(message = "La longitudes obligatoria")
-    @Digits(integer = 8, fraction = 2, message = "El formato la latitud no es válido")
+    @NotNull(message = "{error.longitud.notNull}")
+    @Digits(integer = 10, fraction = 4, message = "{error.longitud.digits}")
     private final BigDecimal longitud;
 
 }

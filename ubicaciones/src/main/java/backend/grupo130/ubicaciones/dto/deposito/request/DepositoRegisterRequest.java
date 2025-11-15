@@ -14,17 +14,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DepositoRegisterRequest {
 
-    @NotNull(message = "El nombre es obligatorio")
-    @NotBlank(message = "El nombre no puede estar vacio")
+    @NotBlank(message = "{error.nombreDeposito.notBlank}")
     private final String nombre;
 
-    @NotNull(message = "El costoEstadiaDiario es obligatoria")
-    @Positive(message = "El costoEstadiaDiario debe ser un número positivo")
-    @Digits(integer = 8, fraction = 2, message = "El formato del costoEstadiaDiario no es válido")
+    @NotNull(message = "{error.costoEstadiaDiario.notNull}")
+    @Positive(message = "{error.costoEstadiaDiario.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.costoEstadiaDiario.digits}")
     private final BigDecimal costoEstadiaDiario;
 
-    @NotNull(message = "La ubicacion es obligatoria")
-    @Positive(message = "El ID del ubicacion debe ser un número positivo")
-    private final Integer idUbicacion;
+    @NotNull(message = "{error.idUbicacion.notNull}")
+    @Positive(message = "{error.idUbicacion.positive}")
+    private final Long idUbicacion;
 
 }

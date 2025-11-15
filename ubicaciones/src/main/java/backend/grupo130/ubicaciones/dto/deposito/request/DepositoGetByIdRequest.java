@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DepositoGetByIdRequest {
 
-    private final Integer idDeposito;
+    private final Long idDeposito;
 
 }

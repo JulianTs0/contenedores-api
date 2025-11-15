@@ -2,6 +2,7 @@
 package backend.grupo130.ubicaciones.controller;
 
 import backend.grupo130.ubicaciones.data.models.Ubicacion;
+import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionDeleteRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionEditRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionRegisterRequest;
@@ -29,28 +30,24 @@ public class UbicacionController {
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<UbicacionGetByIdResponse> getById(
-        @NotNull(message = "El ID de ubicacion no puede ser nulo")
-        @Positive(message = "El ID del ubicacion debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idUbicacion.notNull}")
+        @Positive(message = "{error.idUbicacion.positive}")
+        @PathVariable Long id
     ) {
 
         UbicacionGetByIdRequest request = new UbicacionGetByIdRequest(id);
 
-        Ubicacion ubicacion = this.ubicacionService.getById(request);
-
-        return ResponseEntity.ok(this.toResponseGet(ubicacion));
+        return ResponseEntity.ok(this.ubicacionService.getById(request));
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<UbicacionGetAllResponse> getAll() {
 
-        List<Ubicacion> ubicaciones = this.ubicacionService.getAll();
-
-        return ResponseEntity.ok(this.toResponseGet(ubicaciones));
+        return ResponseEntity.ok(this.ubicacionService.getAll());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UbicacionRegisterRequest> register(
+    public ResponseEntity<?> register(
         @RequestBody @Valid UbicacionRegisterRequest request
     ) {
 
@@ -64,36 +61,21 @@ public class UbicacionController {
         @RequestBody @Valid UbicacionEditRequest request
     ) {
 
-        Ubicacion ubicacion = this.ubicacionService.edit(request);
-
-        return ResponseEntity.ok(this.toResponsePatch(ubicacion));
+        return ResponseEntity.ok(this.ubicacionService.edit(request));
     }
 
-    // Respuestas
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(
+        @NotNull(message = "{error.idUbicacion.notNull}")
+        @Positive(message = "{error.idUbicacion.positive}")
+        @PathVariable Long id
+    ) {
 
-    private UbicacionGetByIdResponse toResponseGet(Ubicacion ubicacion) {
-        return new UbicacionGetByIdResponse(
-            ubicacion.getIdUbicacion(),
-            ubicacion.getDireccionTextual(),
-            ubicacion.getLatitud(),
-            ubicacion.getLongitud(),
-            ubicacion.getIdDeposito()
-            );
-    }
+        UbicacionDeleteRequest request = new UbicacionDeleteRequest(id);
 
-    private UbicacionGetAllResponse toResponseGet(List<Ubicacion> ubicaciones) {
-        return new UbicacionGetAllResponse(
-            ubicaciones
-        );
-    }
+        this.ubicacionService.delete(request);
 
-    private UbicacionEditResponse toResponsePatch(Ubicacion ubicacion) {
-        return new UbicacionEditResponse(
-            ubicacion.getIdUbicacion(),
-            ubicacion.getDireccionTextual(),
-            ubicacion.getLatitud(),
-            ubicacion.getLongitud()
-        );
+        return ResponseEntity.ok().build();
     }
 
 }

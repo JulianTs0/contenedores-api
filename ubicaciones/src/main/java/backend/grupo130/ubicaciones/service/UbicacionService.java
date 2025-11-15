@@ -2,11 +2,17 @@ package backend.grupo130.ubicaciones.service;
 
 import backend.grupo130.ubicaciones.Repository.DepositoRepository;
 import backend.grupo130.ubicaciones.Repository.UbicacionRepository;
+import backend.grupo130.ubicaciones.config.enums.Errores;
 import backend.grupo130.ubicaciones.config.exceptions.ServiceError;
 import backend.grupo130.ubicaciones.data.models.Ubicacion;
+import backend.grupo130.ubicaciones.dto.ubicaciones.UbicacionesMapperDto;
+import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionDeleteRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionEditRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionRegisterRequest;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,44 +28,38 @@ public class UbicacionService {
 
     private final DepositoRepository depositoRepository;
 
-    public Ubicacion getById(UbicacionGetByIdRequest request) throws ServiceError {
+    public UbicacionGetByIdResponse getById(UbicacionGetByIdRequest request) throws ServiceError {
         try {
 
             Ubicacion ubicacion = this.ubicacionRepository.getById(request.getIdUbicacion());
 
             if (ubicacion == null) {
-                throw new ServiceError("Ubicacion no encontrado", 404);
+                throw new ServiceError("", Errores.UBICACION_NO_ENCONTRADA, 404);
             }
 
-            Integer idDeposito = this.depositoRepository.findByUbicacionId(ubicacion.getIdUbicacion());
+           UbicacionGetByIdResponse response = UbicacionesMapperDto.toResponseGet(ubicacion);
 
-            ubicacion.setIdDeposito(idDeposito);
-
-            return ubicacion;
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }
         catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 
-    public List<Ubicacion> getAll() throws ServiceError {
+    public UbicacionGetAllResponse getAll() throws ServiceError {
         try {
 
             List<Ubicacion> ubicaciones = this.ubicacionRepository.getAll();
 
-            for(Ubicacion ubicacion : ubicaciones){
-                Integer idDeposito = this.depositoRepository.findByUbicacionId(ubicacion.getIdUbicacion());
+            UbicacionGetAllResponse response = UbicacionesMapperDto.toResponseGet(ubicaciones);
 
-                ubicacion.setIdDeposito(idDeposito);
-            }
-
-            return ubicaciones;
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         }  catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 
@@ -71,23 +71,24 @@ public class UbicacionService {
             ubicacion.setDireccionTextual(request.getDireccion());
 
             ubicacion.setLatitud(request.getLatitud());
+
             ubicacion.setLongitud(request.getLongitud());
 
             this.ubicacionRepository.save(ubicacion);
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 
-    public Ubicacion edit(UbicacionEditRequest request) throws ServiceError {
+    public UbicacionEditResponse edit(UbicacionEditRequest request) throws ServiceError {
         try {
 
-            Ubicacion ubicacion = this.ubicacionRepository.getById(request.getUbicacionId());
+            Ubicacion ubicacion = this.ubicacionRepository.getById(request.getIdUbicacion());
 
             if (ubicacion == null) {
-                throw new ServiceError("Ubicacion no encontrado", 404);
+                throw new ServiceError("", Errores.UBICACION_NO_ENCONTRADA, 404);
             }
 
             if (request.getLatitud() != null) {
@@ -102,11 +103,31 @@ public class UbicacionService {
 
             this.ubicacionRepository.update(ubicacion);
 
-            return ubicacion;
+            UbicacionEditResponse response = UbicacionesMapperDto.toResponsePatch(ubicacion);
+
+            return response;
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
+        }
+    }
+
+    public void delete(UbicacionDeleteRequest request) throws ServiceError {
+        try {
+
+            Ubicacion ubicacion = this.ubicacionRepository.getById(request.getIdUbicacion());
+
+            if (ubicacion == null) {
+                throw new ServiceError("", Errores.UBICACION_NO_ENCONTRADA, 404);
+            }
+
+            this.ubicacionRepository.delete(ubicacion.getIdUbicacion());
+        } catch (ServiceError ex) {
+            throw ex;
+        }
+        catch (Exception ex) {
+            throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 

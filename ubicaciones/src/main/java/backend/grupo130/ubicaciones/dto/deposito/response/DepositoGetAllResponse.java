@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class DepositoGetAllResponse {
 
-    private final List<DepositoGetByIdResponse> depositos;
+    private final List<Deposito> depositos;
 
 }
