@@ -253,6 +253,8 @@ public class RutaService {
 
             requestEdit.setTiempoEstimadoHoras(horas);
             requestEdit.setTarifa(tarifa);
+            requestEdit.setIdOrigen(tramos.getFirst().getIdOrigen());
+            requestEdit.setIdDestino(tramos.getLast().getIdDestino());
 
             this.enviosRepository.editSolicitud(requestEdit);
 

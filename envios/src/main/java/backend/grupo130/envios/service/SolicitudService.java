@@ -181,6 +181,13 @@ public class SolicitudService {
                 solicitud.setTiempoRealHoras(request.getTiempoRealHoras());
             }
 
+            if (request.getIdOrigen() != null) {
+                solicitud.setIdOrigen(request.getIdOrigen());
+            }
+            if (request.getIdDestino() != null) {
+                solicitud.setIdDestino(request.getIdDestino());
+            }
+
             // --- Lógica para Tarifa ---
             if (request.getTarifa() != null) {
                 log.info("Procesando tarifa para solicitud {}", solicitud.getIdSolicitud());
@@ -198,6 +205,7 @@ public class SolicitudService {
                     tarifaRequest.setCostoFinal(request.getCostoFinal());
                 }
 
+
                 // 4. Verificamos si la solicitud YA tiene una tarifa (para actualizar) o no (para crear)
                 Tarifa tarifaExistente = solicitud.getTarifa();
                 if (tarifaExistente != null) {
@@ -210,6 +218,7 @@ public class SolicitudService {
                     tarifaExistente.setValorLitro(tarifaRequest.getValorLitro());
                     tarifaExistente.setCostoEstadia(tarifaRequest.getCostoEstadia());
                     tarifaExistente.setCostoEstimado(tarifaRequest.getCostoEstimado());
+                    solicitud.setCostoEstimado(tarifaRequest.getCostoEstimado());
                     tarifaExistente.setCostoFinal(tarifaRequest.getCostoFinal());
 
                     this.tarifaRepository.update(tarifaExistente); // Actualizamos la existente
@@ -222,21 +231,6 @@ public class SolicitudService {
 
             }
 
-            // Si se pasan costos, los actualizamos en la tarifa de la solicitud
-            // (Asumimos que la solicitud ya tiene una tarifa)
-            /*if (solicitud.getTarifa() != null) {
-                if (request.getCostoEstimado() != null) {
-                    solicitud.getTarifa().setCostoEstimado(request.getCostoEstimado());
-                }
-                if (request.getCostoFinal() != null) {
-                    solicitud.getTarifa().setCostoFinal(request.getCostoFinal());
-                }
-                // Guardamos la tarifa (aunque JPA lo haría por cascada si está configurado)
-                tarifaRepository.update(solicitud.getTarifa());
-            } else if (request.getCostoEstimado() != null || request.getCostoFinal() != null) {
-                // No se puede asignar costos si no hay tarifa
-                throw new ServiceError("No se puede asignar costos si la solicitud no tiene una tarifa vinculada", Errores.TARIFA_NO_ENCONTRADA, 400);
-            }*/
 
             SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
             return SolicitudMapperDto.toResponsePatch(solicitudActualizada);

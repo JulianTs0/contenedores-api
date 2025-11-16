@@ -216,7 +216,7 @@ public class TramoService {
             List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
 
 
-            int ordenActual = tramo.getOrden();
+            int ordenActual = tramo.getOrden() ;
 
             if (ordenActual > 1) {
 
@@ -242,9 +242,12 @@ public class TramoService {
 
             tramo.setEstado(EstadoTramo.INICIADO);
 
+
             Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
 
-            this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
+            if(contenedor.getEstado() != null && contenedor.getEstado().equals(EstadoContenedor.EN_DEPOSITO)){
+                this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
+            }
 
             this.tramoRepository.update(tramo);
 
@@ -263,8 +266,7 @@ public class TramoService {
 
                 this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
 
-                // Cambiar Solicitud a Iniciada
-                // CAMBIAR CONTENDOR A ENTRANSITO
+
             }
 
         } catch (ServiceError ex) {
@@ -317,9 +319,10 @@ public class TramoService {
                 this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_DEPOSITO.name());
             }
 
-            if(tramo.getOrden().equals(ruta.getCantidadTramos())){
+            if(tramo.getOrden().equals(ruta.getCantidadTramos())) {
 
                 SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
+
                 requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
                 requestCambio.setNuevoEstado(EstadoSolicitud.ENTREGADO.name());
                 requestCambio.setDescripcion("Todos los tramos fueron finalizados");

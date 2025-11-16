@@ -46,7 +46,9 @@ public class SolicitudMapperDto {
             solicitud.getCostoFinal(),
             solicitud.getTiempoEstimadoHoras(),
             solicitud.getTiempoRealHoras(),
-            solicitud.getTarifa()
+            solicitud.getTarifa(),
+            solicitud.getIdOrigen(),
+            solicitud.getIdDestino()
         );
     }
 

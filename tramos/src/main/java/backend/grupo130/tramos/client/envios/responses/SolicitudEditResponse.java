@@ -20,4 +20,8 @@ public class SolicitudEditResponse {
     private final BigDecimal tiempoEstimadoHoras;
     private final BigDecimal tiempoRealHoras;
     private final Tarifa tarifa;
+
+    private Long idOrigen;
+
+    private Long idDestino;
 }

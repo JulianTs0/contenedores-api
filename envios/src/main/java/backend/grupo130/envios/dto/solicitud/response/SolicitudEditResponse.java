@@ -21,4 +21,6 @@ public class SolicitudEditResponse {
     private final BigDecimal tiempoEstimadoHoras;
     private final BigDecimal tiempoRealHoras;
     private final Tarifa tarifa; // Devolvemos el objeto Tarifa completo (o un DTO)
+    private Long idOrigen;
+    private Long idDestino;
 }

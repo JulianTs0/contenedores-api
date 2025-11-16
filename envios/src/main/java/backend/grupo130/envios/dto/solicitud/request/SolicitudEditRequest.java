@@ -38,4 +38,9 @@ public class SolicitudEditRequest {
     private final BigDecimal tiempoRealHoras;
 
     private final Tarifa tarifa;
+
+    private Long idOrigen;
+
+    private Long idDestino;
+
 }
