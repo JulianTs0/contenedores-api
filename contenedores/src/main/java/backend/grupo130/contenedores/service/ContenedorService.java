@@ -132,7 +132,7 @@ public class ContenedorService {
 
                     contenedor.setIdCliente(usuario.getIdUsuario());
 
-                    contenedor.setEstado(Estado.PROGRAMADO);
+                    contenedor.setEstado(Estado.BORRADOR);
 
                 } catch (ServiceError ex) {
 

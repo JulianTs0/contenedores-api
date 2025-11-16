@@ -21,8 +21,8 @@ public class Tarifa {
     @Column(name = "id_tarifa")
     private Long idTarifa;
 
-    @Column(name = "volumen_min", precision = 10, scale = 2)
-    private BigDecimal volumenMin;
+    @Column(name = "peso_max", precision = 10, scale = 2)
+    private BigDecimal pesoMax;
 
     @Column(name = "volumen_max", precision = 10, scale = 2)
     private BigDecimal volumenMax;
@@ -35,6 +35,12 @@ public class Tarifa {
 
     @Column(name = "consumo_aprox", precision = 10, scale = 2)
     private BigDecimal consumoAprox;
+
+    @Column(name = "costo_estimado", precision = 10, scale = 2)
+    private BigDecimal costoEstimado;
+
+    @Column(name = "costo_final", precision = 10, scale = 2)
+    private BigDecimal costoFinal;
 
     @Column(name = "costo_estadia", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoEstadia;

@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface PostgresTramoRepositoryI extends JpaRepository<Tramo, Integer> {
+public interface PostgresTramoRepositoryI extends JpaRepository<Tramo, Long> {
 
     @Query("SELECT t FROM Tramo t WHERE t.rutaTraslado.idRuta = :idRuta ORDER BY t.idTramo ASC")
-    List<Tramo> buscarTodosPorIdRuta(@Param("idRuta") Integer idRuta);
+    List<Tramo> buscarTodosPorIdRuta(@Param("idRuta") Long idRuta);
 
 }
 

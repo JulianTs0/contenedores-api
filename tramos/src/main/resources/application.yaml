@@ -23,17 +23,13 @@ spring:
         url: http://localhost:8095/api/envios
     ubicaciones:
         url: http://localhost:8094/api/ubicaciones
+    contenedores:
+        url: http://localhost:8091/api/contenedores
     osrm:
         uri-template: /route/v1/driving/{origen};{destino}?overview=false
 
 server:
   port: 8092
-
-#security:
-#    oauth2:
-#        resourceserver:
-#            jwt:
-#                issuer-uri: http://keycloak:8081/realms/tpi-backend
 
 springdoc:
   swagger-ui:

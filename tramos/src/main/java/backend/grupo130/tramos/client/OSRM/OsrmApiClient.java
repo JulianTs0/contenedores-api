@@ -2,6 +2,7 @@ package backend.grupo130.tramos.client.OSRM;
 
 import backend.grupo130.tramos.client.OSRM.response.OsrmRouteResponse;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class OsrmApiClient {
         } catch (ServiceError ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 

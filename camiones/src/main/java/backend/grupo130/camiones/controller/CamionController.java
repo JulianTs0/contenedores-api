@@ -2,9 +2,7 @@ package backend.grupo130.camiones.controller;
 
 import backend.grupo130.camiones.data.models.Camion;
 import backend.grupo130.camiones.dto.request.*;
-import backend.grupo130.camiones.dto.response.EditResponse;
-import backend.grupo130.camiones.dto.response.GetAllResponse;
-import backend.grupo130.camiones.dto.response.GetByIdResponse;
+import backend.grupo130.camiones.dto.response.*;
 import backend.grupo130.camiones.service.CamionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -51,6 +49,12 @@ public class CamionController {
         return ResponseEntity.ok(this.camionService.getDisponibles());
     }
 
+    @GetMapping("/getConsumoPromedio")
+    public ResponseEntity<GetPromedioCombustibleActualResponse> getConsumoPromedio() {
+
+        return ResponseEntity.ok(this.camionService.getConsumoPromedio());
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(
             @RequestBody @Valid RegisterRequest request
@@ -59,6 +63,14 @@ public class CamionController {
         this.camionService.register(request);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/getOpciones")
+    public ResponseEntity<GetPromedioCostoBaseResponse> getOpciones(
+        @RequestBody @Valid GetOpcionesCamionesRequest request
+    ) {
+
+        return ResponseEntity.ok(this.camionService.getCostoAprox(request));
     }
 
     @PatchMapping("/edit")

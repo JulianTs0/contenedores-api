@@ -7,6 +7,7 @@ import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;
 import backend.grupo130.tramos.service.TramoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -25,14 +26,14 @@ public class TramoController {
 
     private final TramoService tramoService;
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/getById/{idTramo}")
     public ResponseEntity<TramoGetByIdResponse> getById(
-        @NotNull(message = "El ID del tramo no puede ser nulo")
-        @Positive(message = "El ID del tramo debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idTramo.notNull}")
+        @Positive(message = "{error.idTramo.positive}")
+        @PathVariable Long idTramo
     ) {
 
-        TramoGetByIdRequest request = new TramoGetByIdRequest(id);
+        TramoGetByIdRequest request = new TramoGetByIdRequest(idTramo);
 
         return ResponseEntity.ok(this.tramoService.getById(request));
     }
@@ -56,8 +57,7 @@ public class TramoController {
 
     @GetMapping("/getByTransportista/{dominio}")
     public ResponseEntity<TramoGetAllResponse> getByTransportista(
-        @NotNull(message = "El dominio no puede ser nulo")
-        @NotEmpty(message = "El dominio del tramo no puede estar vacio")
+        @NotBlank(message = "{error.dominioCamion.notBlank}")
         @PathVariable String dominio
     ) {
 
@@ -66,14 +66,14 @@ public class TramoController {
         return ResponseEntity.ok(this.tramoService.getByTransportista(request));
     }
 
-    @GetMapping("/getByRuta/{id}")
+    @GetMapping("/getByRuta/{idRuta}")
     public ResponseEntity<TramoGetAllResponse> getByRuta(
-        @NotNull(message = "La id de la ruta no puede ser nulo")
-        @Positive(message = "La id de la ruta debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idRuta.notNull}")
+        @Positive(message = "{error.idRuta.positive}")
+        @PathVariable Long idRuta
     ) {
 
-        TramoGetByRutaIdRequest request = new TramoGetByRutaIdRequest(id);
+        TramoGetByRutaIdRequest request = new TramoGetByRutaIdRequest(idRuta);
 
         return ResponseEntity.ok(this.tramoService.getTramosDeRuta(request));
     }

@@ -5,6 +5,8 @@ import backend.grupo130.camiones.data.models.Camion;
 import backend.grupo130.camiones.data.repository.PostgresCamionRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -21,6 +23,16 @@ public class CamionRepository {
     public List<Camion> getAll() {
         List<Camion> models = this.postgresRepository.findAll();
         return models;
+    }
+
+    public BigDecimal findAverageCostOfTop3(BigDecimal peso, BigDecimal volumen){
+        BigDecimal promedio = this.postgresRepository.findAverageCostOfTop3(peso, volumen);
+        return (promedio != null) ? promedio : BigDecimal.ZERO;
+    }
+
+    public BigDecimal findAverageConsumoTotal() {
+        BigDecimal promedio = this.postgresRepository.findAverageConsumoCombustible();
+        return (promedio != null) ? promedio : BigDecimal.ZERO;
     }
 
     public List<Camion> findDisponibilidad(){

@@ -6,6 +6,7 @@ import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetDepositoByIdResponse;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetUbicacionByIdResponse;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetUbicacionGetAllResponse;
+import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +33,10 @@ public class UbicacionesRepository {
 
             return deposito;
 
-        } catch (Exception ex) {
-            log.warn(ex.getMessage());
-            ex.printStackTrace();
-            throw new ServiceError("Error interno", 500);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
@@ -54,10 +55,10 @@ public class UbicacionesRepository {
 
             return ubicacion;
 
-        } catch (Exception ex) {
-            log.warn(ex.getMessage());
-            ex.printStackTrace();
-            throw new ServiceError("Error interno", 500);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
@@ -68,8 +69,10 @@ public class UbicacionesRepository {
 
             return response.getUbicaciones();
 
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 

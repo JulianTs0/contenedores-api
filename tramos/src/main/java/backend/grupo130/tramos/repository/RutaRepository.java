@@ -14,8 +14,8 @@ public class RutaRepository {
 
     private final PostgresRutaRepositoryI rutaRepository;
 
-    public RutaTraslado getById(Integer rutaId){
-        RutaTraslado model = this.rutaRepository.findById(rutaId).orElse(null);
+    public RutaTraslado getById(Long idRuta){
+        RutaTraslado model = this.rutaRepository.findById(idRuta).orElse(null);
         return model;
     }
 

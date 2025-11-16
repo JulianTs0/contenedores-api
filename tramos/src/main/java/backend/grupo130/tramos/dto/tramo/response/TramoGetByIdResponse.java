@@ -2,10 +2,7 @@ package backend.grupo130.tramos.dto.tramo.response;
 
 import backend.grupo130.tramos.client.camiones.models.Camion;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
-import backend.grupo130.tramos.config.enums.Estado;
-import backend.grupo130.tramos.config.enums.TipoTramo;
 import backend.grupo130.tramos.data.models.RutaTraslado;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TramoGetByIdResponse {
 
-    private final Integer idTramo;
+    private final Long idTramo;
 
     private final String tipoTramo;
 
@@ -36,12 +33,12 @@ public class TramoGetByIdResponse {
 
     private Integer orden;
 
-    private String dominioCamion;
+    private Camion dominioCamion;
 
-    private Integer rutaTraslado;
+    private RutaTraslado rutaTraslado;
 
-    private Integer idOrigen;
+    private Ubicacion idOrigen;
 
-    private Integer idDestino;
+    private Ubicacion idDestino;
 
 }

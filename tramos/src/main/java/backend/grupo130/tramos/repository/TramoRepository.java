@@ -13,8 +13,8 @@ public class TramoRepository {
 
     private final PostgresTramoRepositoryI tramoRepository;
 
-    public Tramo getById(Integer tramoId){
-        Tramo model = this.tramoRepository.findById(tramoId).orElse(null);
+    public Tramo getById(Long idTramo){
+        Tramo model = this.tramoRepository.findById(idTramo).orElse(null);
         return model;
     }
 
@@ -38,7 +38,7 @@ public class TramoRepository {
         return updated;
     }
 
-    public List<Tramo> buscarPorRuta(Integer idRuta){
+    public List<Tramo> buscarPorRuta(Long idRuta){
         List<Tramo> tramos = this.tramoRepository.buscarTodosPorIdRuta(idRuta);
         return tramos;
     }

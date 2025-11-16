@@ -1,10 +1,7 @@
 package backend.grupo130.tramos.data.models;
 
-import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
-import backend.grupo130.tramos.config.enums.Estado;
+import backend.grupo130.tramos.config.enums.EstadoTramo;
 import backend.grupo130.tramos.config.enums.TipoTramo;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +21,7 @@ public class Tramo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tramo")
-    private Integer idTramo;
+    private Long idTramo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_tramo", nullable = false)
@@ -32,7 +29,7 @@ public class Tramo {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
-    private Estado estado;
+    private EstadoTramo estado;
 
     @Column(name = "costo_aproximado", precision = 10, scale = 2)
     private BigDecimal costoAproximado;
@@ -63,36 +60,25 @@ public class Tramo {
     private RutaTraslado rutaTraslado;
 
     @Column(name = "id_origen", nullable = false)
-    private Integer idOrigen;
+    private Long idOrigen;
 
     @Column(name = "id_destino", nullable = false)
-    private Integer idDestino;
-
-    // Dominio
-
-    @Transient
-    private Camion camion;
-
-    @Transient
-    private Ubicacion origen;
-
-    @Transient
-    private Ubicacion destino;
+    private Long idDestino;
 
     public boolean esEstimado(){
-        return estado.equals(Estado.ESTIMADO);
+        return estado.equals(EstadoTramo.ESTIMADO);
     }
 
     public boolean esAsignado() {
-        return  estado.equals(Estado.ASIGNADO);
+        return  estado.equals(EstadoTramo.ASIGNADO);
     }
 
     public boolean esIniciado() {
-        return  estado.equals(Estado.INICIADO);
+        return  estado.equals(EstadoTramo.INICIADO);
     }
 
     public boolean esFinalizado(){
-        return  estado.equals(Estado.FINALIZADO);
+        return  estado.equals(EstadoTramo.FINALIZADO);
     }
 
     public boolean esUltimo(List<Tramo> tramos){

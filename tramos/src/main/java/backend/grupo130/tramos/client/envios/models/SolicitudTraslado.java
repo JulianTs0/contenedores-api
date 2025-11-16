@@ -1,6 +1,7 @@
 package backend.grupo130.tramos.client.envios.models;
 
-import backend.grupo130.tramos.config.enums.Estado;
+import backend.grupo130.tramos.config.enums.EstadoSolicitud;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,54 +9,37 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolicitudTraslado {
 
-    private Integer idSolicitud;
+    private Long idSolicitud;
 
-    private LocalDateTime fechaHoraInicio;
+    private LocalDateTime fechaInicio;
 
-    private LocalDateTime fechaHoraFin;
-
-    private BigDecimal costoEstimado;
+    private LocalDateTime fechaFin;
 
     private BigDecimal tiempoEstimadoHoras;
 
-    private BigDecimal costoFinal;
-
     private BigDecimal tiempoRealHoras;
 
-    private Integer idContenedor;
+    private BigDecimal costoEstimado;
 
-    private Integer idCliente;
+    private BigDecimal costoFinal;
 
-    private Integer idOrigen;
+    private Tarifa tarifa;
 
-    private Integer idDestino;
+    private List<SeguimientoEnvio> seguimientos;
 
-    private Integer idTarifa;
+    private Long idContenedor;
 
-    private Estado estado;
+    private Long idCliente;
 
-    private String descripcion;
+    private Long idOrigen;
 
-    public boolean esBorrador(){
-        return this.estado.equals(Estado.BORRADOR);
-    }
-
-    public boolean esProgramada(){
-        return this.estado.equals(Estado.PROGRAMADA);
-    }
-
-    public boolean esEntransito(){
-        return this.estado.equals(Estado.ENTRANSITO);
-    }
-
-    public boolean esEntregada(){
-        return this.estado.equals(Estado.ENTREGADA);
-    }
+    private Long idDestino;
 
 }

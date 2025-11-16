@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class TarifaGetByIdResponse {
 
     private final Long idTarifa;
-    private final BigDecimal volumenMin;
+    private final BigDecimal pesoMax;
     private final BigDecimal volumenMax;
     private final BigDecimal costoBase;
     private final BigDecimal valorLitro;

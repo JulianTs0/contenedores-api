@@ -1,5 +1,8 @@
 package backend.grupo130.tramos.dto.tramo;
 
+import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;
@@ -8,7 +11,7 @@ import java.util.List;
 
 public class TramoMapperDto {
 
-    public static TramoGetByIdResponse toResponseGet(Tramo tramo) {
+    public static TramoGetByIdResponse toResponseGet(Tramo tramo, Camion camion, Ubicacion origen, Ubicacion destino) {
         return new TramoGetByIdResponse(
             tramo.getIdTramo(),
             tramo.getTipoTramo().name(),
@@ -20,22 +23,17 @@ public class TramoMapperDto {
             tramo.getFechaHoraInicioReal(),
             tramo.getFechaHoraFinReal(),
             tramo.getOrden(),
-            tramo.getDominioCamion(),
-            tramo.getRutaTraslado().getIdRuta(),
-            tramo.getIdOrigen(),
-            tramo.getIdDestino()
+            camion,
+            tramo.getRutaTraslado(),
+            origen,
+            destino
         );
     }
 
     public static TramoGetAllResponse toResponseGet(List<Tramo> tramos) {
 
-        List<TramoGetByIdResponse> respuestas = tramos
-            .stream()
-            .map(TramoMapperDto::toResponseGet)
-            .toList();
-
         return new TramoGetAllResponse(
-            respuestas
+            tramos
         );
     }
 

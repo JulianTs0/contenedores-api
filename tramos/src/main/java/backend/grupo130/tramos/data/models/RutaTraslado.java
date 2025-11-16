@@ -20,7 +20,7 @@ public class RutaTraslado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ruta")
-    private Integer idRuta;
+    private Long idRuta;
 
     @Column(name = "cantidad_tramos", nullable = false)
     private Integer cantidadTramos;
@@ -31,10 +31,7 @@ public class RutaTraslado {
     @Column(name = "cargos_gestion_fijo", precision = 10, scale = 2, nullable = false)
     private BigDecimal cargosGestionFijo;
 
-    @Column(name = "id_solicitud", nullable = false)
-    private Integer idSolicitud;
-
-    @Transient
-    private SolicitudTraslado solicitud;
+    @Column(name = "id_solicitud")
+    private Long idSolicitud;
 
 }

@@ -77,7 +77,7 @@ public class ContenedorController {
         return ResponseEntity.ok(this.contenedorService.edit(request));
     }
 
-    @PatchMapping("/cambioDeEstado")
+    @PostMapping("/cambioDeEstado")
     public ResponseEntity<CambioDeEstadoResponse> cambioDeEstado(
         @RequestBody @Valid CambioDeEstadoRequest request
     ) {
@@ -85,7 +85,7 @@ public class ContenedorController {
         return ResponseEntity.ok(this.contenedorService.cambioDeEstado(request));
     }
 
-    @PatchMapping("/asignarCliente")
+    @PostMapping("/asignarCliente")
     public ResponseEntity<?> cambioDeEstado(
         @RequestBody @Valid AsignarClienteRequest request
     ) {

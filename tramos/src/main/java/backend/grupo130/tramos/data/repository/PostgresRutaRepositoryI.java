@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface PostgresRutaRepositoryI extends JpaRepository<RutaTraslado, Integer> {
+public interface PostgresRutaRepositoryI extends JpaRepository<RutaTraslado, Long> {
 
 }
 

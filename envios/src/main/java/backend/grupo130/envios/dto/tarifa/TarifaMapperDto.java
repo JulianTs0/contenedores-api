@@ -20,7 +20,7 @@ public class TarifaMapperDto {
     public static TarifaGetByIdResponse toResponseGetById(Tarifa tarifa) {
         return new TarifaGetByIdResponse(
                 tarifa.getIdTarifa(),
-                tarifa.getVolumenMin(),
+                tarifa.getPesoMax(),
                 tarifa.getVolumenMax(),
                 tarifa.getCostoBase(),
                 tarifa.getValorLitro(),
@@ -32,7 +32,7 @@ public class TarifaMapperDto {
     public static TarifaEditResponse toResponseEdit(Tarifa tarifa) {
         return new TarifaEditResponse(
                 tarifa.getIdTarifa(),
-                tarifa.getVolumenMin(),
+                tarifa.getPesoMax(),
                 tarifa.getVolumenMax(),
                 tarifa.getCostoBase(),
                 tarifa.getValorLitro(),

@@ -2,10 +2,9 @@ package backend.grupo130.camiones.dto;
 
 import backend.grupo130.camiones.client.usuarios.models.Usuario;
 import backend.grupo130.camiones.data.models.Camion;
-import backend.grupo130.camiones.dto.response.EditResponse;
-import backend.grupo130.camiones.dto.response.GetAllResponse;
-import backend.grupo130.camiones.dto.response.GetByIdResponse;
+import backend.grupo130.camiones.dto.response.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CamionesMapperDto {
@@ -34,6 +33,18 @@ public class CamionesMapperDto {
             camion.getConsumoCombustible(),
             camion.getCostoTrasladoBase(),
             camion.getEstado()
+        );
+    }
+
+    public static GetPromedioCostoBaseResponse toResponseAvg(BigDecimal promedio){
+        return new GetPromedioCostoBaseResponse(
+            promedio
+        );
+    }
+
+    public static GetPromedioCombustibleActualResponse toResponseAvgTotal(BigDecimal promedio){
+        return new GetPromedioCombustibleActualResponse(
+            promedio
         );
     }
 

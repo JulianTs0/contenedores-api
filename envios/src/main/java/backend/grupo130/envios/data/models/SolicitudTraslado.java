@@ -1,5 +1,6 @@
 package backend.grupo130.envios.data.models;
 
+import backend.grupo130.envios.config.enums.Estado;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,11 +41,27 @@ public class SolicitudTraslado {
     @Column(name = "tiempo_real_horas", precision = 10, scale = 2)
     private BigDecimal tiempoRealHoras;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_tarifa", referencedColumnName = "id_tarifa")
     private Tarifa tarifa;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private Estado estado;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_solicitud") // Esto reemplaza al mappedBy
+    @JoinColumn(name = "id_solicitud")
     private List<SeguimientoEnvio> seguimientos;
+
+    @Column(name = "id_contenedor", nullable = false)
+    private Long idContenedor;
+
+    @Column(name = "id_cliente", nullable = false)
+    private Long idCliente;
+
+    @Column(name = "id_origen")
+    private Long idOrigen;
+
+    @Column(name = "id_destino")
+    private Long idDestino;
 }

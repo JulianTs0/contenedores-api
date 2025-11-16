@@ -7,9 +7,7 @@ import backend.grupo130.camiones.config.exceptions.ServiceError;
 import backend.grupo130.camiones.data.models.Camion;
 import backend.grupo130.camiones.dto.CamionesMapperDto;
 import backend.grupo130.camiones.dto.request.*;
-import backend.grupo130.camiones.dto.response.EditResponse;
-import backend.grupo130.camiones.dto.response.GetAllResponse;
-import backend.grupo130.camiones.dto.response.GetByIdResponse;
+import backend.grupo130.camiones.dto.response.*;
 import backend.grupo130.camiones.repository.CamionRepository;
 import backend.grupo130.camiones.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -17,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -76,6 +75,36 @@ public class CamionService {
             List<Camion> camiones = this.camionRepository.findDisponibilidad();
 
             GetAllResponse response = CamionesMapperDto.toResponseGet(camiones);
+
+            return response;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+    public GetPromedioCostoBaseResponse getCostoAprox(GetOpcionesCamionesRequest request) throws ServiceError {
+        try {
+
+            BigDecimal promedio = this.camionRepository.findAverageCostOfTop3(request.getCapacidadPeso(), request.getCapacidadVolumen());
+
+            GetPromedioCostoBaseResponse response = CamionesMapperDto.toResponseAvg(promedio);
+
+            return response;
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+    public GetPromedioCombustibleActualResponse getConsumoPromedio() throws ServiceError {
+        try {
+
+            BigDecimal promedio = this.camionRepository.findAverageConsumoTotal();
+
+            GetPromedioCombustibleActualResponse response = CamionesMapperDto.toResponseAvgTotal(promedio);
 
             return response;
         } catch (ServiceError ex) {

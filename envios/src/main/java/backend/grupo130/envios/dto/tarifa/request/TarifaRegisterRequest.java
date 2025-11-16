@@ -16,7 +16,7 @@ public class TarifaRegisterRequest {
     @NotNull(message = "{error.volumenMin.notNull}")
     @PositiveOrZero(message = "{error.volumenMin.positiveOrZero}")
     @Digits(integer = 8, fraction = 2, message = "{error.volumenMin.digits}")
-    private BigDecimal volumenMin;
+    private BigDecimal pesoMax;
 
     @NotNull(message = "{error.volumenMax.notNull}")
     @Positive(message = "{error.volumenMax.positive}")

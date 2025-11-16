@@ -3,9 +3,11 @@ package backend.grupo130.tramos.controller;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
+import backend.grupo130.tramos.dto.ruta.request.RutaGetOpcionesRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaRegisterRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
+import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
 import backend.grupo130.tramos.dto.tramo.request.TramoAsignacionCamionRequest;
 import backend.grupo130.tramos.service.RutaService;
 import jakarta.validation.Valid;
@@ -26,29 +28,33 @@ public class RutaController {
 
     private final RutaService rutaService;
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/getById/{idRuta}")
     public ResponseEntity<RutaGetByIdResponse> getById(
-        @NotNull(message = "El ID de la ruta no puede ser nulo")
-        @Positive(message = "El ID de la ruta debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idRuta.notNull}")
+        @Positive(message = "{error.idRuta.positive}")
+        @PathVariable Long idRuta
     ) {
 
-        RutaGetByIdRequest request = new RutaGetByIdRequest(id);
+        RutaGetByIdRequest request = new RutaGetByIdRequest(idRuta);
 
-        RutaTraslado ruta = this.rutaService.getById(request);
-
-        return ResponseEntity.ok(this.toResponseGet(ruta));
+        return ResponseEntity.ok(this.rutaService.getById(request));
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getAll() {
 
-        List<RutaTraslado> rutas = this.rutaService.getAll();
-
-        return ResponseEntity.ok(this.toResponseGet(rutas));
+        return ResponseEntity.ok(this.rutaService.getAll());
     }
 
-    @PostMapping("/register")
+    @PostMapping("/getRutaTentativa")
+    public ResponseEntity<RutaGetOpcionesResponse> register(
+        @RequestBody @Valid RutaGetOpcionesRequest request
+    ) {
+
+        return ResponseEntity.ok(this.rutaService.getRutaTentativa(request));
+    }
+
+    @PatchMapping("/register")
     public ResponseEntity<?> register(
         @RequestBody @Valid RutaRegisterRequest request
     ) {
@@ -66,24 +72,6 @@ public class RutaController {
         this.rutaService.asignarSolicitud(request);
 
         return ResponseEntity.ok().build();
-    }
-
-    // Respuestas
-
-    private RutaGetByIdResponse toResponseGet(RutaTraslado ruta) {
-        return new RutaGetByIdResponse(
-            ruta.getIdRuta(),
-            ruta.getCantidadTramos(),
-            ruta.getCantidadDepositos(),
-            ruta.getCargosGestionFijo(),
-            ruta.getSolicitud()
-        );
-    }
-
-    private RutaGetAllResponse toResponseGet(List<RutaTraslado> rutas) {
-        return new RutaGetAllResponse(
-            rutas
-        );
     }
 
 }

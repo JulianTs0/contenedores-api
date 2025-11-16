@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TramoGetByRutaIdRequest {
 
-    private final Integer idRuta;
+    private final Long idRuta;
 
 }

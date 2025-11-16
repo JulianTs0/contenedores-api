@@ -10,12 +10,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RutaAsignarSolicitudRequest {
 
-    @NotNull(message = "La id de la ruta es obligatoria")
-    @Positive(message = "El ID de la ruta debe ser un número positivo")
-    private final Integer idRuta;
+    @NotNull(message = "{error.idRuta.notNull}")
+    @Positive(message = "{error.idRuta.positive}")
+    private final Long idRuta;
 
-    @NotNull(message = "La id de la solicitud es obligatoria")
-    @NotBlank(message = "El ID de la solicitud debe ser un número positivo")
-    private final Integer idSolicitud;
+    @NotNull(message = "{error.idSolicitud.notNull}")
+    @Positive(message = "{error.idSolicitud.positive}")
+    private final Long idSolicitud;
 
 }

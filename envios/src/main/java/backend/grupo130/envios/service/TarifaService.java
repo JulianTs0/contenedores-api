@@ -28,7 +28,6 @@ public class TarifaService {
 
     private final TarifaRepository tarifaRepository;
 
-
     public TarifaRegisterResponse register(TarifaRegisterRequest request) throws ServiceError {
         try {
 
@@ -64,8 +63,8 @@ public class TarifaService {
             }
 
             // Actualización parcial de campos (solo si no son nulos)
-            if (request.getVolumenMin() != null) {
-                tarifa.setVolumenMin(request.getVolumenMin());
+            if (request.getPesoMax() != null) {
+                tarifa.setPesoMax(request.getPesoMax());
             }
             if (request.getVolumenMax() != null) {
                 tarifa.setVolumenMax(request.getVolumenMax());
@@ -81,11 +80,6 @@ public class TarifaService {
             }
             if (request.getCostoEstadia() != null) {
                 tarifa.setCostoEstadia(request.getCostoEstadia());
-            }
-
-            // Validar de nuevo que min < max
-            if (tarifa.getVolumenMin().compareTo(tarifa.getVolumenMax()) >= 0) {
-                throw new ServiceError("El volumen mínimo no puede ser mayor o igual al máximo", Errores.DATOS_INVALIDOS, 400);
             }
 
             this.tarifaRepository.save(tarifa);

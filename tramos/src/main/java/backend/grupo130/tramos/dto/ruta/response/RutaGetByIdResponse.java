@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class RutaGetByIdResponse {
 
-    private final Integer idRuta;
+    private final Long idRuta;
 
     private final Integer cantidadTramos;
 
@@ -19,6 +19,6 @@ public class RutaGetByIdResponse {
 
     private final BigDecimal cargosGestionFijo;
 
-    private final SolicitudTraslado idSolicitud;
+    private final SolicitudTraslado solicitud;
     
 }

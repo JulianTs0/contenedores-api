@@ -4,10 +4,12 @@ import backend.grupo130.tramos.client.envios.EnvioClient;
 import backend.grupo130.tramos.client.envios.models.SeguimientoEnvio;
 import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.models.Tarifa;
-import backend.grupo130.tramos.client.envios.responses.GetSeguimientoEnvioByIdResponse;
-import backend.grupo130.tramos.client.envios.responses.GetSolicitudTrasladoByIdResponse;
-import backend.grupo130.tramos.client.envios.responses.GetTarifaByIdResponse;
+import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
+import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
+import backend.grupo130.tramos.client.envios.responses.*;
+import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,33 +19,78 @@ public class EnviosRepository {
 
     private final EnvioClient envioClient;
 
-    public Tarifa getTarifaById(Integer tarifaId) {
+    public Tarifa getTarifaById(Long tarifaId) {
         try {
-            GetTarifaByIdResponse response = this.envioClient.getTarifaById(tarifaId);
+            // GetTarifaByIdResponse response = this.envioClient.getTarifaById(tarifaId);
             return new Tarifa();
 
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public SolicitudTraslado getSolicitudTrasladoById(Integer solicitudTrasladoId) {
+    public SolicitudTraslado getSolicitudTrasladoById(Long solicitudTrasladoId) {
         try {
-            GetSolicitudTrasladoByIdResponse response = this.envioClient.getSolicitudTrasladoById(solicitudTrasladoId);
-            return new SolicitudTraslado();
+            SolicitudGetByIdResponse response = this.envioClient.getSolicitudTrasladoById(solicitudTrasladoId);
 
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+            return new SolicitudTraslado(
+                response.getIdSolicitud(),
+                response.getFechaInicio(),
+                response.getFechaFin(),
+                response.getTiempoEstimadoHoras(),
+                response.getTiempoRealHoras(),
+                response.getCostoEstimado(),
+                response.getCostoFinal(),
+                response.getTarifa(),
+                response.getSeguimientos(),
+                response.getIdContenedor(),
+                response.getIdCliente(),
+                response.getIdOrigen(),
+                response.getIdDestino()
+            );
+
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 
-    public SeguimientoEnvio getSeguimientoEnvioById(Integer seguimientoEnvioId) {
+    public SeguimientoEnvio getSeguimientoEnvioById(Long seguimientoEnvioId) {
         try {
-            GetSeguimientoEnvioByIdResponse response = this.envioClient.getSeguimientoEnvioById(seguimientoEnvioId);
+
+            // GetSeguimientoEnvioByIdResponse response = this.envioClient.getSeguimientoEnvioById(seguimientoEnvioId);
             return new SeguimientoEnvio();
 
-        } catch (Exception ex) {
-            throw new ServiceError("Error interno", 500);
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+    public SolicitudEditResponse editSolicitud(SolicitudEditRequest request) {
+        try {
+
+            return this.envioClient.editSolicitud(request);
+
+        } catch (FeignException ex) {
+            throw new ServiceError(ex.contentUTF8(), Errores.ERROR_INTERNO , ex.status());
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+    }
+
+
+    public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(SolicitudCambioDeEstadoRequest request) {
+        try {
+            return this.envioClient.cambioDeEstadoSolicitud(request);
+
+        } catch (Exception ex){
+
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
     }
 }

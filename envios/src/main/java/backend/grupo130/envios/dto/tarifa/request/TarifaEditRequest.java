@@ -18,7 +18,7 @@ public class TarifaEditRequest {
 
     @PositiveOrZero(message = "{error.volumenMin.positiveOrZero}")
     @Digits(integer = 8, fraction = 2, message = "{error.volumenMin.digits}")
-    private final BigDecimal volumenMin;
+    private final BigDecimal pesoMax;
 
     @Positive(message = "{error.volumenMax.positive}")
     @Digits(integer = 8, fraction = 2, message = "{error.volumenMax.digits}")

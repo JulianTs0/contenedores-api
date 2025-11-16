@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TramoGetByIdRequest {
 
-    private final Integer idTramo;
+    private final Long idTramo;
 
 }

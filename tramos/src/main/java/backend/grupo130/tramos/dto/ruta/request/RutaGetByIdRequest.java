@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RutaGetByIdRequest {
 
-    private final Integer idRuta;
+    private final Long idRuta;
 
 }

@@ -13,12 +13,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class TramoAsignacionCamionRequest {
 
-    @NotNull(message = "La id del tramo es obligatoria")
-    @Positive(message = "El ID del tramo debe ser un número positivo")
-    private final Integer idTramo;
+    @NotNull(message = "{error.idTramo.notNull}")
+    @Positive(message = "{error.idTramo.positive}")
+    private final Long idTramo;
 
-    @NotNull(message = "La dominio del camion es obligatorio")
-    @NotBlank(message = "El dominio no puede estar vacio")
+    @NotBlank(message = "{error.dominioCamion.notBlank}")
     private final String dominioCamion;
 
 }
