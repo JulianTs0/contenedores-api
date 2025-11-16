@@ -43,4 +43,9 @@ public class UbicacionRepository {
         return idUbicacion;
     }
 
+    public Ubicacion findUbicacionByDepositoId(Long idDeposito){
+        Ubicacion ubicacion = this.ubicacionRepository.findUbicacionByDepositoId(idDeposito).orElse(null);
+        return ubicacion;
+    }
+
 }

@@ -19,6 +19,6 @@ public class UbicacionGetByIdResponse {
 
     private final BigDecimal longitud;
 
-    private final Long idDeposito;
+    private final Deposito deposito;
 
 }

@@ -12,12 +12,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Deposito {
 
-    private Integer idDeposito;
+    private Long idDeposito;
 
     private String nombre;
 
     private BigDecimal costoEstadiaDiario;
-
-    private Ubicacion ubicacion;
 
 }

@@ -1,5 +1,6 @@
 package backend.grupo130.tramos.client.ubicaciones.responses;
 
+import backend.grupo130.tramos.client.ubicaciones.models.Deposito;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class GetUbicacionByIdResponse {
 
-    private final Integer ubicacionId;
+    private final Long idUbicacion;
 
     private final String direccion;
 
@@ -18,6 +19,7 @@ public class GetUbicacionByIdResponse {
 
     private final BigDecimal longitud;
 
-    private final Integer idDeposito;
+    private final Deposito deposito;
+
 
 }

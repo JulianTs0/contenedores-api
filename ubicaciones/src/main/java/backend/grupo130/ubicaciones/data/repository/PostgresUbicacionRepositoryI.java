@@ -12,4 +12,7 @@ public interface PostgresUbicacionRepositoryI extends JpaRepository<Ubicacion, L
     @Query("SELECT u.idUbicacion FROM Ubicacion u WHERE u.deposito.idDeposito = :depositoId")
     Optional<Long> findUbicacionIdByDepositoId(@Param("depositoId") Long depositoId);
 
+    @Query("SELECT u FROM Ubicacion u WHERE u.deposito.idDeposito = :depositoId")
+    Optional<Ubicacion> findUbicacionByDepositoId(@Param("depositoId") Long depositoId);
+
 }

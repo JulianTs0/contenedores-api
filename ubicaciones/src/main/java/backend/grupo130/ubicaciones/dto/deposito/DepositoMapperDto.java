@@ -28,7 +28,7 @@ public class DepositoMapperDto {
         return new DepositoEditResponse(
             deposito.getIdDeposito(),
             deposito.getNombre(),
-            deposito.getCostoEstadiaDiario(),
+            deposito.getCostoEstadiaDiario()
         );
     }
 
