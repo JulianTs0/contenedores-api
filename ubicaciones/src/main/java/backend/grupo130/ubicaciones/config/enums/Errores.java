@@ -8,7 +8,8 @@ public enum Errores {
     ERROR_INTERNO("Error interno"),
 
     UBICACION_NO_ENCONTRADA("Ubicacion no encontrado"),
-    DEPOSITO_NO_ENCONTRADO("Deposito no encontrado");
+    DEPOSITO_NO_ENCONTRADO("Deposito no encontrado"),
+    UBICACION_CON_DEPOSTIO("La Ubicacion ya tiene deposito");
 
     private final String mensaje;
 

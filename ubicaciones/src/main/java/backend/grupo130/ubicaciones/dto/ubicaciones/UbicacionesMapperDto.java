@@ -10,12 +10,13 @@ import java.util.List;
 public class UbicacionesMapperDto {
 
     public static UbicacionGetByIdResponse toResponseGet(Ubicacion ubicacion) {
+
         return new UbicacionGetByIdResponse(
             ubicacion.getIdUbicacion(),
             ubicacion.getDireccionTextual(),
             ubicacion.getLatitud(),
             ubicacion.getLongitud(),
-            ubicacion.getDeposito().getIdDeposito()
+            ubicacion.getDeposito()
         );
     }
 

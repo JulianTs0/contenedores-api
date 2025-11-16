@@ -26,7 +26,7 @@ public class RutaRegisterRequest {
 
     @NotNull(message = "Los tramos son obligatorios")
     @NotEmpty(message = "Debe haber un tramo minimo")
-    private final List<Integer> ubicaciones;
+    private final List<Long> ubicaciones;
 
     @NotNull(message = "La fecha Hora Inicio Estimada es obligatorio")
     private LocalDateTime fechaHoraInicioEstimado;

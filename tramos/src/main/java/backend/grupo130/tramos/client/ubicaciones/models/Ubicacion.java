@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Ubicacion {
 
-    private Integer idUbicacion;
+    private Long idUbicacion;
 
     private String direccionTextual;
 
@@ -20,6 +20,6 @@ public class Ubicacion {
 
     private BigDecimal longitud;
 
-    private Integer idDeposito;
+    private Deposito deposito;
 
 }

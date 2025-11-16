@@ -22,8 +22,4 @@ public class DepositoEditRequest {
     @Digits(integer = 8, fraction = 2, message = "{error.costoEstadiaDiario.digits}")
     private final BigDecimal costoEstadiaDiario;
 
-    @NotNull(message = "{error.idUbicacion.notNull}")
-    @Positive(message = "{error.idUbicacion.positive}")
-    private final Long idUbicacion;
-
 }

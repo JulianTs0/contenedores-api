@@ -20,17 +20,14 @@ public class UbicacionesRepository {
 
     private final UbicacionClient ubicacionClient;
 
-    public Deposito getDepositoById(Integer depositoId) {
+    public Deposito getDepositoById(Long depositoId) {
         try {
             GetDepositoByIdResponse response = this.ubicacionClient.getDepositoById(depositoId);
-
-            Ubicacion ubicacion = this.getUbicacionById(response.getIdUbicacion());
 
             Deposito deposito = new Deposito(
                 response.getIdDeposito(),
                 response.getNombre(),
-                response.getCostoEstadiaDiario(),
-                ubicacion
+                response.getCostoEstadiaDiario()
             );
 
             return deposito;
@@ -42,17 +39,17 @@ public class UbicacionesRepository {
         }
     }
 
-    public Ubicacion getUbicacionById(Integer ubicacionId) {
+    public Ubicacion getUbicacionById(Long ubicacionId) {
         try {
 
             GetUbicacionByIdResponse response = this.ubicacionClient.getUbicacionById(ubicacionId);
 
             Ubicacion ubicacion = new Ubicacion(
-                response.getUbicacionId(),
+                response.getIdUbicacion(),
                 response.getDireccion(),
                 response.getLatitud(),
                 response.getLongitud(),
-                response.getIdDeposito()
+                response.getDeposito()
             );
 
             return ubicacion;

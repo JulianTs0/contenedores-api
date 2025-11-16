@@ -1,13 +1,12 @@
 package backend.grupo130.ubicaciones.controller;
 
-import backend.grupo130.ubicaciones.data.models.Deposito;
+import backend.grupo130.ubicaciones.dto.deposito.request.DepositoDeleteRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoEditRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
 import backend.grupo130.ubicaciones.service.DepositoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -27,30 +26,26 @@ public class DepositoController {
 
     private final DepositoService depositoService;
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/getById/{idDeposito}")
     public ResponseEntity<DepositoGetByIdResponse> getById(
-        @NotNull(message = "El ID de deposito no puede ser nulo")
-        @Positive(message = "El ID del deposito debe ser un número positivo")
-        @PathVariable Integer id
+        @NotNull(message = "{error.idDeposito.notNull}")
+        @Positive(message = "{error.idDeposito.positive}")
+        @PathVariable Long idDeposito
     ) {
 
-        DepositoGetByIdRequest request = new DepositoGetByIdRequest(id);
+        DepositoGetByIdRequest request = new DepositoGetByIdRequest(idDeposito);
 
-        Deposito deposito = this.depositoService.getById(request);
-
-        return ResponseEntity.ok(this.toResponseGet(deposito));
+        return ResponseEntity.ok(this.depositoService.getById(request));
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<DepositoGetAllResponse> getAll() {
 
-        List<Deposito> depositos = this.depositoService.getAll();
-
-        return ResponseEntity.ok(this.toResponseGet(depositos));
+        return ResponseEntity.ok(this.depositoService.getAll());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<DepositoRegisterRequest> register(
+    public ResponseEntity<?> register(
         @RequestBody @Valid DepositoRegisterRequest request
     ) {
 
@@ -64,9 +59,21 @@ public class DepositoController {
         @RequestBody @Valid DepositoEditRequest request
     ) {
 
-        Deposito deposito = this.depositoService.edit(request);
+        return ResponseEntity.ok(this.depositoService.edit(request));
+    }
 
-        return ResponseEntity.ok(this.toResponsePatch(deposito));
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(
+        @NotNull(message = "{error.idDeposito.notNull}")
+        @Positive(message = "{error.idDeposito.positive}")
+        @PathVariable Long id
+    ) {
+
+        DepositoDeleteRequest request = new DepositoDeleteRequest(id);
+
+        this.depositoService.delete(request);
+
+        return ResponseEntity.ok().build();
     }
 
 }

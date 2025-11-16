@@ -10,12 +10,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class GetDepositoByIdResponse {
 
-    private final Integer idDeposito;
+    private final Long idDeposito;
 
     private final String nombre;
 
     private final BigDecimal costoEstadiaDiario;
 
-    private final Integer idUbicacion;
+    private final Long idUbicacion;
 
 }
