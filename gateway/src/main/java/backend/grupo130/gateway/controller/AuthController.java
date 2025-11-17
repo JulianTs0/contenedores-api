@@ -19,7 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/gateway")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
 

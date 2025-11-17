@@ -19,19 +19,48 @@ spring:
 
     cloud:
         gateway:
-            routes:
-                - id: ms-usuarios
-                  uri: http://localhost:8090
-                  predicates:
-                      - Path=/gateway/usuarios/**
-                  filters:
-                      - RewritePath=/gateway/usuarios/(?<segment>.*), /api/usuarios/${segment}
-                -   id: ms-contenedores
-                    uri: http://localhost:8091
-                    predicates:
-                        - Path=/gateway/contenedores/**
-                    filters:
-                        - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
+            # Propiedades actualizadas para eliminar el WARN
+            server:
+                webflux:
+                    routes:
+                        - id: ms-usuarios
+                          uri: http://localhost:8090
+                          predicates:
+                              - Path=/gateway/usuarios/**
+                          filters:
+                              - RewritePath=/gateway/usuarios/(?<segment>.*), /api/usuarios/${segment}
+                        - id: ms-contenedores
+                          uri: http://localhost:8091
+                          predicates:
+                              - Path=/gateway/contenedores/**
+                          filters:
+                              - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
+                        
+                        # --- RUTAS AÑADIDAS ---
+                        - id: ms-tramos
+                          uri: http://localhost:8092
+                          predicates:
+                              - Path=/gateway/tramos/**
+                          filters:
+                              - RewritePath=/gateway/tramos/(?<segment>.*), /api/tramos/${segment}
+                        - id: ms-camiones
+                          uri: http://localhost:8093
+                          predicates:
+                              - Path=/gateway/camiones/**
+                          filters:
+                              - RewritePath=/gateway/camiones/(?<segment>.*), /api/camiones/${segment}
+                        - id: ms-ubicaciones
+                          uri: http://localhost:8094
+                          predicates:
+                              - Path=/gateway/ubicaciones/**
+                          filters:
+                              - RewritePath=/gateway/ubicaciones/(?<segment>.*), /api/ubicaciones/${segment}
+                        - id: ms-envios
+                          uri: http://localhost:8095
+                          predicates:
+                              - Path=/gateway/envios/**
+                          filters:
+                              - RewritePath=/gateway/envios/(?<segment>.*), /api/envios/${segment}
 
 server:
     port: 8082
