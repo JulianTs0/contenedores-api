@@ -13,7 +13,11 @@ public class GatewayBeans {
     public RouteLocator configuradorDeRutas(
         RouteLocatorBuilder builder,
         @Value("${server.uri.usuarios}") String uriUsuarios,
-        @Value("${server.uri.contenedores}") String uriContenedores
+        @Value("${server.uri.contenedores}") String uriContenedores,
+        @Value("${server.uri.tramos}") String uriTramos,
+        @Value("${server.uri.camiones}") String uriCamiones,
+        @Value("${server.uri.ubicaciones}") String uriUbicaciones,
+        @Value("${server.uri.envios}") String uriEnvios
     )
     {
         return builder.routes()
@@ -24,6 +28,22 @@ public class GatewayBeans {
             .route(r -> r
                 .path("/api/contenedores/**")
                 .uri(uriContenedores)
+            )
+            .route(r -> r
+                .path("/api/tramos/**")
+                .uri(uriTramos)
+            )
+            .route(r -> r
+                .path("/api/camiones/**")
+                .uri(uriCamiones)
+            )
+            .route(r -> r
+                .path("/api/ubicaciones/**")
+                .uri(uriUbicaciones)
+            )
+            .route(r -> r
+                .path("/api/envios/**")
+                .uri(uriEnvios)
             )
             .build();
     }

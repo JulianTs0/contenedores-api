@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 1. Leer la propiedad del archivo de log desde application.yml (TPI Paso 3) -->
+    <!-- Esto nos permite definir el nombre del archivo en application.yml -->
+    <springProperty scope="context" name="LOG_FILE" source="logging.file.name" defaultValue="logs/default-camiones.log"/>
+
+    <!-- 2. Definir el Patrón de Log con Correlation ID (TPI Paso 4) -->
+    <!--
+      %d{yyyy-MM-dd HH:mm:ss.SSS} -> Fecha y hora
+      [%thread]                     -> Hilo de ejecución
+      %-5level                      -> Nivel de log (INFO, DEBUG, ERROR)
+      %logger{36}                   -> Nombre de la clase (abreviado)
+      [CID: %X{correlationId:-N/A}] -> ¡CORRELATION ID! (MDC). Si no existe, imprime N/A.
+      %msg%n                        -> El mensaje de log
+      %ex                           -> La traza de la excepción (si existe)
+    -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [CID: %X{correlationId:-N/A}] - %msg%n%ex"/>
+
+    <!-- 3. Appender de Consola (Para Docker/stdout y desarrollo) (TPI Paso 3) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 4. Appender de Archivo con Rotación (Rolling Log) (TPI Paso 3) -->
+    <appender name="FILE_ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Usamos el nombre de archivo definido en application.yml -->
+        <file>${LOG_FILE}</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Rotación diaria (cumple "por tiempo") -->
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- Mantener 30 días de historial -->
+            <maxHistory>30</maxHistory>
+
+            <!-- Opcional: Límite total de tamaño de todos los logs históricos -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 5. Configurar Logger Raíz (Root) -->
+    <!--
+      Los niveles de log (INFO, DEBUG) se controlan desde application.yml.
+      Aquí solo adjuntamos los appenders (dónde escribir).
+    -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_ROLLING"/>
+    </root>
+
+</configuration>

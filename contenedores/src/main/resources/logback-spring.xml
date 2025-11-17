@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+    Configuración de LOGBACK (SLF4J)
+    Cumple con los Pasos 1, 3 y 4 del TPI.
+
+    - Paso 1: Configuración base.
+    - Paso 3: Persistencia Local y Rotación (Rolling Log).
+    - Paso 4: Trazabilidad (Inclusión del Correlation ID en el patrón).
+    -->
+
+    <!-- Variable para el patrón de logs común -->
+    <!--
+        %d: Fecha y hora
+        %-5level: Nivel de log (INFO, ERROR)
+        [%thread]: Thread que ejecuta
+        [%logger{36}]: Nombre de la clase (acortado)
+        [%X{correlationId}]: ¡La clave! Imprime el Correlation ID desde el MDC.
+        %msg%n: El mensaje de log y salto de línea
+    -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%logger{36}] [%X{correlationId}] - %msg%n"/>
+
+    <!-- Variable para la ruta de los archivos (leído desde application.yml) -->
+    <!-- 'LOG_FILE' será 'logs/microservicio-contenedores.log' gracias al application.yml -->
+    <property name="LOG_FILE" value="${LOG_FILE:-logs/default-app.log}"/>
+
+
+    <!--
+    Appender 1: CONSOLE (stdout)
+    Cumple con el requisito de Docker (Paso 3)
+    -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!--
+    Appender 2: ROLLING FILE (Persistencia Local)
+    Cumple con el requisito de "revisión de logs" y "Rolling Log" (Paso 3)
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+
+        <!-- Política de Rotación: Diaria -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Crea un archivo nuevo cada día -->
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <!-- Guarda 30 días de historial -->
+            <maxHistory>30</maxHistory>
+            <!-- Comprime los archivos viejos -->
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!--
+    Configuración de Niveles (Paso 2)
+    Estos niveles base pueden ser sobrescritos por application.yml
+    -->
+
+    <!-- Nivel Raíz (Default) -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <!-- Nivel específico para nuestro paquete (más detallado) -->
+    <!-- Ajustado al paquete de tu microservicio -->
+    <logger name="backend.grupo130.contenedores" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Niveles de Spring (menos ruido) -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.hibernate" level="WARN"/>
+
+</configuration>

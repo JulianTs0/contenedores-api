@@ -42,3 +42,26 @@ springdoc:
 feign:
     httpclient:
         enabled: true
+
+logging:
+    # 1. Referencia al archivo de configuración de Logback (Paso 3)
+    # Spring Boot buscará este archivo para aplicar la configuración de rotación.
+    config: classpath:logback-spring.xml
+
+    # 2. Definición de la ruta del archivo (usada por logback-spring.xml)
+    file:
+        name: logs/microservicio-envios.log # Cumple TPI Paso 3
+
+    # 3. Definición de Niveles de Log (Cumple TPI Paso 2)
+    level:
+        # Nivel por defecto para todo (INFO)
+        root: INFO
+
+        # Nivel específico para NUESTRO código (DEBUG para diagnóstico)
+        backend.grupo130.envios: DEBUG
+
+        # Reducir el "ruido" de librerías comunes en producción
+        org.springframework: INFO
+        org.hibernate.SQL: WARN # Ocultar las queries de Hibernate, salvo que sean WARN
+        org.hibernate.type.descriptor.sql: WARN
+

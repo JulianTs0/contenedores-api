@@ -34,3 +34,17 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+logging:
+    level:
+        # Nivel raíz (root) por defecto.
+        # Captura logs de Spring, Hibernate, etc. en nivel INFO.
+        root: INFO
+
+        # Nivel específico para TU código.
+        # Poner en DEBUG o TRACE para diagnóstico en desarrollo.
+        backend.grupo130: DEBUG
+
+        # Ejemplo para reducir el "ruido" de librerías comunes:
+        org.springframework.web: INFO
+        org.hibernate: WARN

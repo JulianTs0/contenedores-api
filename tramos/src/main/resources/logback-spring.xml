@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+      Cumple "Paso 3: Persistencia Local" y "Paso 4: Trazabilidad" (MDC)
+      Spring Boot buscará este archivo en src/main/resources
+    -->
+
+    <!-- Variable para definir el directorio de los logs -->
+    <property name="LOGS_DIR" value="./logs" />
+
+    <!--
+      Variable para el patrón de log.
+      Incluye el "Paso 4: Correlation ID" usando %X{correlationId}
+      El ":-" después de correlationId provee un valor default (vacío) si el MDC está vacío.
+    -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{correlationId:-}] - %msg%n" />
+
+    <!--
+      Appender de Consola.
+      Cumple "Paso 3: Configuración en Docker" (escribir a stdout/stderr)
+    -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!--
+      Appender de Archivo con Rotación (Rolling Log).
+      Cumple "Paso 3: Persistencia y Rotación"
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_DIR}/tramos-microservice.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+
+        <!-- Política de Rotación (Rolling Policy) -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--
+              Rotación diaria.
+              Los archivos viejos se comprimirán (ej. .log.gz)
+            -->
+            <fileNamePattern>${LOGS_DIR}/archived/tramos-microservice-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+
+            <!--
+              Rotar cuando el archivo alcance los 10 MB
+            -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!--
+              Mantener un historial de 30 días
+            -->
+            <maxHistory>30</maxHistory>
+
+            <!--
+              Tamaño total de todos los archivos de log (historial)
+            -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--
+      Configuración de Niveles (Paso 1)
+      Esto se puede manejar aquí o en application.yml.
+      Lo defino aquí como base, pero application.yml tiene precedencia para perfiles de Spring.
+    -->
+
+    <!-- Logger Raíz (root) -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+    <!-- Nivel específico para tu paquete (Paso 1) -->
+    <!-- (Esto es duplicado de application.yml, pero sirve como ejemplo si NO usaras .yml) -->
+    <!--
+    <logger name="backend.grupo130" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+    -->
+
+</configuration>

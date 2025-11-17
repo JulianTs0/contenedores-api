@@ -27,3 +27,19 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+# PASO 1: Configurar Niveles
+logging:
+    level:
+        # Nivel raíz por defecto. Capturará INFO y superior (WARN, ERROR) de todas las librerías.
+        root: INFO
+        # Nivel específico para nuestro código. Queremos ver DEBUG y superior.
+        backend.grupo130.ubicaciones: DEBUG
+        # Opcional: Reducir el "ruido" de Spring y Hibernate en los logs
+        org.springframework: INFO
+        org.hibernate: INFO
+
+# Configuración de persistencia y rotación de archivos
+# Se delega a logback-spring.xml para control avanzado (Paso 3 y 4)
+# Spring Boot buscará este archivo automáticamente.
+logging.config: classpath:logback-spring.xml

@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j
+@Slf4j // Anotación de Lombok para SLF4J
 public class SeguimientoService {
 
     private final SeguimientoEnvioRepository seguimientoRepository;
@@ -33,65 +33,77 @@ public class SeguimientoService {
     // GET
 
     public SeguimientoGetByIdResponse getById(SeguimientoGetByIdRequest request) throws ServiceError {
+        log.info("Inicio getById. Buscando seguimiento con ID: {}", request.getIdSeguimiento());
         try {
             SeguimientoEnvio seguimiento = this.seguimientoRepository.getById(request.getIdSeguimiento());
 
             if (seguimiento == null) {
+                log.warn("Seguimiento no encontrado con ID: {}", request.getIdSeguimiento());
                 throw new ServiceError("", Errores.SEGUIMIENTO_NO_ENCONTRADO, 404);
             }
 
+            log.info("Seguimiento encontrado exitosamente. ID: {}", request.getIdSeguimiento());
             SeguimientoGetByIdResponse response = SeguimientoMapperDto.toResponseGet(seguimiento);
             return response;
 
         } catch (ServiceError ex) {
+            log.warn("ServiceError en getById (Seguimiento ID: {}): {} - {}", request.getIdSeguimiento(), ex.getHttpCode(), ex.getMessage());
             throw ex;
         }
         catch (Exception ex) {
+            log.error("Error interno al buscar seguimiento por ID {}: {}", request.getIdSeguimiento(), ex.getMessage(), ex);
             throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 
     public SeguimientoGetAllResponse getAll() throws ServiceError {
+        log.info("Inicio getAll. Buscando todos los seguimientos.");
         try {
             List<SeguimientoEnvio> seguimientos = this.seguimientoRepository.getAll();
+            log.info("Se encontraron {} seguimientos.", seguimientos.size());
             SeguimientoGetAllResponse response = SeguimientoMapperDto.toResponseGet(seguimientos);
             return response;
         } catch (ServiceError ex) {
+            log.warn("ServiceError en getAll (Seguimientos): {} - {}", ex.getHttpCode(), ex.getMessage());
             throw ex;
         }  catch (Exception ex) {
+            log.error("Error interno al buscar todos los seguimientos: {}", ex.getMessage(), ex);
             throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }
 
     public void register(SeguimientoRegisterRequest request) throws ServiceError {
+        log.info("Inicio register. Registrando nuevo seguimiento para Solicitud ID: {}", request.getIdSolicitud());
         try {
 
             SolicitudTraslado solicitud = solicitudRepository.getById(request.getIdSolicitud());
 
             if (solicitud == null) {
+                log.warn("Solicitud no encontrada (ID: {}) al registrar seguimiento.", request.getIdSolicitud());
                 throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
             }
 
             Estado estado = Estado.fromString(request.getEstado());
             if (estado == null) {
+                log.warn("Estado inválido proporcionado: {}", request.getEstado());
                 throw new ServiceError("", Errores.ESTADO_INVALIDO, 400);
             }
 
+            // (Lógica de negocio sin cambios)
             SeguimientoEnvio seguimiento = new SeguimientoEnvio();
-
             seguimiento.setDescripcion(request.getDescripcion());
-
             seguimiento.setFechaHoraInicio(LocalDateTime.now());
-
             seguimiento.setEstado(estado);
-
             solicitud.getSeguimientos().add(seguimiento);
 
             this.solicitudRepository.update(solicitud);
+            log.info("Seguimiento registrado exitosamente para Solicitud ID: {}", request.getIdSolicitud());
 
         } catch (ServiceError ex) {
+            log.warn("ServiceError en register (Seguimiento para Solicitud ID: {}): {} - {}", request.getIdSolicitud(), ex.getHttpCode(), ex.getMessage());
             throw ex;
         } catch (Exception ex) {
+            log.error("Error interno al registrar seguimiento (Solicitud ID: {}): {}", request.getIdSolicitud(), ex.getMessage(), ex);
             throw new ServiceError(ex.getMessage() , Errores.ERROR_INTERNO, 500);
         }
     }

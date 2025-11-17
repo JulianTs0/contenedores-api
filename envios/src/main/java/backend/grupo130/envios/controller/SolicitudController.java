@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,37 +21,43 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/envios/solicitud")
 @RequiredArgsConstructor
+@Slf4j // Añadir anotación para logging
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<SolicitudGetByIdResponse> getById(
-            @NotNull(message = "{error.idSolicitud.notNull}")
-            @Positive(message = "{error.idSolicitud.positive}")
-            @PathVariable Long id
+        @NotNull(message = "{error.idSolicitud.notNull}")
+        @Positive(message = "{error.idSolicitud.positive}")
+        @PathVariable Long id
     ) {
+        // LOG Nivel INFO: Evento importante de flujo
+        log.info("Recibida solicitud GET en /getById/{}", id);
         SolicitudGetByIdRequest request = new SolicitudGetByIdRequest(id);
         return ResponseEntity.ok(this.solicitudService.getById(request));
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<SolicitudGetAllResponse> getAll() {
+        log.info("Recibida solicitud GET en /getAll");
         return ResponseEntity.ok(this.solicitudService.getAll());
     }
 
     @PostMapping("/register")
     public ResponseEntity<SolicitudGetByIdResponse> register(
-            @RequestBody @Valid SolicitudRegisterRequest request
+        @RequestBody @Valid SolicitudRegisterRequest request
     ) {
+        log.info("Recibida solicitud POST en /register para cliente ID: {}", request.getIdCliente());
         // El servicio de registro ahora devuelve la solicitud creada
         return ResponseEntity.ok(this.solicitudService.register(request));
     }
 
     @PostMapping("/cambioDeEstado")
     public ResponseEntity<SolicitudCambioDeEstadoResponse> cambioDeEstado(
-            @RequestBody @Valid SolicitudCambioDeEstadoRequest request
+        @RequestBody @Valid SolicitudCambioDeEstadoRequest request
     ) {
+        log.info("Recibida solicitud POST en /cambioDeEstado. Solicitud ID: {}, Nuevo Estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
         return ResponseEntity.ok(this.solicitudService.cambioDeEstado(request));
     }
 
@@ -58,6 +65,7 @@ public class SolicitudController {
     public ResponseEntity<SolicitudEditResponse> edit(
         @RequestBody @Valid SolicitudEditRequest request
     ) {
+        log.info("Recibida solicitud POST en /edit. Solicitud ID: {}", request.getIdSolicitud());
         return ResponseEntity.ok(this.solicitudService.edit(request));
     }
 }

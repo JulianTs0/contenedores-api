@@ -19,68 +19,100 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    /**
-     * Define la cadena de filtros de seguridad para el API Gateway.
-     * Esta función configura las reglas de autorización para todos los endpoints expuestos
-     * y habilita la validación de tokens JWT (Resource Server).
-     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+
+        final String ROL_ADMIN = "ADMINISTRADOR";
+        final String ROL_CLIENTE = "CLIENTE";
+        final String ROL_TRANSP = "TRANSPORTISTA";
+
         http
             .authorizeExchange(exchanges -> exchanges
 
-                // RUTA PÚBLICA PARA REGISTRO: Permite el acceso sin autenticación para crear nuevos usuarios.
+                // Permite el acceso público al endpoint de callback de Keycloak
                 .pathMatchers( "/api/login/oauth2/code/keycloak")
                 .permitAll()
 
-                // RUTA PROTEGIDA (Usuarios Genéricos): Requiere autenticación y CUALQUIERA de los roles del TPI.
-                // Roles permitidos: Administrador, Cliente o Transportista.
-                // Nota: hasAnyRole() espera los roles sin el prefijo "ROLE_"
-                .pathMatchers("/gateway/usuarios/**")
-                .hasAnyRole("ADMINISTRADOR", "CLIENTE", "TRANSPORTISTA")
+                // Servicio de Usuarios (No se proveyó controller, se mantiene el wildcard)
+                .pathMatchers("/api/usuarios/**")
+                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
 
-                .pathMatchers("/gateway/contenedores/**")
-                .hasAnyRole("ADMINISTRADOR", "CLIENTE", "TRANSPORTISTA")
+                // CamionController (/api/camiones)
+                .pathMatchers(HttpMethod.GET, "/api/camiones/getById/{dominio}").hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/camiones/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/camiones/getDisponibles").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/camiones/register").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/camiones/edit").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/camiones/asignarTransportista").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/camiones/delete/{dominio}").hasAnyRole(ROL_ADMIN)
 
+                // ContenedorController (/api/contenedores)
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/getById/{id}").hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
+                .pathMatchers(HttpMethod.POST, "/api/contenedores/getByPesoVolumen").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/getByEstado/{estado}").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/contenedores/register").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/contenedores/edit").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/contenedores/delete/{id}").hasAnyRole(ROL_ADMIN)
+
+                // RutaController (/api/rutas)
+                .pathMatchers(HttpMethod.GET, "/api/rutas/getById/{idRuta}").hasAnyRole(ROL_ADMIN, ROL_CLIENTE)
+                .pathMatchers(HttpMethod.GET, "/api/rutas/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/rutas/getRutaTentativa").hasAnyRole(ROL_CLIENTE)
+                .pathMatchers(HttpMethod.PATCH, "/api/rutas/asignarSolicitud").hasAnyRole(ROL_CLIENTE)
+
+                // TramoController (/api/tramos)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/getById/{idTramo}").hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/getAll").hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/asignarCamion").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/getByTransportista/{dominio}").hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/getByRuta/{idRuta}").hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/registrarInicio").hasAnyRole(ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/registrarFin").hasAnyRole(ROL_TRANSP)
+
+                // SolicitudController (/api/envios/solicitud)
+                .pathMatchers(HttpMethod.GET, "/api/envios/solicitud/getById/{id}").hasAnyRole(ROL_CLIENTE)
+                .pathMatchers(HttpMethod.GET, "/api/envios/solicitud/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/envios/solicitud/register").hasAnyRole(ROL_CLIENTE)
+
+                // DepositoController (/api/ubicaciones/depositos)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/depositos/getById/{idDeposito}").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/depositos/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/ubicaciones/depositos/register").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/ubicaciones/depositos/edit").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/ubicaciones/depositos/delete/{id}").hasAnyRole(ROL_ADMIN)
+
+                // UbicacionController (/api/ubicaciones/ubicaciones)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/ubicaciones/getById/{id}").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/ubicaciones/getAll").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/ubicaciones/ubicaciones/register").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/ubicaciones/ubicaciones/edit").hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/ubicaciones/ubicaciones/delete/{id}").hasAnyRole(ROL_ADMIN)
+
+                // Cualquier otra solicitud debe estar autenticada
                 .anyExchange().authenticated()
             )
 
-            // Configura el Resource Server para procesar tokens JWT
             .oauth2ResourceServer(oauth2 -> oauth2
-                // Conecta la lógica de validación del JWT, usando el conversor de roles
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
             )
 
-            // Deshabilita la protección CSRF (Cross-Site Request Forgery), práctica común en APIs sin estado (stateless)
             .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return http.build();
     }
 
-    /**
-     * Define el conversor de tokens JWT (JSON Web Token) a un objeto de autenticación
-     * que Spring Security pueda entender y utilizar en el contexto de un Resource Server reactivo.
-     *
-     * Esta configuración es esencial para el API Gateway (Resource Server) [3] al permitirle:
-     * 1. Extraer los roles del usuario desde el 'claim' de acceso al Realm ('realm_access').
-     * 2. Mapear esos roles al formato requerido por Spring Security (prefiando con 'ROLE_').
-     * 3. Proporcionar un objeto de autenticación (AbstractAuthenticationToken) para la fase de autorización.
-     */
     private ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
-        // Inicializa el conversor base de JWT a Authentication
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
 
-        // Configura la lógica para extraer los permisos (Granted Authorities) del JWT.
-        // Este conversor se enfoca en el mapeo de los roles definidos en Keycloak (tpi-backend).
+
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            // Accede al 'claim' 'realm_access' del token JWT. Este 'claim' es donde Keycloak
-            // almacena la información de los roles del Realm asociados al usuario [8].
+
             Object realmAccess = jwt.getClaim("realm_access");
 
             if (realmAccess instanceof Map) {
 
                 Map<?, ?> realmMap = (Map<?, ?>) realmAccess;
-                // Se espera que la lista de roles esté bajo la clave "roles" dentro de 'realm_access' [8].
                 Object roles = realmMap.get("roles");
 
                 if (roles instanceof Collection) {
@@ -88,21 +120,15 @@ public class SecurityConfig {
                     Collection<?> lst = (Collection<?>) roles;
                     return lst.stream()
                         .map(Object::toString)
-                        // Transformación crítica: Cada rol se convierte a mayúsculas y se le antepone el prefijo
-                        // "ROLE_" (Ej: 'ADMINISTRADOR' -> 'ROLE_ADMINISTRADOR'). Spring Security requiere
-                        // este formato para su mecanismo de autorización basado en roles (.hasRole(), .hasAnyRole()) [8].
+
                         .map(r -> "ROLE_" + r.toUpperCase())
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
                 }
             }
-            // Si no se encuentra el claim o no contiene roles, se devuelve una lista vacía de autoridades.
             return Collections.emptyList();
         });
 
-        // Envuelve el conversor síncrono en un adaptador reactivo (ReactiveJwtAuthenticationConverterAdapter).
-        // Esto es necesario debido a que Spring Cloud Gateway utiliza Spring WebFlux [6, 7],
-        // y la cadena de filtros de seguridad requiere un resultado de tipo Mono<AbstractAuthenticationToken> [7].
         return new ReactiveJwtAuthenticationConverterAdapter(converter);
     }
 
