@@ -79,7 +79,6 @@ public class RutaService {
             throw ex;
         }
         catch (Exception ex) {
-            // Requisito TPI: No perder la traza de la excepción raíz
             log.error("Error interno inesperado al buscar Ruta por ID: {}", request.getIdRuta(), ex);
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
@@ -152,7 +151,6 @@ public class RutaService {
             if (tarifa == null) {
                 log.warn("La solicitud {} no tiene tarifa (es nula). Creando una nueva instancia de Tarifa en memoria.", solicitud.getIdSolicitud());
                 tarifa = new Tarifa();
-                // Valor de respaldo, idealmente esto debería venir de configuración
                 tarifa.setValorLitro(BigDecimal.valueOf(10));
             }
 
@@ -226,7 +224,6 @@ public class RutaService {
                 tramo.setIdOrigen(origen.getIdUbicacion());
                 tramo.setIdDestino(destino.getIdUbicacion());
 
-                // ... (Lógica de negocio de TipoTramo) ...
                 if(origen.getDeposito() == null && destino.getDeposito() == null){
                     tramo.setTipoTramo(TipoTramo.ORIGEN_DESTINO);
                 }
@@ -262,7 +259,6 @@ public class RutaService {
             ruta.setCantidadTramos(tramos.size());
             ruta.setCantidadDepositos(depositos.size());
 
-            // ... (Lógica de negocio de Tarifa) ...
             tarifa.setPesoMax(contenedor.getPeso());
             tarifa.setVolumenMax(contenedor.getVolumen());
             tarifa.setCostoBase(costoBasePromedio);
@@ -278,7 +274,6 @@ public class RutaService {
 
             BigDecimal horas = BigDecimal.valueOf(tiempoTotal / 3600).setScale(2, RoundingMode.HALF_UP);
             log.debug("Tiempo estimado calculado: {} horas.", horas);
-            // El log.warn original. Lo mantengo como DEBUG ya que parece ser de diagnóstico.
             log.debug("Valor original log.warn de horas: {}", horas.toString());
 
             requestEdit.setTiempoEstimadoHoras(horas);
@@ -328,13 +323,6 @@ public class RutaService {
                 log.warn("La Ruta ID {} no tiene tramos. No se puede asignar.", ruta.getIdRuta());
                 throw new ServiceError("", Errores.RUTA_SIN_TRAMOS, 400);
             }
-
-            /* // Lógica de negocio comentada, la respeto.
-            for (Tramo tramo : tramos){
-                if (!tramo.esAsignado()){
-                    throw new ServiceError("", Errores.RUTA_SIN_CONDUCTORES, 400);
-                }
-            }*/
 
             ruta.setIdSolicitud(solicitud.getIdSolicitud());
 

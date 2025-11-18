@@ -1,13 +1,3 @@
-package backend.grupo130.envios.service;
-
-import backend.grupo130.envios.client.contenedores.models.Contenedor;
-import backend.grupo130.envios.config.enums.Errores;
-import backend.grupo130.envios.config.enums.Estado;
-import backend.grupo130.envios.config.exceptions.ServiceError;
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
-import backend.grupo130.envios.data.models.SolicitudTraslado;
-import backend.grupo130.envios.data.models.Tarifa;
-import backend.grupo130.envios.dto.solicitud.SolicitudMapperDto;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudEditRequest;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudGetByIdRequest;
@@ -34,11 +24,8 @@ import java.util.List;
 public class SolicitudService {
 
     private final SolicitudTrasladoRepository solicitudRepository;
-
     private final ContenedorRepository contenedorRepository;
-
     private final TarifaRepository tarifaRepository;
-
 
     public SolicitudGetByIdResponse getById(SolicitudGetByIdRequest request) throws ServiceError {
         log.info("Inicio getById. Buscando solicitud con ID: {}", request.getIdSolicitud());
@@ -52,22 +39,7 @@ public class SolicitudService {
 
             log.info("Solicitud encontrada exitosamente. ID: {}", request.getIdSolicitud());
 
-            return new SolicitudGetByIdResponse(
-                solicitud.getIdSolicitud(),
-                solicitud.getFechaInicio(),
-                solicitud.getFechaFin(),
-                solicitud.getEstado().toString(),
-                solicitud.getTarifa(),
-                solicitud.getSeguimientos(),
-                solicitud.getIdContenedor(),
-                solicitud.getIdCliente(),
-                solicitud.getIdOrigen(),
-                solicitud.getIdDestino(),
-                solicitud.getCostoEstimado(),
-                solicitud.getCostoFinal(),
-                solicitud.getTiempoEstimadoHoras(),
-                solicitud.getTiempoRealHoras()
-            );
+            return SolicitudMapperDto.toResponseGet(solicitud);
 
         } catch (ServiceError ex) {
             log.warn("ServiceError en getById: {} - {}", ex.getHttpCode(), ex.getMessage());
@@ -78,11 +50,9 @@ public class SolicitudService {
         }
     }
 
-
     public SolicitudGetAllResponse getAll() throws ServiceError {
         log.info("Inicio getAll. Buscando todas las solicitudes.");
         try {
-
             List<SolicitudTraslado> solicitudes = this.solicitudRepository.getAll();
             log.info("Se encontraron {} solicitudes.", solicitudes.size());
 
@@ -99,14 +69,13 @@ public class SolicitudService {
     public SolicitudGetByIdResponse register(SolicitudRegisterRequest request) throws ServiceError {
         log.info("Inicio register. Registrando nueva solicitud para cliente ID: {}", request.getIdCliente());
         try {
-
             Contenedor contenedor;
             try {
                 log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
                 contenedor = this.contenedorRepository.getByPesoVolumen(
-                    request.getPeso(),
-                    request.getVolumen(),
-                    request.getIdCliente()
+                        request.getPeso(),
+                        request.getVolumen(),
+                        request.getIdCliente()
                 );
                 this.contenedorRepository.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
                 log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
@@ -115,15 +84,15 @@ public class SolicitudService {
                 if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
                     log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
                     this.contenedorRepository.register(
-                        request.getPeso(),
-                        request.getVolumen(),
-                        request.getIdCliente()
+                            request.getPeso(),
+                            request.getVolumen(),
+                            request.getIdCliente()
                     );
                     log.info("Volviendo a buscar el contenedor recién creado...");
                     contenedor = this.contenedorRepository.getByPesoVolumen(
-                        request.getPeso(),
-                        request.getVolumen(),
-                        request.getIdCliente()
+                            request.getPeso(),
+                            request.getVolumen(),
+                            request.getIdCliente()
                     );
                     log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
                 } else {
@@ -137,11 +106,11 @@ public class SolicitudService {
             solicitud.setEstado(Estado.BORRADOR);
 
             SeguimientoEnvio primerSeguimiento = new SeguimientoEnvio(
-                null,
-                LocalDateTime.now(),
-                null,
-                Estado.BORRADOR,
-                "Solicitud creada."
+                    null,
+                    LocalDateTime.now(),
+                    null,
+                    Estado.BORRADOR,
+                    "Solicitud creada."
             );
 
             List<SeguimientoEnvio> inicio = List.of(primerSeguimiento);
@@ -160,7 +129,6 @@ public class SolicitudService {
         }
     }
 
-
     public SolicitudEditResponse edit(SolicitudEditRequest request) throws ServiceError {
         log.info("Inicio edit. Editando solicitud ID: {}", request.getIdSolicitud());
         try {
@@ -175,36 +143,19 @@ public class SolicitudService {
                 throw new ServiceError("No se puede editar una solicitud FINALIZADA", Errores.TRANSICION_ESTADO_INVALIDA, 400);
             }
 
-            if (request.getFechaInicio() != null) {
-                solicitud.setFechaInicio(request.getFechaInicio());
-            }
-            if (request.getFechaFin() != null) {
-                solicitud.setFechaFin(request.getFechaFin());
-            }
-            if (request.getTiempoEstimadoHoras() != null) {
-                solicitud.setTiempoEstimadoHoras(request.getTiempoEstimadoHoras());
-            }
-            if (request.getTiempoRealHoras() != null) {
-                solicitud.setTiempoRealHoras(request.getTiempoRealHoras());
-            }
-
-            if (request.getIdOrigen() != null) {
-                solicitud.setIdOrigen(request.getIdOrigen());
-            }
-            if (request.getIdDestino() != null) {
-                solicitud.setIdDestino(request.getIdDestino());
-            }
+            if (request.getFechaInicio() != null) solicitud.setFechaInicio(request.getFechaInicio());
+            if (request.getFechaFin() != null) solicitud.setFechaFin(request.getFechaFin());
+            if (request.getTiempoEstimadoHoras() != null) solicitud.setTiempoEstimadoHoras(request.getTiempoEstimadoHoras());
+            if (request.getTiempoRealHoras() != null) solicitud.setTiempoRealHoras(request.getTiempoRealHoras());
+            if (request.getIdOrigen() != null) solicitud.setIdOrigen(request.getIdOrigen());
+            if (request.getIdDestino() != null) solicitud.setIdDestino(request.getIdDestino());
 
             if (request.getTarifa() != null) {
                 log.info("Procesando tarifa para solicitud {}", solicitud.getIdSolicitud());
                 Tarifa tarifaRequest = request.getTarifa();
 
-                if (request.getCostoEstimado() != null) {
-                    tarifaRequest.setCostoEstimado(request.getCostoEstimado());
-                }
-                if (request.getCostoFinal() != null) {
-                    tarifaRequest.setCostoFinal(request.getCostoFinal());
-                }
+                if (request.getCostoEstimado() != null) tarifaRequest.setCostoEstimado(request.getCostoEstimado());
+                if (request.getCostoFinal() != null) tarifaRequest.setCostoFinal(request.getCostoFinal());
 
                 Tarifa tarifaExistente = solicitud.getTarifa();
                 if (tarifaExistente != null) {
@@ -227,7 +178,6 @@ public class SolicitudService {
                 }
             }
 
-
             SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
             log.info("Solicitud editada exitosamente. ID: {}", solicitudActualizada.getIdSolicitud());
             return SolicitudMapperDto.toResponsePatch(solicitudActualizada);
@@ -244,7 +194,6 @@ public class SolicitudService {
     public SolicitudCambioDeEstadoResponse cambioDeEstado(SolicitudCambioDeEstadoRequest request) throws ServiceError {
         log.info("Inicio cambioDeEstado. Solicitud ID: {}. Nuevo estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
         try {
-
             SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
             if (solicitud == null) {
@@ -260,47 +209,36 @@ public class SolicitudService {
 
             switch (solicitud.getEstado()) {
                 case BORRADOR:
-                    if (nuevoEstado != Estado.PROGRAMADO) {
-                        throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                    }
+                    if (nuevoEstado != Estado.PROGRAMADO) throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
                     break;
                 case PROGRAMADO:
-                    if (nuevoEstado != Estado.EN_TRANSITO) {
-                        throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                    }
+                    if (nuevoEstado != Estado.EN_TRANSITO) throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
                     break;
                 case EN_TRANSITO:
-                    if (nuevoEstado != Estado.ENTREGADO) {
-                        throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                    }
+                    if (nuevoEstado != Estado.ENTREGADO) throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
                     break;
                 case ENTREGADO:
                     log.warn("Intento de cambiar estado en solicitud ya finalizada. ID: {}", request.getIdSolicitud());
                     throw new ServiceError("", Errores.SOLICITUD_YA_FINALIZADA, 400);
             }
 
-            if(nuevoEstado.equals(Estado.EN_TRANSITO)){
-                solicitud.setFechaInicio(LocalDateTime.now());
-            }
-            if(nuevoEstado.equals(Estado.ENTREGADO)){
-                solicitud.setFechaFin(LocalDateTime.now());
-            }
+            if(nuevoEstado.equals(Estado.EN_TRANSITO)) solicitud.setFechaInicio(LocalDateTime.now());
+            if(nuevoEstado.equals(Estado.ENTREGADO)) solicitud.setFechaFin(LocalDateTime.now());
 
             solicitud.setEstado(nuevoEstado);
 
             SeguimientoEnvio nuevoSeguimiento = new SeguimientoEnvio(
-                null,
-                LocalDateTime.now(),
-                (nuevoEstado == Estado.ENTREGADO) ? LocalDateTime.now() : null,
-                nuevoEstado,
-                request.getDescripcion()
+                    null,
+                    LocalDateTime.now(),
+                    (nuevoEstado == Estado.ENTREGADO) ? LocalDateTime.now() : null,
+                    nuevoEstado,
+                    request.getDescripcion()
             );
 
             solicitud.getSeguimientos().getLast().setFechaHoraFin(LocalDateTime.now());
             solicitud.getSeguimientos().add(nuevoSeguimiento);
 
             SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
-
             SeguimientoEnvio seguimientoSolicitudActualizada = solicitudActualizada.getSeguimientos().get(solicitudActualizada.getSeguimientos().size() - 1);
 
             log.info("Cambio de estado exitoso. Solicitud ID: {}. Nuevo estado: {}", request.getIdSolicitud(), nuevoEstado);

@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SeguimientoGetAllResponse {
 
-    // Siguiendo el ejemplo de Contenedor, devolvemos la lista de entidades
     private final List<SeguimientoEnvio> seguimientos;
 
 }
