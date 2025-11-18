@@ -3,7 +3,9 @@ package backend.grupo130.tramos.service;
 import backend.grupo130.tramos.client.camiones.models.Camion;
 import backend.grupo130.tramos.client.contenedores.models.Contenedor;
 import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
+import backend.grupo130.tramos.client.envios.models.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
+import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
 import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
 import backend.grupo130.tramos.config.enums.*;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
@@ -19,7 +21,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -247,10 +253,9 @@ public class TramoService {
             RutaTraslado ruta = tramo.getRutaTraslado();
             SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
-            // ... (Lógica de negocio comentada, la respeto) ...
-            //if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
-            //    throw new ServiceError("No se puede registar el inicio de un tramo de una solicitud que no esta programada", 400);
-            //}
+            if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
+                throw new ServiceError("", Errores.SOLICITUD_NO_PROGRAMADA, 400);
+            }
 
             List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
             int ordenActual = tramo.getOrden() ;
@@ -280,13 +285,15 @@ public class TramoService {
                 throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
             }
 
+            this.camionesRepository.cambiarDisponibilidad(camion.getDominio(), false);
+
             tramo.setFechaHoraInicioReal(LocalDateTime.now());
             tramo.setEstado(EstadoTramo.INICIADO);
             log.debug("Tramo ID {} actualizado a INICIADO.", tramo.getIdTramo());
 
             Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
 
-            if(contenedor.getEstado() != null && contenedor.getEstado().equals(EstadoContenedor.EN_DEPOSITO)){
+            if(contenedor.getEstado() != null && contenedor.getEstado().name().equals(EstadoContenedor.EN_DEPOSITO.name())){
                 log.info("Contenedor {} sale de DEPOSITO. Actualizando a EN_TRANSITO.", contenedor.getIdContenedor());
                 this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
             }
@@ -308,6 +315,7 @@ public class TramoService {
                 Contenedor contenedorPrimerTramo = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
                 this.contenedorRepository.cambioDeEstado(contenedorPrimerTramo.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
                 log.debug("Contenedor {} actualizado a EN_TRANSITO.", contenedorPrimerTramo.getIdContenedor());
+
             }
 
             log.info("Registro de INICIO de Tramo ID {} completado.", request.getIdTramo());
@@ -345,10 +353,9 @@ public class TramoService {
             RutaTraslado ruta = tramo.getRutaTraslado();
             SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
-            // ... (Lógica de negocio comentada, la respeto) ...
-            //if(!solicitudTraslado.esEntransito()){
-            //    throw new ServiceError("No se puede registar el fin de un tramo de una solicitud que no esta iniciada", 400);
-            //}
+            if(!solicitudTraslado.esEntransito()){
+               throw new ServiceError("",Errores.SOLICITUD_NO_INICIADA, 400);
+            }
 
             Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
@@ -356,6 +363,8 @@ public class TramoService {
                 log.error("CAMION NO ENCONTRADO (Inconsistencia de datos): {}", request.getDominioCamion());
                 throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
             }
+
+            this.camionesRepository.cambiarDisponibilidad(camion.getDominio(), true);
 
             tramo.setFechaHoraFinReal(LocalDateTime.now());
             tramo.setEstado(EstadoTramo.FINALIZADO);
@@ -372,6 +381,42 @@ public class TramoService {
             if(tramo.getOrden().equals(ruta.getCantidadTramos())) {
                 log.info("Detectado fin del ultimo tramo (Orden {} de {}). Finalizando Solicitud {} y Contenedor {}.", tramo.getOrden(), ruta.getCantidadTramos(), solicitudTraslado.getIdSolicitud(), solicitudTraslado.getIdContenedor());
 
+                Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
+                this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.ENTREGADO.name());
+                log.debug("Contenedor {} actualizado a ENTREGADO.", contenedor.getIdContenedor());
+
+
+                List<Tramo> todosLosTramos = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
+                Tarifa tarifa = solicitudTraslado.getTarifa();
+
+                if (tarifa == null) {
+                    log.error("La Solicitud {} no tiene Tarifa asociada. No se puede calcular el costo final.", solicitudTraslado.getIdSolicitud());
+                    throw new ServiceError("Solicitud sin tarifa", Errores.TARIFA_NO_ENCONTRADA, 404);
+                }
+
+                BigDecimal costoFinalCalculado = tarifa.calcularCostoFinal(solicitudTraslado.getCostoEstimado(), todosLosTramos);
+                log.info("Costo final calculado para Solicitud {}: ${}", solicitudTraslado.getIdSolicitud(), costoFinalCalculado);
+
+                LocalDateTime inicio = todosLosTramos.getFirst().getFechaHoraInicioReal();
+                LocalDateTime fin = todosLosTramos.getFirst().getFechaHoraFinReal();
+
+                Duration duration = Duration.between(inicio, fin);
+
+                BigDecimal segundos = BigDecimal.valueOf(duration.getSeconds());
+
+                BigDecimal tiempoRealHoras = segundos.divide(
+                    BigDecimal.valueOf(3600),
+                    2,
+                    RoundingMode.HALF_UP
+                );
+
+                SolicitudEditRequest editRequest = new SolicitudEditRequest();
+                editRequest.setIdSolicitud(solicitudTraslado.getIdSolicitud());
+                editRequest.setCostoFinal(costoFinalCalculado);
+                editRequest.setTiempoRealHoras(tiempoRealHoras);
+
+                this.enviosRepository.editSolicitud(editRequest);
+
                 SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
 
                 requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
@@ -380,10 +425,6 @@ public class TramoService {
 
                 this.enviosRepository.cambioDeEstadoSolicitud(requestCambio);
                 log.debug("Solicitud {} actualizada a ENTREGADO.", solicitudTraslado.getIdSolicitud());
-
-                Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
-                this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.ENTREGADO.name());
-                log.debug("Contenedor {} actualizado a ENTREGADO.", contenedor.getIdContenedor());
             }
 
             log.info("Registro de FIN de Tramo ID {} completado.", request.getIdTramo());

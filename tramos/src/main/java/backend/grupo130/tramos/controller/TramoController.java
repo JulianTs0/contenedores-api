@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tramos")
+@RequestMapping("/api/tramos/tramos")
 @RequiredArgsConstructor
 @Validated
 @Slf4j

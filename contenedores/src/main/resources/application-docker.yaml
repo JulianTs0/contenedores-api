@@ -1,0 +1,6 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://db_contenedores:5432/contenedores_db
+    clients:
+        usuarios:
+            url: http://usuarios:8090/api/usuarios

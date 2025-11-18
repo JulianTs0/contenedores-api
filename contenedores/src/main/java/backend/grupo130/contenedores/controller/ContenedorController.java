@@ -122,13 +122,13 @@ public class ContenedorController {
             content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<RegisterResponse> register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo contenedor a registrar", required = true,
             content = @Content(schema = @Schema(implementation = RegisterRequest.class)))
         @RequestBody @Valid RegisterRequest request
     ) {
-        this.contenedorService.register(request);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(this.contenedorService.register(request));
     }
 
     @Operation(summary = "Editar un contenedor existente",

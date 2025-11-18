@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostgresContenedorRepositoryI extends JpaRepository<Contenedor, Long> {
 
-    Contenedor findFirstByPesoAndVolumen(BigDecimal peso, BigDecimal volumen);
+    Contenedor findFirstByPesoAndVolumenAndIdClienteIsNull(BigDecimal peso, BigDecimal volumen);
 
     List<Contenedor> findByEstado(Estado estado);
 

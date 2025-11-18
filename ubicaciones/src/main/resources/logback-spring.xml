@@ -2,27 +2,22 @@
 <configuration>
 
     <!--
-    PASO 3: Persistencia Local y Rotación (Rolling Log)
-    PASO 4: Inclusión del Correlation ID (MDC)
+      Este archivo es genérico y reutilizable.
+      Toma el nombre de la aplicación desde application.yml
     -->
+    <springProperty scope="context" name="spring.application.name" source="spring.application.name"/>
 
-    <!-- Variable para definir la ruta de los logs -->
-    <property name="LOG_PATH" value="logs" />
+    <!-- Variable para definir el directorio de los logs -->
+    <property name="LOGS_DIR" value="./logs" />
 
     <!--
-    Patrón de Log:
-    %d: Fecha y hora
-    %-5level: Nivel de log (INFO, DEBUG, etc.)
-    [%thread]: Hilo que ejecuta
-    [%-40.40logger{39}]: Nombre de la clase (acortado)
-    [%X{correlationId}]: <- ¡AQUÍ ESTÁ EL CORRELATION ID! Lee la clave "correlationId" del MDC.
-    %msg%n: Mensaje de log y salto de línea
+      Variable para el patrón de log.
+      Incluye el "Correlation ID" usando %X{correlationId}
     -->
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%-40.40logger{39}] [%X{correlationId}] : %msg%n" />
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{correlationId:-}] - %msg%n" />
 
-    <!-- 1. Appender de Consola (Salida Estándar) -->
-    <!-- Esto cumple el requisito de "Configuración en Docker" (escribir en stdout) -->
+    <!-- Appender de Consola (para Docker) -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
@@ -30,47 +25,44 @@
         </encoder>
     </appender>
 
-    <!-- 2. Appender de Archivo con Rotación (Rolling File Appender) -->
-    <!-- Esto cumple el requisito de "Persistencia Local y Rotación" -->
+    <!--
+      Appender de Archivo con Rotación (para persistencia)
+      Usa el nombre de la app dinámicamente.
+    -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/ubicaciones-service.log</file>
+        <!--
+          ¡CLAVE! Usa el nombre del microservicio para el archivo de log
+          Ej: /logs/usuarios.log, /logs/tramos.log
+        -->
+        <file>${LOGS_DIR}/${spring.application.name}.log</file>
 
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
             <charset>utf8</charset>
         </encoder>
 
-        <!-- Política de Rotación: Rota diariamente O si el archivo supera los 10MB -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- Patrón del archivo historico (diario) -->
-            <fileNamePattern>${LOG_PATH}/archived/ubicaciones-service-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- Tamaño máximo del archivo antes de rotar (dentro del mismo día) -->
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- Mantener 30 días de historial -->
+        <!-- Política de Rotación (Rolling Policy) -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--
+              ¡CLAVE! Usa el nombre del microservicio para el archivo archivado
+              Ej: /logs/archived/usuarios-2025-11-17.0.log.gz
+            -->
+            <fileNamePattern>${LOGS_DIR}/archived/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
             <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
-    <!--
-    Configuración de Loggers:
-    Define qué appenders usar y el nivel (leído desde application.yml)
-    -->
-
-    <!-- Logger Raíz: Usa ambos appenders (Consola y Archivo) -->
-    <root level="INFO"> <!-- El nivel aquí es un fallback, el de .yml tiene prioridad -->
+    <!-- Logger Raíz (root) -->
+    <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </root>
 
-    <!-- Logger específico para nuestro paquete -->
-    <!-- No es necesario re-definirlo si ya está en application.yml,
-         pero sirve para asegurar que use los appenders correctos.
-         'additivity=false' evita que los logs se dupliquen en el root. -->
-    <logger name="backend.grupo130.ubicaciones" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </logger>
+    <!--
+      El nivel de log específico para tu código (ej: backend.grupo130)
+      se debe manejar en cada application.yml, ya que es más flexible.
+    -->
 
 </configuration>

@@ -7,6 +7,7 @@ import backend.grupo130.envios.client.contenedores.request.ContenedorRegisterReq
 import backend.grupo130.envios.client.contenedores.request.GetByPesoVolumenRequest;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByPesoVolumenResponse;
+import backend.grupo130.envios.client.contenedores.responses.RegisterResponse;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoContenedor;
 import backend.grupo130.envios.config.exceptions.ServiceError;
@@ -49,9 +50,9 @@ public class ContenedorRepository {
         }
     }
 
-    public Contenedor getByPesoVolumen(BigDecimal peso, BigDecimal volumen, Long idCliente){
+    public Contenedor getByPesoVolumen(BigDecimal peso, BigDecimal volumen){
         try {
-            GetByPesoVolumenRequest request = new GetByPesoVolumenRequest(peso, volumen, idCliente);
+            GetByPesoVolumenRequest request = new GetByPesoVolumenRequest(peso, volumen);
             // 1. Llama al endpoint de búsqueda
             ContenedorGetByPesoVolumenResponse response = this.contenedorClient.getByPesoVolumen(request);
 
@@ -69,14 +70,13 @@ public class ContenedorRepository {
         }
     }
 
-    public void register(BigDecimal peso, BigDecimal volumen, Long idCliente){
+    public Long register(BigDecimal peso, BigDecimal volumen, Long idCliente){
         try {
             ContenedorRegisterRequest request = new ContenedorRegisterRequest(peso, volumen, idCliente);
-            ResponseEntity<Void> response = this.contenedorClient.register(request);
+
+            RegisterResponse response = this.contenedorClient.register(request);
             
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new ServiceError("Error al registrar contenedor", Errores.ERROR_INTERNO, response.getStatusCode().value());
-            }
+            return response.getId();
         } catch (Exception ex){
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }

@@ -36,12 +36,6 @@ public class Tarifa {
     @Column(name = "consumo_aprox", precision = 10, scale = 2)
     private BigDecimal consumoAprox;
 
-    @Column(name = "costo_estimado", precision = 10, scale = 2)
-    private BigDecimal costoEstimado;
-
-    @Column(name = "costo_final", precision = 10, scale = 2)
-    private BigDecimal costoFinal;
-
     @Column(name = "costo_estadia", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoEstadia;
 

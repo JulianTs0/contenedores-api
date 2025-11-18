@@ -60,7 +60,7 @@ public class SolicitudService {
                 solicitud.getIdSolicitud(),
                 solicitud.getFechaInicio(),
                 solicitud.getFechaFin(),
-                solicitud.getEstado().toString(),
+                solicitud.getEstado().name(),
                 solicitud.getTarifa(),
                 solicitud.getSeguimientos(),
                 solicitud.getIdContenedor(),
@@ -112,26 +112,26 @@ public class SolicitudService {
                 log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
                 contenedor = this.contenedorRepository.getByPesoVolumen(
                     request.getPeso(),
-                    request.getVolumen(),
-                    request.getIdCliente()
+                    request.getVolumen()
                 );
+
+                if(contenedor.getIdCliente() != null){
+                    throw new ServiceError("[404]",Errores.CONTENEDOR_NO_ENCONTRADO,404);
+                }
+
                 this.contenedorRepository.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
                 log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
 
             } catch (ServiceError ex) {
                 if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
                     log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
-                    this.contenedorRepository.register(
+                    Long nuevoId = this.contenedorRepository.register(
                         request.getPeso(),
                         request.getVolumen(),
                         request.getIdCliente()
                     );
                     log.info("Volviendo a buscar el contenedor recién creado...");
-                    contenedor = this.contenedorRepository.getByPesoVolumen(
-                        request.getPeso(),
-                        request.getVolumen(),
-                        request.getIdCliente()
-                    );
+                    contenedor = this.contenedorRepository.getById(nuevoId);
                     log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
                 } else {
                     // Relanzamos si es otro tipo de ServiceError
@@ -198,12 +198,17 @@ public class SolicitudService {
             if (request.getTiempoRealHoras() != null) {
                 solicitud.setTiempoRealHoras(request.getTiempoRealHoras());
             }
-
             if (request.getIdOrigen() != null) {
                 solicitud.setIdOrigen(request.getIdOrigen());
             }
             if (request.getIdDestino() != null) {
                 solicitud.setIdDestino(request.getIdDestino());
+            }
+            if (request.getCostoEstimado() != null) {
+                solicitud.setCostoEstimado(request.getCostoEstimado());
+            }
+            if (request.getCostoFinal() != null) {
+                solicitud.setCostoFinal(request.getCostoFinal());
             }
 
             // --- Lógica para Tarifa (Sin cambios) ---
@@ -211,12 +216,6 @@ public class SolicitudService {
                 log.info("Procesando tarifa para solicitud {}", solicitud.getIdSolicitud());
                 Tarifa tarifaRequest = request.getTarifa();
 
-                if (request.getCostoEstimado() != null) {
-                    tarifaRequest.setCostoEstimado(request.getCostoEstimado());
-                }
-                if (request.getCostoFinal() != null) {
-                    tarifaRequest.setCostoFinal(request.getCostoFinal());
-                }
 
                 Tarifa tarifaExistente = solicitud.getTarifa();
                 if (tarifaExistente != null) {
@@ -227,9 +226,6 @@ public class SolicitudService {
                     tarifaExistente.setConsumoAprox(tarifaRequest.getConsumoAprox());
                     tarifaExistente.setValorLitro(tarifaRequest.getValorLitro());
                     tarifaExistente.setCostoEstadia(tarifaRequest.getCostoEstadia());
-                    tarifaExistente.setCostoEstimado(tarifaRequest.getCostoEstimado());
-                    solicitud.setCostoEstimado(tarifaRequest.getCostoEstimado());
-                    tarifaExistente.setCostoFinal(tarifaRequest.getCostoFinal());
 
                     this.tarifaRepository.update(tarifaExistente);
                 } else {

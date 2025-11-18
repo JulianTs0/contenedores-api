@@ -69,7 +69,7 @@ public class ContenedorService {
             log.debug("Llamando al repositorio para buscar por peso y volumen.");
             Contenedor contenedor = this.contenedorRepository.findByPesoVolumen(request.getPeso(), request.getVolumen());
 
-            if (contenedor == null) {
+            if (contenedor == null || contenedor.getIdCliente() != null) {
                 log.warn("No se encontró un contenedor disponible para peso {} y volumen {}", request.getPeso(), request.getVolumen());
                 throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
             }
@@ -136,11 +136,12 @@ public class ContenedorService {
 
     // POST
 
-    public void register(RegisterRequest request) throws ServiceError {
+    public RegisterResponse register(RegisterRequest request) throws ServiceError {
         log.info("Iniciando registro de nuevo contenedor (Peso: {}, Volumen: {}).", request.getPeso(), request.getVolumen());
         try {
 
             Contenedor contenedor = new Contenedor();
+            contenedor.setIdContenedor(null);
             contenedor.setPeso(request.getPeso());
             contenedor.setVolumen(request.getVolumen());
 
@@ -163,8 +164,10 @@ public class ContenedorService {
                 contenedor.setEstado(Estado.BORRADOR);
             }
 
-            this.contenedorRepository.save(contenedor);
+            Contenedor saved = this.contenedorRepository.save(contenedor);
+
             log.info("Nuevo contenedor registrado exitosamente en el repositorio.");
+            return ContenedorMapperDto.toResponsePost(saved);
         } catch (ServiceError ex) {
             log.warn("Error de servicio al registrar contenedor - Código: {} - Mensaje: {}", ex.getHttpCode(), ex.getMessage());
             throw ex;
@@ -240,7 +243,6 @@ public class ContenedorService {
 
             log.debug("Asignando cliente y cambiando estado a PROGRAMADO para contenedor ID: {}.", request.getId());
             contenedor.setIdCliente(usuario.getIdUsuario());
-            contenedor.setEstado(Estado.PROGRAMADO);
 
             this.contenedorRepository.update(contenedor);
             log.info("Cliente ID: {} asignado exitosamente al contenedor ID: {}.", request.getIdCliente(), request.getId());

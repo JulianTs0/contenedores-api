@@ -171,7 +171,7 @@ public class CamionController {
         @ApiResponse(responseCode = "404", description = "Camión no encontrado", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
-    @PatchMapping("/cambiarDisponibilidad")
+    @PutMapping("/cambiarDisponibilidad")
     public ResponseEntity<EditResponse> cambiarDisponibilidad(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dominio del camión y su nuevo estado de disponibilidad", required = true)
         @RequestBody @Valid CambiarDisponibilidadRequest request
@@ -190,7 +190,7 @@ public class CamionController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PatchMapping("/asignarTransportista")
-    public ResponseEntity<?> cambioDeEstado(
+    public ResponseEntity<?> asignarTransportista(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dominio del camión e ID del transportista a asignar", required = true)
         @RequestBody @Valid AsignarTransportistaRequest request
     ) {

@@ -1,0 +1,23 @@
+@startuml
+title Diagrama de Secuencia: Asignar Solicitud (Interacción Microservicios)
+
+hide footbox
+autonumber
+
+participant "TramosService" as TC
+participant "EnviosService" as EC
+
+TC -> TC: asignarSolicitud(RutaAsignarSolicitudRequest)
+activate TC
+
+
+TC -> EC: getSolicitudTrasladoById(idSolicitud)
+activate EC
+EC --> TC: SolicitudTraslado (o Error 404)
+deactivate EC
+
+
+TC --> TC: void (Exito)
+deactivate TC
+
+@enduml

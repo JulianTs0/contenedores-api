@@ -1,0 +1,37 @@
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8080/realms/TPI-Backend
+            client:
+                provider:
+                    keycloak:
+                        token-uri: http://keycloak:8080/realms/TPI-Backend/protocol/openid-connect/token
+
+    cloud:
+        gateway:
+            server:
+                webflux:
+                    routes:
+                        - id: ms-usuarios
+                          uri: http://usuarios:8090
+                        - id: ms-contenedores
+                          uri: http://contenedores:8091
+                        - id: ms-tramos
+                          uri: http://tramos:8092
+                        - id: ms-camiones
+                          uri: http://camiones:8093
+                        - id: ms-ubicaciones
+                          uri: http://ubicaciones:8094
+                        - id: ms-envios
+                          uri: http://envios:8095
+
+server:
+    uri:
+        usuarios: http://usuarios:8090
+        contenedores: http://contenedores:8091
+        tramos: http://tramos:8092
+        camiones: http://camiones:8093
+        ubicaciones: http://ubicaciones:8094
+        envios: http://envios:8095

@@ -26,25 +26,12 @@ springdoc:
     path: /swagger-ui.html
 
 logging:
-    # 1. Referencia al archivo de configuración de Logback (Paso 3)
-    # Spring Boot buscará este archivo para aplicar la configuración de rotación.
+    # 1. Le dice a Spring que use el archivo XML
     config: classpath:logback-spring.xml
 
-    # 2. Definición de la ruta del archivo (usada por logback-spring.xml)
-    file:
-        # Ajustado para este microservicio
-        name: logs/microservicio-contenedores.log # Cumple TPI Paso 3
-
-    # 3. Definición de Niveles de Log (Cumple TPI Paso 2)
+    # 2. Define los niveles
     level:
-        # Nivel por defecto para todo (INFO)
         root: INFO
-
-        # Nivel específico para NUESTRO código (DEBUG para diagnóstico)
-        # Ajustado al paquete de tus clases
-        backend.grupo130.contenedores: DEBUG
-
-        # Reducir el "ruido" de librerías comunes en producción
+        backend.grupo130: DEBUG # O el nivel que quieras para tu código
         org.springframework: INFO
-        org.hibernate.SQL: WARN # Ocultar las queries de Hibernate, salvo que sean WARN
-        org.hibernate.type.descriptor.sql: WARN
+        org.hibernate: WARN

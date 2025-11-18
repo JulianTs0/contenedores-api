@@ -15,7 +15,7 @@ public class ContenedorMapperDto {
             contenedor.getPeso(),
             contenedor.getVolumen(),
             usuario,
-            contenedor.getEstado().toString()
+            contenedor.getEstado().name()
         );
     }
 
@@ -28,6 +28,12 @@ public class ContenedorMapperDto {
     public static GetAllResponse toResponseGet(List<Contenedor> contenedores) {
         return new GetAllResponse(
             contenedores
+        );
+    }
+
+    public static RegisterResponse toResponsePost(Contenedor contenedor) {
+        return new RegisterResponse(
+            contenedor.getIdContenedor()
         );
     }
 

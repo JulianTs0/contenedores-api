@@ -57,10 +57,6 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- ========================= -->
-        <!-- 🔒 Seguridad JWT / Keycloak -->
-        <!-- ========================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -70,9 +66,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
-        <!-- ========================= -->
-        <!-- 🔒 Fin dependencias JWT -->
-        <!-- ========================= -->
 
     </dependencies>
     <dependencyManagement>

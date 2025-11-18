@@ -1,0 +1,6 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://db_camiones:5432/camiones_db
+    clients:
+        usuarios:
+            url: http://usuarios:8090/api/usuarios

@@ -13,6 +13,4 @@ public class GetByPesoVolumenRequest {
 
     private final BigDecimal volumen;
 
-    private final Long idCliente;
-
 }

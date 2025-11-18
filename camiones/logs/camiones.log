@@ -1,0 +1,141 @@
+2025-11-18 08:17:44.390 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - Starting CamionesApplication using Java 21.0.8 with PID 8350 (/home/julian/CarpetaCentral/Programacion/Java/TPI-Backend/camiones/target/classes started by julian in /home/julian/CarpetaCentral/Programacion/Java/TPI-Backend/camiones)
+2025-11-18 08:17:44.400 [restartedMain] DEBUG b.g.camiones.CamionesApplication - [] - Running with Spring Boot v3.5.7, Spring v6.2.12
+2025-11-18 08:17:44.402 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - No active profile set, falling back to 1 default profile: "default"
+2025-11-18 08:17:44.487 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-18 08:17:44.488 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-18 08:17:45.840 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-18 08:17:45.926 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [] - Finished Spring Data repository scanning in 67 ms. Found 1 JPA repository interface.
+2025-11-18 08:17:46.138 [restartedMain] INFO  o.s.cloud.context.scope.GenericScope - [] - BeanFactory id=66a94ac0-d2aa-3b1e-b455-326bf8b1be0b
+2025-11-18 08:17:46.854 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - [] - Tomcat initialized with port 8093 (http)
+2025-11-18 08:17:46.878 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - [] - Initializing ProtocolHandler ["http-nio-8093"]
+2025-11-18 08:17:46.881 [restartedMain] INFO  o.a.catalina.core.StandardService - [] - Starting service [Tomcat]
+2025-11-18 08:17:46.882 [restartedMain] INFO  o.a.catalina.core.StandardEngine - [] - Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-11-18 08:17:46.948 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - [] - Initializing Spring embedded WebApplicationContext
+2025-11-18 08:17:46.949 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [] - Root WebApplicationContext: initialization completed in 2460 ms
+2025-11-18 08:17:47.663 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - [] - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-18 08:17:47.700 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Starting...
+2025-11-18 08:17:47.907 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - [] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@75593dc5
+2025-11-18 08:17:47.910 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Start completed.
+2025-11-18 08:17:47.968 [restartedMain] WARN  org.hibernate.orm.deprecation - [] - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-18 08:17:49.127 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - [] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-18 08:17:49.497 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - [] - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-18 08:17:50.627 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - [] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-18 08:17:50.663 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - [] - Unable to start LiveReload server
+2025-11-18 08:17:51.482 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - [] - Starting ProtocolHandler ["http-nio-8093"]
+2025-11-18 08:17:51.502 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - [] - Tomcat started on port 8093 (http) with context path '/'
+2025-11-18 08:17:51.522 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - Started CamionesApplication in 8.085 seconds (process running for 9.02)
+2025-11-18 08:47:50.206 [http-nio-8093-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - [] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-18 08:47:50.214 [http-nio-8093-exec-1] INFO  o.s.web.servlet.DispatcherServlet - [] - Initializing Servlet 'dispatcherServlet'
+2025-11-18 08:47:50.220 [http-nio-8093-exec-1] INFO  o.s.web.servlet.DispatcherServlet - [] - Completed initialization in 4 ms
+2025-11-18 08:47:51.210 [http-nio-8093-exec-6] INFO  o.s.api.AbstractOpenApiResource - [] - Init duration for springdoc-openapi is: 690 ms
+2025-11-18 08:51:39.629 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de costo aproximado para peso 120.00 y volumen 120.00
+2025-11-18 08:51:39.864 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Costo aproximado calculado: 30.0000000000000000
+2025-11-18 08:51:39.888 [http-nio-8093-exec-9] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de consumo promedio de combustible total
+2025-11-18 08:51:40.005 [http-nio-8093-exec-9] INFO  b.g.camiones.service.CamionService - [] - Consumo promedio total calculado: 22.5
+2025-11-18 08:55:49.729 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de costo aproximado para peso 100.00 y volumen 100.00
+2025-11-18 08:55:49.736 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Costo aproximado calculado: 30.0000000000000000
+2025-11-18 08:55:49.742 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de consumo promedio de combustible total
+2025-11-18 08:55:49.745 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Consumo promedio total calculado: 22.5
+2025-11-18 09:08:22.265 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Iniciando obtención de camiones disponibles
+2025-11-18 09:08:22.331 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Se encontraron 3 camiones disponibles
+2025-11-18 09:08:49.052 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 23H33EE
+2025-11-18 09:08:49.083 [http-nio-8093-exec-5] DEBUG b.g.camiones.service.CamionService - [] - Camión 23H33EE tiene transportista asignado, buscando datos...
+2025-11-18 09:08:49.140 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 23H33EE
+2025-11-18 09:08:56.924 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 23H33EE
+2025-11-18 09:08:56.928 [http-nio-8093-exec-6] DEBUG b.g.camiones.service.CamionService - [] - Camión 23H33EE tiene transportista asignado, buscando datos...
+2025-11-18 09:08:56.939 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 23H33EE
+2025-11-18 09:09:10.761 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Iniciando obtención de camiones disponibles
+2025-11-18 09:09:10.768 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Se encontraron 3 camiones disponibles
+2025-11-18 09:09:28.458 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 09:09:28.466 [http-nio-8093-exec-8] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 09:09:28.487 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 09:30:08.033 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - [] - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-18 09:30:08.058 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - [] - Graceful shutdown complete
+2025-11-18 09:30:08.115 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - [] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-18 09:30:08.173 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Shutdown initiated...
+2025-11-18 09:30:08.192 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Shutdown completed.
+2025-11-18 09:30:22.086 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - Starting CamionesApplication using Java 21.0.8 with PID 16916 (/home/julian/CarpetaCentral/Programacion/Java/TPI-Backend/camiones/target/classes started by julian in /home/julian/CarpetaCentral/Programacion/Java/TPI-Backend/camiones)
+2025-11-18 09:30:22.099 [restartedMain] DEBUG b.g.camiones.CamionesApplication - [] - Running with Spring Boot v3.5.7, Spring v6.2.12
+2025-11-18 09:30:22.100 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - No active profile set, falling back to 1 default profile: "default"
+2025-11-18 09:30:22.323 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-18 09:30:22.324 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - [] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-18 09:30:24.684 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-18 09:30:24.827 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [] - Finished Spring Data repository scanning in 101 ms. Found 1 JPA repository interface.
+2025-11-18 09:30:25.233 [restartedMain] INFO  o.s.cloud.context.scope.GenericScope - [] - BeanFactory id=66a94ac0-d2aa-3b1e-b455-326bf8b1be0b
+2025-11-18 09:30:26.392 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - [] - Tomcat initialized with port 8093 (http)
+2025-11-18 09:30:26.431 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - [] - Initializing ProtocolHandler ["http-nio-8093"]
+2025-11-18 09:30:26.437 [restartedMain] INFO  o.a.catalina.core.StandardService - [] - Starting service [Tomcat]
+2025-11-18 09:30:26.438 [restartedMain] INFO  o.a.catalina.core.StandardEngine - [] - Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-11-18 09:30:26.536 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - [] - Initializing Spring embedded WebApplicationContext
+2025-11-18 09:30:26.538 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [] - Root WebApplicationContext: initialization completed in 4210 ms
+2025-11-18 09:30:27.791 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - [] - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-18 09:30:27.871 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Starting...
+2025-11-18 09:30:28.293 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - [] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@33ac6a65
+2025-11-18 09:30:28.296 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Start completed.
+2025-11-18 09:30:28.388 [restartedMain] WARN  org.hibernate.orm.deprecation - [] - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-18 09:30:30.534 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - [] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-18 09:30:31.081 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - [] - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-18 09:30:32.563 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - [] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-18 09:30:32.615 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - [] - Unable to start LiveReload server
+2025-11-18 09:30:33.805 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - [] - Starting ProtocolHandler ["http-nio-8093"]
+2025-11-18 09:30:33.849 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - [] - Tomcat started on port 8093 (http) with context path '/'
+2025-11-18 09:30:33.874 [restartedMain] INFO  b.g.camiones.CamionesApplication - [] - Started CamionesApplication in 13.847 seconds (process running for 15.716)
+2025-11-18 09:48:50.167 [http-nio-8093-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - [] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-18 09:48:50.200 [http-nio-8093-exec-1] INFO  o.s.web.servlet.DispatcherServlet - [] - Initializing Servlet 'dispatcherServlet'
+2025-11-18 09:48:50.282 [http-nio-8093-exec-1] INFO  o.s.web.servlet.DispatcherServlet - [] - Completed initialization in 79 ms
+2025-11-18 09:48:51.995 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de costo aproximado para peso 200.00 y volumen 100.00
+2025-11-18 09:48:52.145 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Costo aproximado calculado: 40.0000000000000000
+2025-11-18 09:48:52.228 [http-nio-8093-exec-2] INFO  b.g.camiones.service.CamionService - [] - Iniciando cálculo de consumo promedio de combustible total
+2025-11-18 09:48:52.309 [http-nio-8093-exec-2] INFO  b.g.camiones.service.CamionService - [] - Consumo promedio total calculado: 22.5
+2025-11-18 09:50:08.615 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 09:50:08.678 [http-nio-8093-exec-4] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 09:50:08.725 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 09:50:13.724 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 09:50:13.729 [http-nio-8093-exec-5] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 09:50:13.744 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 09:50:17.834 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Iniciando obtención de camiones disponibles
+2025-11-18 09:50:17.866 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Se encontraron 3 camiones disponibles
+2025-11-18 09:50:33.410 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 23H33EE
+2025-11-18 09:50:33.414 [http-nio-8093-exec-7] DEBUG b.g.camiones.service.CamionService - [] - Camión 23H33EE tiene transportista asignado, buscando datos...
+2025-11-18 09:50:33.437 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 23H33EE
+2025-11-18 10:00:04.689 [http-nio-8093-exec-10] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:00:04.707 [http-nio-8093-exec-10] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:00:04.742 [http-nio-8093-exec-10] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:00:04.779 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 22HTY01E. Nuevo estado: false
+2025-11-18 10:00:04.790 [http-nio-8093-exec-1] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 22HTY01E. Nuevo estado: false
+2025-11-18 10:00:31.685 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:00:31.689 [http-nio-8093-exec-3] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:00:31.703 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:00:46.610 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:00:46.613 [http-nio-8093-exec-4] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:00:46.622 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:00:46.631 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 22HTY01E. Nuevo estado: true
+2025-11-18 10:00:46.634 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 22HTY01E. Nuevo estado: true
+2025-11-18 10:00:52.651 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:00:52.656 [http-nio-8093-exec-6] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:00:52.668 [http-nio-8093-exec-6] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:01:29.038 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:01:29.040 [http-nio-8093-exec-7] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:01:29.051 [http-nio-8093-exec-7] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:01:29.060 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 22HTY01E. Nuevo estado: false
+2025-11-18 10:01:29.063 [http-nio-8093-exec-8] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 22HTY01E. Nuevo estado: false
+2025-11-18 10:01:34.706 [http-nio-8093-exec-9] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 22HTY01E
+2025-11-18 10:01:34.709 [http-nio-8093-exec-9] DEBUG b.g.camiones.service.CamionService - [] - Camión 22HTY01E tiene transportista asignado, buscando datos...
+2025-11-18 10:01:34.717 [http-nio-8093-exec-9] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 22HTY01E
+2025-11-18 10:01:34.725 [http-nio-8093-exec-10] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 22HTY01E. Nuevo estado: true
+2025-11-18 10:01:34.727 [http-nio-8093-exec-10] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 22HTY01E. Nuevo estado: true
+2025-11-18 10:02:38.328 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 23H33EE
+2025-11-18 10:02:38.330 [http-nio-8093-exec-3] DEBUG b.g.camiones.service.CamionService - [] - Camión 23H33EE tiene transportista asignado, buscando datos...
+2025-11-18 10:02:38.341 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 23H33EE
+2025-11-18 10:02:38.353 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 23H33EE. Nuevo estado: false
+2025-11-18 10:02:38.359 [http-nio-8093-exec-3] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 23H33EE. Nuevo estado: false
+2025-11-18 10:02:45.115 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Iniciando búsqueda de camión por dominio: 23H33EE
+2025-11-18 10:02:45.118 [http-nio-8093-exec-4] DEBUG b.g.camiones.service.CamionService - [] - Camión 23H33EE tiene transportista asignado, buscando datos...
+2025-11-18 10:02:45.134 [http-nio-8093-exec-4] INFO  b.g.camiones.service.CamionService - [] - Búsqueda exitosa para camión con dominio: 23H33EE
+2025-11-18 10:02:45.150 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Iniciando cambio de disponibilidad para camión: 23H33EE. Nuevo estado: true
+2025-11-18 10:02:45.152 [http-nio-8093-exec-5] INFO  b.g.camiones.service.CamionService - [] - Disponibilidad cambiada exitosamente para camión: 23H33EE. Nuevo estado: true
+2025-11-18 10:07:22.086 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - [] - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-18 10:07:22.090 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - [] - Graceful shutdown complete
+2025-11-18 10:07:22.099 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - [] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-18 10:07:22.108 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Shutdown initiated...
+2025-11-18 10:07:22.112 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - [] - HikariPool-1 - Shutdown completed.

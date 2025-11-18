@@ -1,0 +1,17 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://db_envios:5432/envios_db
+        username: envios
+        password: envios
+
+    clients:
+        usuarios:
+            url: http://usuarios:8090/api/usuarios
+        camiones:
+            url: http://camiones:8093/api/camiones
+        tramos:
+            url: http://tramos:8092/api/tramos
+        ubicaciones:
+            url: http://ubicaciones:8094/api/ubicaciones
+        contenedores:
+            url: http://contenedores:8091/api/contenedores

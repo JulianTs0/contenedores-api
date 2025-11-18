@@ -26,25 +26,12 @@ springdoc:
     path: /swagger-ui.html
 
 logging:
-    # 1. Referencia al archivo de configuración de Logback (Cumple TPI Paso 3)
-    # Le dice a Spring Boot que use este archivo para la configuración avanzada.
+    # 1. Le dice a Spring que use el archivo XML
     config: classpath:logback-spring.xml
 
-    # 2. Definición de la ruta del archivo (usada por logback-spring.xml)
-    file:
-        # Ajustado para tu microservicio de camiones
-        name: logs/microservicio-camiones.log # Cumple TPI Paso 3
-
-    # 3. Definición de Niveles de Log (Cumple TPI Paso 2)
+    # 2. Define los niveles
     level:
-        # Nivel por defecto para todo (INFO)
         root: INFO
-
-        # Nivel específico para TU código (DEBUG para diagnóstico)
-        # ¡Ajustado al paquete de tus clases "camiones"!
-        backend.grupo130.camiones: DEBUG
-
-        # Reducir el "ruido" de librerías comunes
+        backend.grupo130: DEBUG # O el nivel que quieras para tu código
         org.springframework: INFO
-        org.hibernate.SQL: WARN # Ocultar las queries de Hibernate, salvo que sean WARN
-        org.hibernate.type.descriptor.sql: WARN
+        org.hibernate: WARN

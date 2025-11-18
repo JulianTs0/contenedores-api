@@ -1,5 +1,8 @@
 package backend.grupo130.tramos.client.envios.models;
 
+import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.config.enums.TipoTramo;
+import backend.grupo130.tramos.data.models.Tramo;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +13,10 @@ import lombok.NoArgsConstructor;
 import java.math.RoundingMode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -38,7 +45,7 @@ public class Tarifa {
     private BigDecimal costoBase;
 
     // valor preconfigurado
-    private BigDecimal valorLitro;
+    private BigDecimal valorLitro = new BigDecimal("10");
 
     // Sacar el promedio con la BDD
     private BigDecimal consumoAprox;
@@ -46,9 +53,11 @@ public class Tarifa {
     // A calcular
     private BigDecimal costoEstadia;
 
-    public BigDecimal calcularCostoEstimado(BigDecimal distanciaEnKilometros, BigDecimal cargosFijos) {
+    public BigDecimal calcularCostoEstimado(BigDecimal distanciaEnKilometros, BigDecimal cargosFijos, int cantidadTramos) {
 
         BigDecimal costoBaseAjustado = calcularCostoBaseAjustado();
+
+        BigDecimal cargosFijosTotales = cargosFijos.add(new BigDecimal(cantidadTramos));
 
         BigDecimal consumo = (this.consumoAprox != null) ? this.consumoAprox : BigDecimal.ZERO;
         BigDecimal valor = (this.valorLitro != null) ? this.valorLitro : BigDecimal.ZERO;
@@ -61,7 +70,7 @@ public class Tarifa {
          return costoBaseAjustado
             .add(costoCombustible)
             .add(estadia)
-            .add(cargosFijos)
+            .add(cargosFijosTotales)
             .setScale(MONETARY_SCALE, ROUNDING_MODE);
     }
 
@@ -83,6 +92,40 @@ public class Tarifa {
         }
 
         return base.multiply(multiplicador);
+    }
+
+    public BigDecimal calcularCostoFinal(BigDecimal costoAprox, List<Tramo> tramos) {
+        BigDecimal costoTotal = BigDecimal.ZERO;
+
+        if (costoAprox != null) {
+            costoTotal = costoAprox;
+        }
+
+        for (int i = 0; i < tramos.size() - 1; i++) {
+            Tramo actual = tramos.get(i);
+
+            boolean esTramoDeposito = actual.getTipoTramo().equals(TipoTramo.ORIGEN_DEPOSITO) ||
+                actual.getTipoTramo().equals(TipoTramo.DEPOSITO_DEPOSITO);
+
+            if (esTramoDeposito) {
+                Tramo siguiente = tramos.get(i + 1);
+
+                LocalDateTime finEstadia = actual.getFechaHoraFinReal();
+                LocalDateTime inicioSiguiente = siguiente.getFechaHoraInicioReal();
+
+                if (finEstadia != null && inicioSiguiente != null && this.costoEstadia != null) {
+
+                    long horasEstadia = ChronoUnit.HOURS.between(finEstadia, inicioSiguiente);
+
+                    if (horasEstadia > 0) {
+                        long diasEstadia = (long) Math.ceil(horasEstadia / 24.0);
+                        BigDecimal costoEstadiaCalc = this.costoEstadia.multiply(new BigDecimal(diasEstadia));
+                        costoTotal = costoTotal.add(costoEstadiaCalc);
+                    }
+                }
+            }
+        }
+        return costoTotal;
     }
 
 }

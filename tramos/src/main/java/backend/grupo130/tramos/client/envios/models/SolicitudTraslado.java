@@ -30,6 +30,8 @@ public class SolicitudTraslado {
 
     private BigDecimal costoFinal;
 
+    private EstadoSolicitud estado;
+
     private Tarifa tarifa;
 
     private List<SeguimientoEnvio> seguimientos;
@@ -41,5 +43,17 @@ public class SolicitudTraslado {
     private Long idOrigen;
 
     private Long idDestino;
+
+    public boolean esBorrador(){
+        return this.estado.equals(EstadoSolicitud.BORRADOR);
+    }
+
+    public boolean esEntregada(){
+        return this.estado.equals(EstadoSolicitud.ENTREGADO);
+    }
+
+    public boolean esEntransito(){
+        return this.estado.equals(EstadoSolicitud.EN_TRANSITO);
+    }
 
 }

@@ -15,7 +15,8 @@ spring:
                     keycloak:
                         client-id: tpi-backend-client
                         authorization-grant-type: authorization_code
-                        redirect-uri: "{baseUrl}/gateway/login/oauth2/code/keycloak"
+                        redirect-uri: "{baseUrl}/api/login/oauth2/code/keycloak"
+                        scope: openid, profile, email
 
     cloud:
         gateway:
@@ -35,7 +36,7 @@ spring:
                               - Path=/gateway/contenedores/**
                           filters:
                               - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
-                        
+
                         # --- RUTAS AÑADIDAS ---
                         - id: ms-tramos
                           uri: http://localhost:8092
@@ -71,6 +72,15 @@ server:
         camiones: http://localhost:8093
         ubicaciones: http://localhost:8094
         envios: http://localhost:8095
+
 logging:
+    # 1. Le dice a Spring que use el archivo XML
+    config: classpath:logback-spring.xml
+
+    # 2. Define los niveles
     level:
-        org.springframework.cloud.gateway: DEBUG
+        root: INFO
+        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        org.springframework: INFO
+        org.hibernate: WARN
+

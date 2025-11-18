@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rutas")
+@RequestMapping("/api/tramos/rutas")
 @RequiredArgsConstructor
 @Validated
 @Slf4j
@@ -89,23 +89,6 @@ public class RutaController {
     ) {
         log.info("Iniciando POST /api/rutas/getRutaTentativa para Solicitud ID: {}", request.getIdSolicitud());
         return ResponseEntity.ok(this.rutaService.getRutaTentativa(request));
-    }
-
-    @Operation(summary = "Confirmar y registrar una ruta (DEPRECADO)",
-        description = "Asigna un ID de solicitud a una ruta ya existente. (Este endpoint está marcado como @Deprecated en el servicio, " +
-            "considerar usar /asignarSolicitud en su lugar).")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Solicitud asignada a la ruta", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Ruta o Solicitud no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @PatchMapping("/register")
-    public ResponseEntity<?> register(
-        @RequestBody @Valid RutaRegisterRequest request
-    ) {
-        log.info("Iniciando PATCH /api/rutas/register para Ruta ID: {} y Solicitud ID: {}", request.getIdRuta(), request.getIdSolicitud());
-        this.rutaService.register(request);
-        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Asignar una solicitud a una ruta",

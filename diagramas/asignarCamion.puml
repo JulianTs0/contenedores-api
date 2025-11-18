@@ -1,0 +1,58 @@
+@startuml
+title Diagrama de Secuencia: Asignar Camión (Coordinación de Estados)
+
+hide footbox
+autonumber
+
+participant "TramosService" as TC
+participant "CamionesService" as CMC
+participant "UsuarioService" as UC
+participant "EnviosService" as EC
+participant "ContenedorService" as CC
+
+TC -> TC: asignarCamion(TramoAsignacionCamionRequest)
+activate TC
+
+' 1. Validar Camión (Llamada Externa)
+TC -> CMC: getById(dominio)
+activate CMC
+
+
+    CMC -> UC: getById(idTransportista)
+    activate UC
+    UC --> CMC: Usuario
+    deactivate UC
+
+CMC --> TC: Camion
+deactivate CMC
+
+' 2. Lógica Interna
+TC -> TC: Validar disponibilidad y asignar
+
+
+alt Todos los Tramos Asignados (Ruta Lista)
+
+    ' A. Actualizar Solicitud
+    TC -> EC: getSolicitudTrasladoById(idSolicitud)
+    activate EC
+    EC --> TC: SolicitudTraslado
+    deactivate EC
+
+
+    TC -> EC: cambioDeEstadoSolicitud(PROGRAMADO)
+    activate EC
+    EC --> TC: ok
+    deactivate EC
+
+
+    TC -> CC: cambioDeEstado(idContenedor, PROGRAMADO)
+    activate CC
+    CC --> TC: ok
+    deactivate CC
+
+end
+
+TC --> TC: void (Exito)
+deactivate TC
+
+@enduml

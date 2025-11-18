@@ -95,16 +95,21 @@ services:
         image: quay.io/keycloak/keycloak:21.1.1 # Usando la versión de tu archivo
         container_name: keycloak
         command: start-dev
+        hostname: localhost
         ports:
             - "8081:8080"
         environment:
             KEYCLOAK_ADMIN: admin
             KEYCLOAK_ADMIN_PASSWORD: admin
             KC_DB: dev-file
+            KC_HOSTNAME: localhost
+            KC_HOSTNAME_PORT: 8081
         volumes:
             - ./keycloak/realms:/opt/keycloak/data/import
+            - keycloak_data:/opt/keycloak/data
         networks:
             - microservices-net
+        restart: always
 
     # --- MICROSERVICIOS DE APLICACIÓN ---
 
@@ -114,12 +119,12 @@ services:
             context: .
             dockerfile: usuarios/Dockerfile
         container_name: usuarios
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_usuarios:5432/usuarios_db
             - SPRING_DATASOURCE_USERNAME=usuarios
             - SPRING_DATASOURCE_PASSWORD=usuarios
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/TPI-Backend
         ports:
             - "8090:8090"
         networks:
@@ -127,6 +132,8 @@ services:
         depends_on:
             - db_usuarios
             - keycloak
+        volumes:
+            - logs_usuarios:/app/logs
 
     # Microservicio de Contenedores
     ms-contenedores:
@@ -134,12 +141,12 @@ services:
             context: .
             dockerfile: contenedores/Dockerfile
         container_name: contenedores
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_contenedores:5432/contenedores_db
             - SPRING_DATASOURCE_USERNAME=contenedores
             - SPRING_DATASOURCE_PASSWORD=contenedores
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/TPI-Backend
             - CLIENTS_USUARIOS_URL=http://usuarios:8090/api/usuarios
         ports:
             - "8091:8091"
@@ -149,6 +156,8 @@ services:
             - db_contenedores
             - ms-usuarios
             - keycloak
+        volumes:
+            - logs_contenedores:/app/logs
 
     # Microservicio de Tramos
     ms-tramos:
@@ -156,13 +165,12 @@ services:
             context: .
             dockerfile: tramos/Dockerfile
         container_name: tramos
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_tramos:5432/tramos_db
             - SPRING_DATASOURCE_USERNAME=tramos
             - SPRING_DATASOURCE_PASSWORD=tramos
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/TPI-Backend
-            # URLs de Clientes
             - CLIENTS_USUARIOS_URL=http://usuarios:8090/api/usuarios
             - CLIENTS_CAMIONES_URL=http://camiones:8093/api/camiones
             - CLIENTS_ENVIOS_URL=http://envios:8095/api/envios
@@ -180,6 +188,8 @@ services:
             - ms-ubicaciones
             - ms-contenedores
             - keycloak
+        volumes:
+            - logs_tramos:/app/logs
             # ms-envios tiene una dependencia circular con ms-tramos.
             # He quitado 'ms-envios' de 'depends_on' aquí para evitar un error.
             # Asegúrate de que tus aplicaciones manejen esto (ej. con reintentos).
@@ -190,12 +200,12 @@ services:
             context: .
             dockerfile: camiones/Dockerfile
         container_name: camiones
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_camiones:5432/camiones_db
             - SPRING_DATASOURCE_USERNAME=camiones
             - SPRING_DATASOURCE_PASSWORD=camiones
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/TPI-Backend
             - CLIENTS_USUARIOS_URL=http://usuarios:8090/api/usuarios
         ports:
             - "8093:8093"
@@ -205,6 +215,8 @@ services:
             - db_camiones
             - ms-usuarios
             - keycloak
+        volumes:
+            - logs_camiones:/app/logs
 
     # Microservicio de Ubicaciones
     ms-ubicaciones:
@@ -212,12 +224,12 @@ services:
             context: .
             dockerfile: ubicaciones/Dockerfile
         container_name: ubicaciones
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_ubicaciones:5432/ubicaciones_db
             - SPRING_DATASOURCE_USERNAME=ubicaciones
             - SPRING_DATASOURCE_PASSWORD=ubicaciones
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/tpi-backend
         ports:
             - "8094:8094"
         networks:
@@ -225,6 +237,8 @@ services:
         depends_on:
             - db_ubicaciones
             - keycloak
+        volumes:
+            - logs_ubicaciones:/app/logs
 
     # Microservicio de Envios
     ms-envios:
@@ -232,13 +246,12 @@ services:
             context: .
             dockerfile: envios/Dockerfile
         container_name: envios
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db_envios:5432/envios_db
             - SPRING_DATASOURCE_USERNAME=envios
             - SPRING_DATASOURCE_PASSWORD=envios
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/tpi-backend
-            # URLs de Clientes
             - CLIENTS_USUARIOS_URL=http://usuarios:8090/api/usuarios
             - CLIENTS_CAMIONES_URL=http://camiones:8093/api/camiones
             - CLIENTS_TRAMOS_URL=http://tramos:8092/api/tramos
@@ -256,6 +269,8 @@ services:
             - ms-ubicaciones
             - ms-contenedores
             - keycloak
+        volumes:
+            - logs_envios:/app/logs
 
     # Microservicio Gateway
     ms-gateway:
@@ -263,13 +278,14 @@ services:
             context: .
             dockerfile: gateway/Dockerfile
         container_name: gateway
+        restart: on-failure
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             # --- Keycloak Overrides ---
-            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/TPI-Backend
-            - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI=http://keycloak:8080/realms/TPI-Backend/protocol/openid-connect/token
-
-            # --- Definiciones de Rutas Completas ---
+            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8081/realms/TPI-Backend
+            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/TPI-Backend/protocol/openid-connect/certs
+            - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/TPI-Backend/protocol/openid-connect/token
+            - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI={baseUrl}/api/login/oauth2/code/keycloak
 
             # --- Ruta 0: ms-usuarios ---
             - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_0_ID=ms-usuarios
@@ -312,7 +328,7 @@ services:
             - SERVER_URI_CONTENEDORES=http://contenedores:8091
             - SERVER_URI_TRAMOS=http://tramos:8092
             - SERVER_URI_CAMIONES=http://camiones:8093
-            - SERVER_URI_UBICaciones=http://ubicaciones:8094
+            - SERVER_URI_UBICACIONES=http://ubicaciones:8094
             - SERVER_URI_ENVIOS=http://envios:8095
         ports:
             - "8082:8082"
@@ -326,6 +342,8 @@ services:
             - ms-ubicaciones
             - ms-envios
             - keycloak
+        volumes:
+            - logs_gateway:/app/logs
 
 # --- VOLÚMENES PERSISTENTES PARA LAS BASES DE DATOS ---
 volumes:
@@ -335,6 +353,14 @@ volumes:
     camiones_db_data:
     ubicaciones_db_data:
     envios_db_data:
+    keycloak_data:
+    logs_usuarios:
+    logs_tramos:
+    logs_envios:
+    logs_ubicaciones:
+    logs_contenedores:
+    logs_camiones:
+    logs_gateway:
 
 # --- RED ÚNICA PARA TODOS LOS SERVICIOS ---
 networks:

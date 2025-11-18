@@ -1,0 +1,3 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://db_ubicaciones:5432/ubicaciones_db

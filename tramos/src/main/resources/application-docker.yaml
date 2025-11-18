@@ -1,0 +1,16 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://db_tramos:5432/tramos_db
+
+    clients:
+        # Todos los clients deben usar nombres de servicio internos
+        usuarios:
+            url: http://usuarios:8090/api/usuarios
+        camiones:
+            url: http://camiones:8093/api/camiones
+        envios:
+            url: http://envios:8095/api/envios
+        ubicaciones:
+            url: http://ubicaciones:8094/api/ubicaciones
+        contenedores:
+            url: http://contenedores:8091/api/contenedores

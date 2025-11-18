@@ -19,6 +19,10 @@ WORKDIR /app
 # Copiar el JAR compilado de la etapa anterior
 COPY --from=app_builder /build/target/envios-0.0.1-SNAPSHOT.jar app.jar
 
+RUN mkdir -p /app/logs
+
+VOLUME /app/logs
+
 # Exponer el puerto
 EXPOSE 8095
 

@@ -21,3 +21,14 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+logging:
+    # 1. Le dice a Spring que use el archivo XML
+    config: classpath:logback-spring.xml
+
+    # 2. Define los niveles
+    level:
+        root: INFO
+        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        org.springframework: INFO
+        org.hibernate: WARN

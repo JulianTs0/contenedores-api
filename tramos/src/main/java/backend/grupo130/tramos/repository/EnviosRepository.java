@@ -8,13 +8,16 @@ import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequ
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
 import backend.grupo130.tramos.client.envios.responses.*;
 import backend.grupo130.tramos.config.enums.Errores;
+import backend.grupo130.tramos.config.enums.EstadoSolicitud;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class EnviosRepository {
 
     private final EnvioClient envioClient;
@@ -35,6 +38,8 @@ public class EnviosRepository {
         try {
             SolicitudGetByIdResponse response = this.envioClient.getSolicitudTrasladoById(solicitudTrasladoId);
 
+            log.warn(response.getEstado());
+
             return new SolicitudTraslado(
                 response.getIdSolicitud(),
                 response.getFechaInicio(),
@@ -43,6 +48,7 @@ public class EnviosRepository {
                 response.getTiempoRealHoras(),
                 response.getCostoEstimado(),
                 response.getCostoFinal(),
+                EstadoSolicitud.fromString(response.getEstado()),
                 response.getTarifa(),
                 response.getSeguimientos(),
                 response.getIdContenedor(),

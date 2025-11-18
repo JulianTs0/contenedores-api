@@ -24,7 +24,8 @@ public enum Errores {
     SOLICITUD_NO_INICIADA("No se puede registar el fin de un tramo de una solicitud que no esta iniciada"),
     CAMION_NO_ENCONTRADO("Camion no encontrado"),
     CAMION_NO_DISPONIBLE("El camion no esta disponible"),
-    CAMIONES_NO_ENCONTRADOS("No se encontraros camiones disponibles");
+    CAMIONES_NO_ENCONTRADOS("No se encontraros camiones disponibles"),
+    TARIFA_NO_ENCONTRADA("La Solicitud no tiene Tarifa asociada. No se puede calcular el costo final");
 
     private final String mensaje;
 

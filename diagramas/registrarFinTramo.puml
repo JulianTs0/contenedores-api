@@ -1,0 +1,67 @@
+@startuml
+title Diagrama de Secuencia: Registrar Fin de Tramo (Cierre de Solicitud)
+
+hide footbox
+autonumber
+
+participant "TramosService" as TC
+participant "EnviosService" as EC
+participant "CamionesService" as CMC
+participant "ContenedorService" as CC
+
+TC -> TC: registrarFinTramo(TramoFinTramoRequest)
+activate TC
+
+' 1. Validaciones previas
+TC -> EC: getSolicitudTrasladoById(idSolicitud)
+activate EC
+EC --> TC: SolicitudTraslado
+deactivate EC
+
+' 2. Liberar Camión
+TC -> CMC: getById(dominio)
+activate CMC
+CMC --> TC: Camion
+deactivate CMC
+
+TC -> CMC: cambiarDisponibilidad(dominio, true)
+activate CMC
+CMC --> TC: ok
+deactivate CMC
+
+' 3. Actualizar Estado Local
+TC -> TC: update(Tramo -> FINALIZADO)
+
+' 4. Logica Último Tramo
+alt Es el Último Tramo (Fin del Viaje)
+
+    ' A. Actualizar Contenedor
+    TC -> CC: cambioDeEstado(idContenedor, ENTREGADO)
+    activate CC
+    CC --> TC: ok
+    deactivate CC
+
+
+    ' C. Actualizar Datos de la Solicitud
+    TC -> EC: editSolicitud(costoFinal, tiempoReal)
+    activate EC
+    EC --> TC: ok
+    deactivate EC
+
+    ' D. Cambiar Estado Solicitud
+    TC -> EC: cambioDeEstadoSolicitud(ENTREGADO)
+    activate EC
+    EC --> TC: ok
+    deactivate EC
+
+else Tramo Intermedio (Destino es Depósito)
+    TC -> CC: cambioDeEstado(idContenedor, EN_DEPOSITO)
+    activate CC
+    CC --> TC: ok
+    deactivate CC
+end
+
+TC --> TC: void (Exito)
+deactivate TC
+
+@enduml

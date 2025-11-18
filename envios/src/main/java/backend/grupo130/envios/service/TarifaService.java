@@ -40,10 +40,10 @@ public class TarifaService {
             tarifa.setConsumoAprox(request.getConsumoAprox());
             tarifa.setCostoEstadia(request.getCostoEstadia());
 
-            this.tarifaRepository.save(tarifa);
+            Tarifa saved = this.tarifaRepository.save(tarifa);
             log.info("Tarifa registrada exitosamente. Nueva ID: {}", tarifa.getIdTarifa());
 
-            TarifaRegisterResponse response = TarifaMapperDto.toResponsePost(tarifa);
+            TarifaRegisterResponse response = TarifaMapperDto.toResponsePost(saved);
             return response;
 
         } catch (ServiceError ex) {

@@ -2,14 +2,13 @@ package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.camiones.CamionClient;
 import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.client.camiones.request.CambiarDisponibilidadRequest;
 import backend.grupo130.tramos.client.camiones.request.GetOpcionesCamionesRequest;
-import backend.grupo130.tramos.client.camiones.responses.GetAllResponse;
-import backend.grupo130.tramos.client.camiones.responses.GetCamionByIdResponse;
-import backend.grupo130.tramos.client.camiones.responses.GetPromedioCombustibleActualResponse;
-import backend.grupo130.tramos.client.camiones.responses.GetPromedioCostoBaseResponse;
+import backend.grupo130.tramos.client.camiones.responses.*;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import lombok.AllArgsConstructor;
+import org.hibernate.sql.ast.tree.predicate.BooleanExpressionPredicate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -38,6 +37,22 @@ public class CamionesRepository {
             );
 
             return camion;
+
+        } catch (ServiceError ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
+        }
+
+    }
+
+    public void cambiarDisponibilidad(String dominio, Boolean estado){
+
+        try {
+
+            CambiarDisponibilidadRequest request = new CambiarDisponibilidadRequest(dominio, estado);
+
+            EditResponse response = this.camionClient.cambiarDisponibilidad(request);
 
         } catch (ServiceError ex) {
             throw ex;

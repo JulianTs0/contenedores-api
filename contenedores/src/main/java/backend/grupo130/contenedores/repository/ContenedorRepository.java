@@ -46,7 +46,7 @@ public class ContenedorRepository {
     }
 
     public Contenedor findByPesoVolumen(BigDecimal peso, BigDecimal volumen){
-        Contenedor contenedor = this.contenedorRepository.findFirstByPesoAndVolumen(peso, volumen);
+        Contenedor contenedor = this.contenedorRepository.findFirstByPesoAndVolumenAndIdClienteIsNull(peso, volumen);
         return contenedor;
     }
 

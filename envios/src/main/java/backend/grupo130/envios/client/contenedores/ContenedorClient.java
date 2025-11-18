@@ -5,6 +5,7 @@ import backend.grupo130.envios.client.contenedores.request.ContenedorRegisterReq
 import backend.grupo130.envios.client.contenedores.request.GetByPesoVolumenRequest;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByPesoVolumenResponse;
+import backend.grupo130.envios.client.contenedores.responses.RegisterResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public interface ContenedorClient {
     ContenedorGetByPesoVolumenResponse getByPesoVolumen(@RequestBody GetByPesoVolumenRequest request);
 
     @PostMapping("/register")
-    ResponseEntity<Void> register(@RequestBody ContenedorRegisterRequest request);
+    RegisterResponse register(@RequestBody ContenedorRegisterRequest request);
 
     @PostMapping("/asignarCliente")
     ResponseEntity<Void> asignarCliente(@RequestBody ContenedorAsignarClienteRequest request);

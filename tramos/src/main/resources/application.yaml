@@ -36,15 +36,12 @@ springdoc:
     path: /swagger-ui.html
 
 logging:
+    # 1. Le dice a Spring que use el archivo XML
+    config: classpath:logback-spring.xml
+
+    # 2. Define los niveles
     level:
-        # Nivel raíz (root) por defecto.
-        # Captura logs de Spring, Hibernate, etc. en nivel INFO.
         root: INFO
-
-        # Nivel específico para TU código.
-        # Poner en DEBUG o TRACE para diagnóstico en desarrollo.
-        backend.grupo130: DEBUG
-
-        # Ejemplo para reducir el "ruido" de librerías comunes:
-        org.springframework.web: INFO
+        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        org.springframework: INFO
         org.hibernate: WARN
