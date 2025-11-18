@@ -31,7 +31,4 @@ public class EditRequest {
     @Digits(integer = 10, fraction = 2, message = "{error.costoTrasladoBase.digits}")
     private BigDecimal costoTrasladoBase;
 
-   // @Positive(message = "{error.idTransportista.positve}")
-   // private Integer idTransportista;
-
 }

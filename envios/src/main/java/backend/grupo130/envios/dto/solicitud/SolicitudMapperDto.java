@@ -17,14 +17,13 @@ public class SolicitudMapperDto {
             solicitud.getIdSolicitud(),
             solicitud.getFechaInicio(),
             solicitud.getFechaFin(),
-            solicitud.getEstado().name(), // Convertimos el Enum a String
+            solicitud.getEstado().name(),
             solicitud.getTarifa(),
             solicitud.getSeguimientos(),
             solicitud.getIdContenedor(),
             solicitud.getIdCliente(),
             solicitud.getIdOrigen(),
             solicitud.getIdDestino(),
-            // --- Campos agregados ---
             solicitud.getCostoEstimado(),
             solicitud.getCostoFinal(),
             solicitud.getTiempoEstimadoHoras(),

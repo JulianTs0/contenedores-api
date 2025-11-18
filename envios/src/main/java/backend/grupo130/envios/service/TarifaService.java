@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j // Anotación de Lombok para SLF4J
+@Slf4j
 public class TarifaService {
 
     private final TarifaRepository tarifaRepository;
@@ -31,7 +31,6 @@ public class TarifaService {
     public TarifaRegisterResponse register(TarifaRegisterRequest request) throws ServiceError {
         log.info("Inicio register. Registrando nueva tarifa.");
         try {
-            // (Lógica de negocio sin cambios)
             Tarifa tarifa = new Tarifa();
             tarifa.setConsumoAprox(request.getConsumoAprox());
             tarifa.setCostoBase(request.getCostoBase());
@@ -64,7 +63,6 @@ public class TarifaService {
                 throw new ServiceError("", Errores.TARIFA_NO_ENCONTRADA, 404);
             }
 
-            // (Lógica de negocio sin cambios)
             if (request.getPesoMax() != null) {
                 tarifa.setPesoMax(request.getPesoMax());
             }

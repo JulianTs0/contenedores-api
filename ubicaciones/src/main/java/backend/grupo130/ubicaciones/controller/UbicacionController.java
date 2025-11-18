@@ -32,7 +32,7 @@ import java.util.List;
 @RequestMapping("/api/ubicaciones/ubicaciones")
 @RequiredArgsConstructor
 @Validated
-@Slf4j // <--- Añadido Logger
+@Slf4j
 @Tag(name = "Gestión de Ubicaciones", description = "Endpoints para crear, leer, actualizar y eliminar Ubicaciones.")
 public class UbicacionController {
 

@@ -74,9 +74,7 @@ public class UsuarioController {
             content = @Content)
     })
     @GetMapping("/getAll")
-    public ResponseEntity<GetAllResponse> getAll() { // <-- CORREGIDO: de '?' a 'GetAllResponse'
-        // Devolver '?' (wildcard) impide que Swagger sepa qué objeto se retorna.
-        // Ahora está explícitamente tipado a 'GetAllResponse', que es lo que el servicio devuelve.
+    public ResponseEntity<GetAllResponse> getAll() {
         return ResponseEntity.ok(this.usuarioService.getAll());
     }
 
@@ -93,18 +91,14 @@ public class UsuarioController {
             content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<Void> register( // <-- CORREGIDO: El servicio devuelve void, no GetByIdResponse
+    public ResponseEntity<Void> register(
                                           @RequestBody @Valid RegisterRequest request
     ) {
-        // El estándar REST para una creación (POST) es devolver 201 Created.
-        // Dado que tu servicio 'register' devuelve 'void', no podemos devolver un cuerpo.
         this.usuarioService.register(request);
 
-        // Devolvemos 201 CREATED
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // PATCH
 
     @Operation(summary = "Editar un usuario existente",
         description = "Actualiza uno o más campos de un usuario existente. Los campos nulos en el request serán ignorados.")

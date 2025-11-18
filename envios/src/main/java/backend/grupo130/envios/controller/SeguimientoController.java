@@ -27,7 +27,6 @@ public class SeguimientoController {
         @Positive(message = "{error.idSeguimiento.positive}")
         @PathVariable Long id
     ) {
-        // LOG Nivel INFO: Evento importante de flujo
         log.info("Recibida solicitud GET en /seguimiento/getById/{}", id);
         SeguimientoGetByIdRequest request = new SeguimientoGetByIdRequest(id);
         return ResponseEntity.ok(this.seguimientoService.getById(request));

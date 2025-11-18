@@ -30,32 +30,28 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j // Anotación de Lombok para SLF4J
+@Slf4j
 public class SolicitudService {
 
     private final SolicitudTrasladoRepository solicitudRepository;
 
-    private final ContenedorRepository contenedorRepository; // Inyectamos el repo de Contenedor
+    private final ContenedorRepository contenedorRepository;
 
     private final TarifaRepository tarifaRepository;
 
 
     public SolicitudGetByIdResponse getById(SolicitudGetByIdRequest request) throws ServiceError {
-        // LOG Nivel INFO: Evento importante de flujo
         log.info("Inicio getById. Buscando solicitud con ID: {}", request.getIdSolicitud());
         try {
             SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
             if (solicitud == null) {
-                // LOG Nivel WARN: Condición anómala no crítica
                 log.warn("Solicitud no encontrada con ID: {}", request.getIdSolicitud());
                 throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
             }
 
             log.info("Solicitud encontrada exitosamente. ID: {}", request.getIdSolicitud());
 
-            // --- ADAPTACIÓN MANUAL ---
-            // (Lógica de negocio sin cambios)
             return new SolicitudGetByIdResponse(
                 solicitud.getIdSolicitud(),
                 solicitud.getFechaInicio(),
@@ -74,12 +70,9 @@ public class SolicitudService {
             );
 
         } catch (ServiceError ex) {
-            // Logueamos el error de servicio (controlado)
             log.warn("ServiceError en getById: {} - {}", ex.getHttpCode(), ex.getMessage());
             throw ex;
         } catch (Exception ex) {
-            // LOG Nivel ERROR: Fallo grave o excepción no manejada
-            // Incluimos la traza de la excepción (ex) como buena práctica
             log.error("Error interno al buscar solicitud por ID {}: {}", request.getIdSolicitud(), ex.getMessage(), ex);
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO, 500);
         }
@@ -134,12 +127,10 @@ public class SolicitudService {
                     );
                     log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
                 } else {
-                    // Relanzamos si es otro tipo de ServiceError
                     throw ex;
                 }
             }
 
-            // (Lógica de negocio sin cambios)
             SolicitudTraslado solicitud = new SolicitudTraslado();
             solicitud.setIdContenedor(contenedor.getIdContenedor());
             solicitud.setIdCliente(request.getIdCliente());
@@ -179,13 +170,11 @@ public class SolicitudService {
                 throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
             }
 
-            // (Lógica de negocio sin cambios)
             if (solicitud.getEstado() == Estado.ENTREGADO) {
                 log.warn("Intento de edición en solicitud finalizada. ID: {}", request.getIdSolicitud());
                 throw new ServiceError("No se puede editar una solicitud FINALIZADA", Errores.TRANSICION_ESTADO_INVALIDA, 400);
             }
 
-            // (Lógica de negocio sin cambios)
             if (request.getFechaInicio() != null) {
                 solicitud.setFechaInicio(request.getFechaInicio());
             }
@@ -206,7 +195,6 @@ public class SolicitudService {
                 solicitud.setIdDestino(request.getIdDestino());
             }
 
-            // --- Lógica para Tarifa (Sin cambios) ---
             if (request.getTarifa() != null) {
                 log.info("Procesando tarifa para solicitud {}", solicitud.getIdSolicitud());
                 Tarifa tarifaRequest = request.getTarifa();
@@ -253,7 +241,6 @@ public class SolicitudService {
         }
     }
 
-    // CAMBIO DE ESTADO
     public SolicitudCambioDeEstadoResponse cambioDeEstado(SolicitudCambioDeEstadoRequest request) throws ServiceError {
         log.info("Inicio cambioDeEstado. Solicitud ID: {}. Nuevo estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
         try {
@@ -271,7 +258,6 @@ public class SolicitudService {
                 throw new ServiceError("", Errores.ESTADO_INVALIDO, 400);
             }
 
-            // (Lógica de negocio sin cambios)
             switch (solicitud.getEstado()) {
                 case BORRADOR:
                     if (nuevoEstado != Estado.PROGRAMADO) {
@@ -293,7 +279,6 @@ public class SolicitudService {
                     throw new ServiceError("", Errores.SOLICITUD_YA_FINALIZADA, 400);
             }
 
-            // (Lógica de negocio sin cambios)
             if(nuevoEstado.equals(Estado.EN_TRANSITO)){
                 solicitud.setFechaInicio(LocalDateTime.now());
             }

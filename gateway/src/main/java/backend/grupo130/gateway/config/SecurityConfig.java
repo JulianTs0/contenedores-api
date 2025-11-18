@@ -89,7 +89,6 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.PATCH, "/api/ubicaciones/ubicaciones/edit").hasAnyRole(ROL_ADMIN)
                 .pathMatchers(HttpMethod.DELETE, "/api/ubicaciones/ubicaciones/delete/{id}").hasAnyRole(ROL_ADMIN)
 
-                // Cualquier otra solicitud debe estar autenticada
                 .anyExchange().authenticated()
             )
 

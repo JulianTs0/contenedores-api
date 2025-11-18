@@ -28,22 +28,16 @@ public class Tarifa {
 
     private Long idTarifa;
 
-    // A cargar segun el contenedor
     private BigDecimal pesoMax;
 
-    // A cargar segun el contenedor
     private BigDecimal volumenMax;
 
-    // A calcular del costo base de los camiones
     private BigDecimal costoBase;
 
-    // valor preconfigurado
     private BigDecimal valorLitro;
 
-    // Sacar el promedio con la BDD
     private BigDecimal consumoAprox;
 
-    // A calcular
     private BigDecimal costoEstadia;
 
     public BigDecimal calcularCostoEstimado(BigDecimal distanciaEnKilometros, BigDecimal cargosFijos) {
