@@ -1,6 +1,6 @@
 package backend.grupo130.camiones.dto;
 
-import backend.grupo130.camiones.client.usuarios.models.Usuario;
+import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import backend.grupo130.camiones.data.models.Camion;
 import backend.grupo130.camiones.dto.response.*;
 
@@ -36,13 +36,13 @@ public class CamionesMapperDto {
         );
     }
 
-    public static GetPromedioCostoBaseResponse toResponseAvg(BigDecimal promedio){
+    public static GetPromedioCostoBaseResponse toResponsePromedioCostoBase(BigDecimal promedio){
         return new GetPromedioCostoBaseResponse(
             promedio
         );
     }
 
-    public static GetPromedioCombustibleActualResponse toResponseAvgTotal(BigDecimal promedio){
+    public static GetPromedioCombustibleActualResponse toResponsePromedioCombustible(BigDecimal promedio){
         return new GetPromedioCombustibleActualResponse(
             promedio
         );

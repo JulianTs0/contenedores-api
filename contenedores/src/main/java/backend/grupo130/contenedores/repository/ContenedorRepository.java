@@ -1,6 +1,6 @@
 package backend.grupo130.contenedores.repository;
 
-import backend.grupo130.contenedores.config.enums.Estado;
+import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import backend.grupo130.contenedores.data.models.Contenedor;
 import backend.grupo130.contenedores.data.repository.PostgresContenedorRepositoryI;
 import lombok.AllArgsConstructor;
@@ -25,8 +25,8 @@ public class ContenedorRepository {
         return models;
     }
 
-    public List<Contenedor> findByEstado(Estado estado) {
-        List<Contenedor> models = this.contenedorRepository.findByEstado(estado);
+    public List<Contenedor> findByEstado(EstadoContenedor estadoContenedor) {
+        List<Contenedor> models = this.contenedorRepository.findByEstado(estadoContenedor);
         return models;
     }
 

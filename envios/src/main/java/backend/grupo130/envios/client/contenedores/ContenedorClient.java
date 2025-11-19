@@ -2,13 +2,14 @@ package backend.grupo130.envios.client.contenedores;
 
 import backend.grupo130.envios.client.contenedores.request.ContenedorAsignarClienteRequest;
 import backend.grupo130.envios.client.contenedores.request.ContenedorRegisterRequest;
-import backend.grupo130.envios.client.contenedores.request.GetByPesoVolumenRequest;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByPesoVolumenResponse;
-import backend.grupo130.envios.client.contenedores.responses.RegisterResponse;
+import backend.grupo130.envios.client.contenedores.responses.ContenedorRegisterResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @FeignClient(name = "contenedores", url = "${spring.clients.contenedores.url}")
 public interface ContenedorClient {
@@ -16,13 +17,16 @@ public interface ContenedorClient {
     @GetMapping("/getById/{id}")
     ContenedorGetByIdResponse getBYId(@PathVariable("id") Long id);
 
-    @PostMapping("/getByPesoVolumen")
-    ContenedorGetByPesoVolumenResponse getByPesoVolumen(@RequestBody GetByPesoVolumenRequest request);
+    @GetMapping("/getByPesoVolumen")
+    ContenedorGetByPesoVolumenResponse getByPesoVolumen(
+        @RequestParam(value = "capacidadPeso") BigDecimal peso,
+        @RequestParam(value = "capacidadVolumen") BigDecimal volumen
+    );
 
     @PostMapping("/register")
-    RegisterResponse register(@RequestBody ContenedorRegisterRequest request);
+    ContenedorRegisterResponse register(@RequestBody ContenedorRegisterRequest request);
 
-    @PostMapping("/asignarCliente")
+    @PutMapping("/asignarCliente")
     ResponseEntity<Void> asignarCliente(@RequestBody ContenedorAsignarClienteRequest request);
 
 }

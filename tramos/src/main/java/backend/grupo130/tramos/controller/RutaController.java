@@ -83,8 +83,8 @@ public class RutaController {
         @ApiResponse(responseCode = "404", description = "Solicitud, Contenedor o Ubicación no encontrada", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
-    @PostMapping("/getRutaTentativa")
-    public ResponseEntity<RutaGetOpcionesResponse> getRutaTentativa(
+    @PostMapping("/crearRutaTentativa")
+    public ResponseEntity<RutaGetOpcionesResponse> crearRutaTentativa(
         @RequestBody @Valid RutaGetOpcionesRequest request
     ) {
         log.info("Iniciando POST /api/rutas/getRutaTentativa para Solicitud ID: {}", request.getIdSolicitud());

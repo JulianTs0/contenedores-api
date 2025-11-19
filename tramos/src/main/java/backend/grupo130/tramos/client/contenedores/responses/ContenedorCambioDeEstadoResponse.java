@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CambioDeEstadoResponse {
+public class ContenedorCambioDeEstadoResponse {
 
     private final Long id;
 

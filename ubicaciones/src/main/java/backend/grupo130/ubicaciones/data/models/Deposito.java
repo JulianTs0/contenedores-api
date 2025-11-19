@@ -23,7 +23,7 @@ public class Deposito {
     @Column(name = "nombre", nullable = false, length = 30)
     private String nombre;
 
-    @Column(name = "costo_estadia_diario", precision = 10, scale = 2)
+    @Column(name = "costo_estadia_diario", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoEstadiaDiario;
 
 }

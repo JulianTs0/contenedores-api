@@ -42,7 +42,7 @@
 2025-11-17 11:29:21.137 INFO  [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Iniciando asignación de cliente ID: 4 a contenedor ID: 20
 2025-11-17 11:29:21.137 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para asignar cliente.
 2025-11-17 11:29:21.141 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Buscando usuario ID: 4 para asignación.
-2025-11-17 11:29:22.055 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Asignando cliente y cambiando estado a PROGRAMADO para contenedor ID: 20.
+2025-11-17 11:29:22.055 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Asignando cliente y cambiando estadoContenedor a PROGRAMADO para contenedor ID: 20.
 2025-11-17 11:29:22.061 INFO  [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Cliente ID: 4 asignado exitosamente al contenedor ID: 20.
 2025-11-17 11:50:34.978 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Iniciando búsqueda de contenedor por ID: 20
 2025-11-17 11:50:35.022 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
@@ -84,18 +84,18 @@
 2025-11-17 12:25:54.660 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:25:54.677 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4
 2025-11-17 12:25:54.802 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Búsqueda exitosa del contenedor ID: 20
-2025-11-17 12:40:25.064 INFO  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estado para contenedor ID: 20 al nuevo estado: PROGRAMADO
-2025-11-17 12:40:25.067 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estado.
-2025-11-17 12:40:25.103 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Validando nuevo estado: PROGRAMADO
-2025-11-17 12:40:25.103 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Validando transición de estado: Estado.PROGRAMADO -> Estado.PROGRAMADO
-2025-11-17 12:40:25.114 WARN  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Transición de estado inválida de Estado.PROGRAMADO a Estado.PROGRAMADO para contenedor ID: 20
-2025-11-17 12:40:25.148 WARN  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Error de servicio al cambiar estado (Contenedor ID: 20, Nuevo Estado: PROGRAMADO) - Código: 400 - Mensaje: 
+2025-11-17 12:40:25.064 INFO  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estadoContenedor para contenedor ID: 20 al nuevo estadoContenedor: PROGRAMADO
+2025-11-17 12:40:25.067 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estadoContenedor.
+2025-11-17 12:40:25.103 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Validando nuevo estadoContenedor: PROGRAMADO
+2025-11-17 12:40:25.103 DEBUG [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Validando transición de estadoContenedor: Estado.PROGRAMADO -> Estado.PROGRAMADO
+2025-11-17 12:40:25.114 WARN  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Transición de estadoContenedor inválida de Estado.PROGRAMADO a Estado.PROGRAMADO para contenedor ID: 20
+2025-11-17 12:40:25.148 WARN  [http-nio-8091-exec-5] [b.g.c.service.ContenedorService] [] - Error de servicio al cambiar estadoContenedor (Contenedor ID: 20, Nuevo Estado: PROGRAMADO) - Código: 400 - Mensaje:
 2025-11-17 12:40:25.249 WARN  [http-nio-8091-exec-5] [o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver] [] - Resolved [backend.grupo130.contenedores.config.exceptions.ServiceError: ]
-2025-11-17 12:49:48.015 INFO  [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estado para contenedor ID: 20 al nuevo estado: PROGRAMADO
-2025-11-17 12:49:48.017 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estado.
-2025-11-17 12:49:48.044 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Validando nuevo estado: PROGRAMADO
-2025-11-17 12:49:48.044 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Validando transición de estado: Estado.BORRADOR -> Estado.PROGRAMADO
-2025-11-17 12:49:48.050 INFO  [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estado: Estado.PROGRAMADO.
+2025-11-17 12:49:48.015 INFO  [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estadoContenedor para contenedor ID: 20 al nuevo estadoContenedor: PROGRAMADO
+2025-11-17 12:49:48.017 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estadoContenedor.
+2025-11-17 12:49:48.044 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Validando nuevo estadoContenedor: PROGRAMADO
+2025-11-17 12:49:48.044 DEBUG [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Validando transición de estadoContenedor: Estado.BORRADOR -> Estado.PROGRAMADO
+2025-11-17 12:49:48.050 INFO  [http-nio-8091-exec-6] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estadoContenedor: Estado.PROGRAMADO.
 2025-11-17 12:51:37.874 INFO  [http-nio-8091-exec-8] [b.g.c.service.ContenedorService] [] - Iniciando búsqueda de contenedor por ID: 20
 2025-11-17 12:51:37.875 DEBUG [http-nio-8091-exec-8] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:51:37.885 DEBUG [http-nio-8091-exec-8] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4
@@ -104,11 +104,11 @@
 2025-11-17 12:51:38.090 DEBUG [http-nio-8091-exec-9] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:51:38.105 DEBUG [http-nio-8091-exec-9] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4
 2025-11-17 12:51:38.135 INFO  [http-nio-8091-exec-9] [b.g.c.service.ContenedorService] [] - Búsqueda exitosa del contenedor ID: 20
-2025-11-17 12:51:38.184 INFO  [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estado para contenedor ID: 20 al nuevo estado: EN_TRANSITO
-2025-11-17 12:51:38.187 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estado.
-2025-11-17 12:51:38.196 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Validando nuevo estado: EN_TRANSITO
-2025-11-17 12:51:38.196 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Validando transición de estado: Estado.PROGRAMADO -> Estado.EN_TRANSITO
-2025-11-17 12:51:38.197 INFO  [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estado: Estado.EN_TRANSITO.
+2025-11-17 12:51:38.184 INFO  [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estadoContenedor para contenedor ID: 20 al nuevo estadoContenedor: EN_TRANSITO
+2025-11-17 12:51:38.187 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estadoContenedor.
+2025-11-17 12:51:38.196 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Validando nuevo estadoContenedor: EN_TRANSITO
+2025-11-17 12:51:38.196 DEBUG [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Validando transición de estadoContenedor: Estado.PROGRAMADO -> Estado.EN_TRANSITO
+2025-11-17 12:51:38.197 INFO  [http-nio-8091-exec-10] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estadoContenedor: Estado.EN_TRANSITO.
 2025-11-17 12:52:43.734 INFO  [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Iniciando búsqueda de contenedor por ID: 20
 2025-11-17 12:52:43.737 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:52:43.744 DEBUG [http-nio-8091-exec-2] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4
@@ -117,11 +117,11 @@
 2025-11-17 12:53:04.311 DEBUG [http-nio-8091-exec-1] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:53:04.324 DEBUG [http-nio-8091-exec-1] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4
 2025-11-17 12:53:04.364 INFO  [http-nio-8091-exec-1] [b.g.c.service.ContenedorService] [] - Búsqueda exitosa del contenedor ID: 20
-2025-11-17 12:53:04.406 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estado para contenedor ID: 20 al nuevo estado: EN_DEPOSITO
-2025-11-17 12:53:04.407 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estado.
-2025-11-17 12:53:04.414 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Validando nuevo estado: EN_DEPOSITO
-2025-11-17 12:53:04.414 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Validando transición de estado: Estado.EN_TRANSITO -> Estado.EN_DEPOSITO
-2025-11-17 12:53:04.415 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estado: Estado.EN_DEPOSITO.
+2025-11-17 12:53:04.406 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Iniciando cambio de estadoContenedor para contenedor ID: 20 al nuevo estadoContenedor: EN_DEPOSITO
+2025-11-17 12:53:04.407 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Buscando contenedor ID: 20 para cambio de estadoContenedor.
+2025-11-17 12:53:04.414 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Validando nuevo estadoContenedor: EN_DEPOSITO
+2025-11-17 12:53:04.414 DEBUG [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Validando transición de estadoContenedor: Estado.EN_TRANSITO -> Estado.EN_DEPOSITO
+2025-11-17 12:53:04.415 INFO  [http-nio-8091-exec-3] [b.g.c.service.ContenedorService] [] - Contenedor ID: 20 actualizado al estadoContenedor: Estado.EN_DEPOSITO.
 2025-11-17 12:53:36.958 INFO  [http-nio-8091-exec-4] [b.g.c.service.ContenedorService] [] - Iniciando búsqueda de contenedor por ID: 20
 2025-11-17 12:53:36.959 DEBUG [http-nio-8091-exec-4] [b.g.c.service.ContenedorService] [] - Llamando al repositorio para buscar por ID: 20
 2025-11-17 12:53:36.968 DEBUG [http-nio-8091-exec-4] [b.g.c.service.ContenedorService] [] - Contenedor encontrado. Buscando datos del cliente ID: 4

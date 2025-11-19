@@ -1,6 +1,6 @@
 package backend.grupo130.contenedores.data.models;
 
-import backend.grupo130.contenedores.config.enums.Estado;
+import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +30,7 @@ public class Contenedor {
     private Long idCliente;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Estado", nullable = false)
-    private Estado estado;
+    @Column(name = "estado", nullable = false)
+    private EstadoContenedor estado;
 
 }

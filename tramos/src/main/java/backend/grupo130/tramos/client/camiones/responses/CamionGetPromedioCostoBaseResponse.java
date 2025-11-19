@@ -7,9 +7,8 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class GetPromedioCombustibleActualResponse {
+public class CamionGetPromedioCostoBaseResponse {
 
-    private final BigDecimal consumoAprox;
+    private final BigDecimal promedio;
 
 }
-

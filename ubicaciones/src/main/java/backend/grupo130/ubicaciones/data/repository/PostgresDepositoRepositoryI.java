@@ -9,6 +9,4 @@ import java.util.Optional;
 
 public interface PostgresDepositoRepositoryI extends JpaRepository<Deposito, Long> {
 
-    Optional<Deposito> findByNombre(String nombre);
-
 }

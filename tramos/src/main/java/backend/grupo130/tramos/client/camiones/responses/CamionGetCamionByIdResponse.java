@@ -1,6 +1,5 @@
 package backend.grupo130.tramos.client.camiones.responses;
 
-import backend.grupo130.tramos.client.usuarios.models.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class GetCamionByIdResponse {
+public class CamionGetCamionByIdResponse {
 
     private String dominio;
 

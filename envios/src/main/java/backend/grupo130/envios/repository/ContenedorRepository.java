@@ -4,10 +4,9 @@ import backend.grupo130.envios.client.contenedores.ContenedorClient;
 import backend.grupo130.envios.client.contenedores.models.Contenedor;
 import backend.grupo130.envios.client.contenedores.request.ContenedorAsignarClienteRequest;
 import backend.grupo130.envios.client.contenedores.request.ContenedorRegisterRequest;
-import backend.grupo130.envios.client.contenedores.request.GetByPesoVolumenRequest;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByPesoVolumenResponse;
-import backend.grupo130.envios.client.contenedores.responses.RegisterResponse;
+import backend.grupo130.envios.client.contenedores.responses.ContenedorRegisterResponse;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoContenedor;
 import backend.grupo130.envios.config.exceptions.ServiceError;
@@ -52,9 +51,7 @@ public class ContenedorRepository {
     public Contenedor getByPesoVolumen(BigDecimal peso, BigDecimal volumen){
         try {
 
-            GetByPesoVolumenRequest request = new GetByPesoVolumenRequest(peso, volumen);
-
-            ContenedorGetByPesoVolumenResponse response = this.contenedorClient.getByPesoVolumen(request);
+            ContenedorGetByPesoVolumenResponse response = this.contenedorClient.getByPesoVolumen(peso, volumen);
 
             return this.getById(response.getId());
 
@@ -72,7 +69,7 @@ public class ContenedorRepository {
         try {
             ContenedorRegisterRequest request = new ContenedorRegisterRequest(peso, volumen, idCliente);
 
-            RegisterResponse response = this.contenedorClient.register(request);
+            ContenedorRegisterResponse response = this.contenedorClient.register(request);
             
             return response.getId();
         } catch (Exception ex){

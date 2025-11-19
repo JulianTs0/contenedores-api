@@ -1,6 +1,6 @@
 package backend.grupo130.contenedores.data.repository;
 
-import backend.grupo130.contenedores.config.enums.Estado;
+import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import backend.grupo130.contenedores.data.models.Contenedor;
 
@@ -12,7 +12,7 @@ public interface PostgresContenedorRepositoryI extends JpaRepository<Contenedor,
 
     Contenedor findFirstByPesoAndVolumenAndIdClienteIsNull(BigDecimal peso, BigDecimal volumen);
 
-    List<Contenedor> findByEstado(Estado estado);
+    List<Contenedor> findByEstado(EstadoContenedor estadoContenedor);
 
 }
 

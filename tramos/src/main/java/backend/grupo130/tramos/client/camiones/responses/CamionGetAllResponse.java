@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetAllResponse {
+public class CamionGetAllResponse {
 
     private final List<Camion> camiones;
 

@@ -1,26 +1,28 @@
 package backend.grupo130.tramos.client.camiones;
 
-import backend.grupo130.tramos.client.camiones.request.CambiarDisponibilidadRequest;
-import backend.grupo130.tramos.client.camiones.request.GetOpcionesCamionesRequest;
+import backend.grupo130.tramos.client.camiones.request.CamionCambiarDisponibilidadRequest;
 import backend.grupo130.tramos.client.camiones.responses.*;
-import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @FeignClient(name = "camiones", url = "${spring.clients.camiones.url}")
 public interface CamionClient {
 
     @GetMapping("/getById/{dominio}")
-    GetCamionByIdResponse getBYId(@PathVariable("dominio") String dominio);
+    CamionGetCamionByIdResponse getBYId(@PathVariable("dominio") String dominio);
 
-    @PostMapping("/getOpciones")
-    GetPromedioCostoBaseResponse getPromedioCostoBase(@RequestBody GetOpcionesCamionesRequest request);
+    @GetMapping("/getCostoPromedio")
+    CamionGetPromedioCostoBaseResponse getCostoPromedio(
+        @RequestParam(value = "capacidadPeso") BigDecimal capacidadPeso,
+        @RequestParam(value = "capacidadVolumen") BigDecimal capacidadVolumen
+    );
 
     @GetMapping("/getConsumoPromedio")
-    GetPromedioCombustibleActualResponse getConsumoPromedio();
+    CamionGetPromedioCombustibleActualResponse getConsumoPromedio();
 
     @PutMapping("/cambiarDisponibilidad")
-    EditResponse cambiarDisponibilidad(@RequestBody CambiarDisponibilidadRequest request);
+    CamionEditResponse cambiarDisponibilidad(@RequestBody CamionCambiarDisponibilidadRequest request);
 
 }

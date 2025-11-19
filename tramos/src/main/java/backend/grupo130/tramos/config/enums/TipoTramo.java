@@ -2,7 +2,6 @@ package backend.grupo130.tramos.config.enums;
 
 import lombok.ToString;
 
-@ToString
 public enum TipoTramo {
     ORIGEN_DEPOSITO,
     DEPOSITO_DEPOSITO,

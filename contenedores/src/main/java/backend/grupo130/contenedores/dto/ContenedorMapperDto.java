@@ -1,7 +1,7 @@
 package backend.grupo130.contenedores.dto;
 
-import backend.grupo130.contenedores.client.usuarios.models.Usuario;
-import backend.grupo130.contenedores.config.enums.Estado;
+import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
+import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import backend.grupo130.contenedores.data.models.Contenedor;
 import backend.grupo130.contenedores.dto.response.*;
 
@@ -43,14 +43,14 @@ public class ContenedorMapperDto {
             contenedor.getPeso(),
             contenedor.getPeso(),
             contenedor.getIdCliente(),
-            contenedor.getEstado().toString()
+            contenedor.getEstado().name()
         );
     }
 
-    public static CambioDeEstadoResponse toResponsePatch(Long id, Estado estado) {
+    public static CambioDeEstadoResponse toResponsePatch(Long id, EstadoContenedor estadoContenedor) {
         return new CambioDeEstadoResponse(
             id,
-            estado.toString()
+            estadoContenedor.toString()
         );
     }
 

@@ -1,4 +1,4 @@
-package backend.grupo130.contenedores.client.usuarios.models;
+package backend.grupo130.camiones.client.usuarios.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

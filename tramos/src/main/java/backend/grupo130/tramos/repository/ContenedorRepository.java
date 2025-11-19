@@ -3,7 +3,7 @@ package backend.grupo130.tramos.repository;
 import backend.grupo130.tramos.client.contenedores.ContenedorClient;
 import backend.grupo130.tramos.client.contenedores.models.Contenedor;
 import backend.grupo130.tramos.client.contenedores.request.ContenedorCambioDeEstadoRequest;
-import backend.grupo130.tramos.client.contenedores.responses.CambioDeEstadoResponse;
+import backend.grupo130.tramos.client.contenedores.responses.ContenedorCambioDeEstadoResponse;
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.enums.EstadoContenedor;
@@ -41,7 +41,7 @@ public class ContenedorRepository {
 
     }
 
-    public CambioDeEstadoResponse cambioDeEstado(Long idContenedor, String nuevoEstado) {
+    public ContenedorCambioDeEstadoResponse cambioDeEstado(Long idContenedor, String nuevoEstado) {
         try {
             ContenedorCambioDeEstadoRequest request = new ContenedorCambioDeEstadoRequest(idContenedor, nuevoEstado);
 

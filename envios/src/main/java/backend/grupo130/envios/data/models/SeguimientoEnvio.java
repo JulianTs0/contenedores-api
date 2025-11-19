@@ -1,6 +1,6 @@
 package backend.grupo130.envios.data.models;
 
-import backend.grupo130.envios.config.enums.Estado;
+import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class SeguimientoEnvio {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
-    private Estado estado;
+    private EstadoSolicitud estado;
 
     @Column(columnDefinition = "text", name = "descripcion")
     private String descripcion;

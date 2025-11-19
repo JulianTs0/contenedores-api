@@ -29,7 +29,7 @@ public class Ubicacion {
     @Column(name = "longitud", nullable = false, precision = 10, scale = 4)
     private BigDecimal longitud;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_deposito", referencedColumnName = "id_deposito", unique = true)
     private Deposito deposito;
 

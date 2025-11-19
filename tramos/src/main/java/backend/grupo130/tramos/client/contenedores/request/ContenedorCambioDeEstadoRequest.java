@@ -13,11 +13,8 @@ import lombok.Setter;
 @Setter
 public class ContenedorCambioDeEstadoRequest {
 
-    @NotNull(message = "{error.idContenedor.notNull}")
-    @Positive(message = "{error.idContenedor.positive}")
     private Long id;
 
-    @NotNull(message = "{error.estado.notNull}")
     private String estado;
 
 }

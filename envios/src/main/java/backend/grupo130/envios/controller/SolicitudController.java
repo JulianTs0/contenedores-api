@@ -15,7 +15,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,7 +50,7 @@ public class SolicitudController {
         return ResponseEntity.ok(this.solicitudService.register(request));
     }
 
-    @PostMapping("/cambioDeEstado")
+    @PutMapping("/cambioDeEstado")
     public ResponseEntity<SolicitudCambioDeEstadoResponse> cambioDeEstado(
         @RequestBody @Valid SolicitudCambioDeEstadoRequest request
     ) {
@@ -59,7 +58,7 @@ public class SolicitudController {
         return ResponseEntity.ok(this.solicitudService.cambioDeEstado(request));
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public ResponseEntity<SolicitudEditResponse> edit(
         @RequestBody @Valid SolicitudEditRequest request
     ) {

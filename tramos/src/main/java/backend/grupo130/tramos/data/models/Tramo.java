@@ -81,12 +81,4 @@ public class Tramo {
         return  estado.equals(EstadoTramo.FINALIZADO);
     }
 
-    public boolean esUltimo(List<Tramo> tramos){
-        return tramos.getLast().getIdTramo().equals(this.idTramo);
-    }
-
-    public boolean esPrimero(List<Tramo> tramos){
-        return tramos.getFirst().getIdTramo().equals(this.idTramo);
-    }
-
 }

@@ -8,6 +8,7 @@ public enum Errores {
     CAMION_NO_ENCONTRADO("Camión no encontrado"),
     CAMION_NO_DISPONIBLE("Camión no disponible"),
     USUARIO_NO_TRANSPORTISTA("El usuario debe ser un Transportista"),
+    USUARIO_NO_ENCONTRADO("Usuario no encontrado"),
     ERROR_INTERNO("Error interno");
 
     private final String mensaje;

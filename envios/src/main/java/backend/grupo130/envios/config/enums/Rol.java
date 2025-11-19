@@ -2,7 +2,6 @@ package backend.grupo130.envios.config.enums;
 
 import lombok.ToString;
 
-@ToString
 public enum Rol {
     CLIENTE,
     ADMINISTRADOR,
@@ -16,5 +15,4 @@ public enum Rol {
         }
         return null;
     }
-
 }

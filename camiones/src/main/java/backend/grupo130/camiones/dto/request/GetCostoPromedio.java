@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class GetOpcionesCamionesRequest {
+public class GetCostoPromedio {
 
     @NotNull(message = "{error.capacidadPeso.notNull}")
     @Positive(message = "{error.capacidadPeso.positve}")

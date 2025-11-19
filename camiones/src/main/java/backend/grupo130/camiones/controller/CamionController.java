@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -23,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -131,11 +129,20 @@ public class CamionController {
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
-    @PostMapping("/getOpciones")
-    public ResponseEntity<GetPromedioCostoBaseResponse> getOpciones(
+    @GetMapping("/getCostoPromedio")
+    public ResponseEntity<GetPromedioCostoBaseResponse> getCostoPromedio(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Capacidades requeridas para el envío", required = true)
-        @RequestBody @Valid GetOpcionesCamionesRequest request
+        @NotNull(message = "{error.capacidadPeso.notNull}")
+        @Positive(message = "{error.capacidadPeso.positive}")
+        @RequestParam(value = "capacidadPeso") BigDecimal capacidadPeso,
+
+        @NotNull(message = "{error.capacidadVolumen.notNull}")
+        @Positive(message = "{error.capacidadVolumen.positive}")
+        @RequestParam(value = "capacidadVolumen") BigDecimal capacidadVolumen
     ) {
+
+        GetCostoPromedio request = new GetCostoPromedio(capacidadPeso, capacidadVolumen);
+
         return ResponseEntity.ok(this.camionService.getCostoAprox(request));
     }
 

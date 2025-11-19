@@ -8,6 +8,7 @@ public enum Errores {
     ERROR_INTERNO("Error interno"),
 
     CONTENEDOR_NO_ENCONTRADO("Contenedor no encontrado"),
+    CONTENEDOR_NO_DISPONIBLE("No se puede editar un contenedor que no esta disponible"),
     ESTADO_INVALIDO("El estado no es valido"),
     TRANSICION_ESTADO_INVALIDA("Transicion no valida"),
     CONTENEDOR_YA_ENTREGADO("El container ya fue entregado"),

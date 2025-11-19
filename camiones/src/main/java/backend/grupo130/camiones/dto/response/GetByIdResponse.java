@@ -1,9 +1,8 @@
 
 package backend.grupo130.camiones.dto.response;
 
-import backend.grupo130.camiones.client.usuarios.models.Usuario;
+import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 import java.math.BigDecimal;

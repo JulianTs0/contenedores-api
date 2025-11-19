@@ -11,12 +11,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @Tag(name = "Gestión de Contenedores", description = "API para la creación, consulta, edición y eliminación de contenedores.")
 @RestController
@@ -64,12 +67,21 @@ public class ContenedorController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
-    @PostMapping("/getByPesoVolumen")
+    @GetMapping("/getByPesoVolumen")
     public ResponseEntity<GetByPesoVolumenResponse> getByPesoVolumen(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Criterios de peso y volumen para la búsqueda", required = true,
             content = @Content(schema = @Schema(implementation = GetByPesoVolumenRequest.class)))
-        @RequestBody @Valid GetByPesoVolumenRequest request
+        @Positive(message = "{error.peso.positive}")
+        @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
+        @RequestParam(value = "capacidadPeso")
+        BigDecimal peso,
+
+        @Positive(message = "{error.volumen.positive}")
+        @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
+        @RequestParam(value = "capacidadVolumen") BigDecimal volumen
     ) {
+        GetByPesoVolumenRequest request = new GetByPesoVolumenRequest(peso, volumen);
+
         return ResponseEntity.ok(this.contenedorService.getByPesoVolumen(request));
     }
 
@@ -166,7 +178,7 @@ public class ContenedorController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
-    @PostMapping("/cambioDeEstado")
+    @PutMapping("/cambioDeEstado")
     public ResponseEntity<CambioDeEstadoResponse> cambioDeEstado(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID del contenedor y el nuevo estado deseado", required = true,
             content = @Content(schema = @Schema(implementation = CambioDeEstadoRequest.class)))
@@ -187,11 +199,11 @@ public class ContenedorController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
-    @PostMapping("/asignarCliente")
-    public ResponseEntity<?> asignarCliente( // Corregí el nombre del método que estaba duplicado
-                                             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID del contenedor y ID del cliente a asignar", required = true,
-                                                 content = @Content(schema = @Schema(implementation = AsignarClienteRequest.class)))
-                                             @RequestBody @Valid AsignarClienteRequest request
+    @PutMapping("/asignarCliente")
+    public ResponseEntity<?> asignarCliente(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID del contenedor y ID del cliente a asignar", required = true,
+            content = @Content(schema = @Schema(implementation = AsignarClienteRequest.class)))
+        @RequestBody @Valid AsignarClienteRequest request
     ) {
         this.contenedorService.asignarCliente(request);
         return ResponseEntity.ok().build();

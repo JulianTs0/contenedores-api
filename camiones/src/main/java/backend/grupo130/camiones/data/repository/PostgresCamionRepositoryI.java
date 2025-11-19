@@ -24,7 +24,7 @@ public interface PostgresCamionRepositoryI extends JpaRepository<Camion, String>
         "    AND c.capacidad_volumen >= :volumen " +
         ") as t",
         nativeQuery = true)
-    BigDecimal findAverageCostOfTop3(
+    BigDecimal findAverageCostoTraslado(
         @Param("peso") BigDecimal peso,
         @Param("volumen") BigDecimal volumen
     );

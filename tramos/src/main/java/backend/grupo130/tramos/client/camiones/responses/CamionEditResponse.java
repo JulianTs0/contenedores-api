@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class EditResponse {
+public class CamionEditResponse {
 
     private String dominio;
 

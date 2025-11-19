@@ -1,6 +1,6 @@
 package backend.grupo130.envios.data.models;
 
-import backend.grupo130.envios.config.enums.Estado;
+import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,7 +47,7 @@ public class SolicitudTraslado {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
-    private Estado estado;
+    private EstadoSolicitud estado;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_solicitud")

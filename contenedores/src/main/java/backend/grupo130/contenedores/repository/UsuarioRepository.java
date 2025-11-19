@@ -1,7 +1,7 @@
 package backend.grupo130.contenedores.repository;
 
 import backend.grupo130.contenedores.client.usuarios.UsuarioClient;
-import backend.grupo130.contenedores.client.usuarios.models.Usuario;
+import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.client.usuarios.responses.UsuarioGetByIdResponse;
 import backend.grupo130.contenedores.config.enums.Errores;
 import backend.grupo130.contenedores.config.exceptions.ServiceError;
@@ -18,7 +18,7 @@ public class UsuarioRepository {
 
         try {
 
-            UsuarioGetByIdResponse response = this.usuarioRepository.getBYId(usuarioId);
+            UsuarioGetByIdResponse response = this.usuarioRepository.getById(usuarioId);
 
             Usuario usuario = new Usuario(
                 response.getId(),

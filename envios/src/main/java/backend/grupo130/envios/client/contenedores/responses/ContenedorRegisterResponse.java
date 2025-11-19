@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterResponse {
+public class ContenedorRegisterResponse {
 
     private final Long id;
 

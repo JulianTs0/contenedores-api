@@ -1,17 +1,14 @@
 package backend.grupo130.contenedores.config.enums;
 
-import lombok.ToString;
-
-@ToString
-public enum Estado {
+public enum EstadoContenedor {
     BORRADOR,
     PROGRAMADO,
     EN_TRANSITO,
     EN_DEPOSITO,
     ENTREGADO;
 
-    public static Estado fromString(String text) {
-        for (Estado b : Estado.values()) {
+    public static EstadoContenedor fromString(String text) {
+        for (EstadoContenedor b : EstadoContenedor.values()) {
             if (b.name().equalsIgnoreCase(text)) {
                 return b;
             }

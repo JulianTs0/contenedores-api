@@ -1,6 +1,8 @@
 package backend.grupo130.envios.config.exceptions;
 
+import backend.grupo130.envios.config.enums.Errores;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,23 +14,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceError.class)
     public ResponseEntity<Map<String, Object>> handleServiceError(ServiceError ex) {
 
+        log.warn("Error Controlado: {} - Detalle: {}", ex.getMensajeExterno(), ex.getMessage());
+
         HttpStatus status = HttpStatus.valueOf(ex.getHttpCode());
 
         Map<String, Object> errorDetails = new HashMap<>();
 
-        errorDetails.put("status", ex.getHttpCode());
-        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("httpCode", ex.getHttpCode());
+        errorDetails.put("mensajeInterno", ex.getMessage());
+        errorDetails.put("mensajeExterno", ex.getMensajeExterno());
 
         return ResponseEntity.status(status).body(errorDetails);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        log.error("ERROR INTERNO NO CONTROLADO: ", ex);
+
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("httpCode", 500);
+        errorDetails.put("mensajeInterno", ex.getMessage());
+        errorDetails.put("mensajeExterno", Errores.ERROR_INTERNO.getMensaje());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+
+        log.warn("Error de Validación de Argumentos: {}", ex.getMessage());
 
         Map<String, Object> errorDetails = new HashMap<>();
 
@@ -47,6 +68,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+
+        log.warn("Error de Validación de Constraints: {}", ex.getMessage()); // Opcional
 
         Map<String, Object> errorDetails = new HashMap<>();
 

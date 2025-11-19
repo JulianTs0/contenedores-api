@@ -9,19 +9,13 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "envios", url = "${spring.clients.envios.url}")
 public interface EnvioClient {
 
-    @GetMapping("/tarifa/getById/{id}")
-    GetTarifaByIdResponse getTarifaById(@PathVariable("id") Long id);
-
     @GetMapping("/solicitud/getById/{id}")
     SolicitudGetByIdResponse getSolicitudTrasladoById(@PathVariable("id") Long id);
 
-    @GetMapping("/seguimientoEnvio/getById/{id}")
-    GetSeguimientoEnvioByIdResponse getSeguimientoEnvioById(@PathVariable("id") Long id);
-
-    @PostMapping("/solicitud/edit")
+    @PutMapping("/solicitud/edit")
     SolicitudEditResponse editSolicitud(@RequestBody SolicitudEditRequest request);
 
-    @PostMapping("/solicitud/cambioDeEstado")
+    @PutMapping("/solicitud/cambioDeEstado")
     SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(@RequestBody SolicitudCambioDeEstadoRequest request);
 
 }

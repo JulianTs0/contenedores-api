@@ -1,6 +1,5 @@
 package backend.grupo130.camiones.data.models;
 
-import backend.grupo130.camiones.client.usuarios.models.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 public class Camion {
 
     @Id
-    @Column(name = "dominio", length = 80, nullable = false, unique = true)
+    @Column(name = "dominio", length = 80)
     private String dominio;
 
     @Column(name = "capacidad_peso", precision = 10, scale = 2, nullable = false)
@@ -29,11 +28,10 @@ public class Camion {
     @Column(name = "costo_traslado_base", precision = 10, scale = 2, nullable = false)
     private BigDecimal costoTrasladoBase;
 
-    @Column(name = "estado", precision = 10, scale = 2, nullable = false)
+    @Column(name = "estado", nullable = false)
     private Boolean estado;
 
-    @Column(name = "id_transportista")
+    @Column(name = "id_transportista", unique = true)
     private Long idTransportista;
-
 
 }

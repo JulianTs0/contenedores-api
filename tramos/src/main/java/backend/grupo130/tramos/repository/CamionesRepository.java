@@ -2,17 +2,14 @@ package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.camiones.CamionClient;
 import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.camiones.request.CambiarDisponibilidadRequest;
-import backend.grupo130.tramos.client.camiones.request.GetOpcionesCamionesRequest;
+import backend.grupo130.tramos.client.camiones.request.CamionCambiarDisponibilidadRequest;
 import backend.grupo130.tramos.client.camiones.responses.*;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import lombok.AllArgsConstructor;
-import org.hibernate.sql.ast.tree.predicate.BooleanExpressionPredicate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Repository
 @AllArgsConstructor
@@ -24,7 +21,7 @@ public class CamionesRepository {
 
         try {
 
-            GetCamionByIdResponse response = this.camionClient.getBYId(camionId);
+            CamionGetCamionByIdResponse response = this.camionClient.getBYId(camionId);
 
             Camion camion = new Camion(
                 response.getDominio(),
@@ -50,9 +47,9 @@ public class CamionesRepository {
 
         try {
 
-            CambiarDisponibilidadRequest request = new CambiarDisponibilidadRequest(dominio, estado);
+            CamionCambiarDisponibilidadRequest request = new CamionCambiarDisponibilidadRequest(dominio, estado);
 
-            EditResponse response = this.camionClient.cambiarDisponibilidad(request);
+            CamionEditResponse response = this.camionClient.cambiarDisponibilidad(request);
 
         } catch (ServiceError ex) {
             throw ex;
@@ -66,9 +63,7 @@ public class CamionesRepository {
 
         try {
 
-            GetOpcionesCamionesRequest request = new GetOpcionesCamionesRequest(peso, volumen);
-
-            GetPromedioCostoBaseResponse response = this.camionClient.getPromedioCostoBase(request);
+            CamionGetPromedioCostoBaseResponse response = this.camionClient.getCostoPromedio(peso, volumen);
 
             return response.getPromedio();
 
@@ -84,7 +79,7 @@ public class CamionesRepository {
 
         try {
 
-            GetPromedioCombustibleActualResponse response = this.camionClient.getConsumoPromedio();
+            CamionGetPromedioCombustibleActualResponse response = this.camionClient.getConsumoPromedio();
 
             return response.getConsumoAprox();
 

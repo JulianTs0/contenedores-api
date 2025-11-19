@@ -22,7 +22,4 @@ public class EditRequest {
     @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
     private final BigDecimal volumen;
 
-    @Positive(message = "{error.idCliente.positive}")
-    private final Long idCliente;
-
 }

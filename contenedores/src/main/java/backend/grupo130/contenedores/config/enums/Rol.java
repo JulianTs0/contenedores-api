@@ -1,8 +1,5 @@
 package backend.grupo130.contenedores.config.enums;
 
-import lombok.ToString;
-
-@ToString
 public enum Rol {
     CLIENTE,
     ADMINISTRADOR,

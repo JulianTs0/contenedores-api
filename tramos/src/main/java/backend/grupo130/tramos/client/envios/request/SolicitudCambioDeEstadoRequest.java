@@ -10,7 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SolicitudCambioDeEstadoRequest {
+
     private Long idSolicitud;
+
     private String nuevoEstado;
+
     private String descripcion;
+
 }

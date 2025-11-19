@@ -23,6 +23,11 @@ public class TramoRepository {
         return models;
     }
 
+    public List<Tramo> getByDominio(String dominio){
+        List<Tramo> models = this.tramoRepository.buscarPorDominio(dominio);
+        return models;
+    }
+
     public Tramo save(Tramo tramo) {
         Tramo saved = this.tramoRepository.save(tramo);
         return saved;

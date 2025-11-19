@@ -25,12 +25,12 @@ public class CamionRepository {
         return models;
     }
 
-    public BigDecimal findAverageCostOfTop3(BigDecimal peso, BigDecimal volumen){
-        BigDecimal promedio = this.postgresRepository.findAverageCostOfTop3(peso, volumen);
+    public BigDecimal getPromedioCostoTraslado(BigDecimal peso, BigDecimal volumen){
+        BigDecimal promedio = this.postgresRepository.findAverageCostoTraslado(peso, volumen);
         return (promedio != null) ? promedio : BigDecimal.ZERO;
     }
 
-    public BigDecimal findAverageConsumoTotal() {
+    public BigDecimal getPromedioConsumoTotal() {
         BigDecimal promedio = this.postgresRepository.findAverageConsumoCombustible();
         return (promedio != null) ? promedio : BigDecimal.ZERO;
     }

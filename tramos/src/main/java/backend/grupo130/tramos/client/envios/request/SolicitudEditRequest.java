@@ -19,26 +19,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SolicitudEditRequest {
 
-    @NotNull(message = "El ID de solicitud no puede ser nulo")
-    @Positive(message = "El ID de solicitud debe ser positivo")
     private Long idSolicitud;
 
-    @FutureOrPresent(message = "La fecha de inicio no puede ser en el pasado")
     private LocalDateTime fechaInicio;
 
-    @FutureOrPresent(message = "La fecha de fin no puede ser en el pasado")
     private LocalDateTime fechaFin;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de costo inválido")
     private BigDecimal costoEstimado;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de costo inválido")
     private BigDecimal costoFinal;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de tiempo inválido")
     private BigDecimal tiempoEstimadoHoras;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de tiempo inválido")
     private BigDecimal tiempoRealHoras;
 
     private Tarifa tarifa;

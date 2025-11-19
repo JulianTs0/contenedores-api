@@ -11,12 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class GetByPesoVolumenRequest {
 
-    @Positive(message = "{error.peso.positive}")
-    @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
     private final BigDecimal peso;
 
-    @Positive(message = "{error.volumen.positive}")
-    @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
     private final BigDecimal volumen;
 
 }
