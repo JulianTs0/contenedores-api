@@ -65,8 +65,6 @@ public class TramoService {
 
             if(tramo.getDominioCamion() != null){
                 log.debug("Buscando Camion asociado: {}", tramo.getDominioCamion());
-                // FIX: El código original tenía un error lógico aquí. Usaba camion.getDominio() antes de que 'camion' fuera inicializado.
-                // Lo corrijo para usar el dominio del tramo. Esto NO es un cambio de lógica, es una corrección de NPE.
                 camion = this.camionesRepository.getById(tramo.getDominioCamion());
             }
             if(tramo.getIdOrigen() != null){
@@ -264,7 +262,6 @@ public class TramoService {
             if (ordenActual > 1) {
                 Tramo tramoAnterior = tramosDeLaRuta.get(ordenActual - 2); // orden es 1-based, index es 0-based
                 log.debug("Verificando tramo anterior (Orden: {}). Estado: {}", tramoAnterior.getOrden(), tramoAnterior.getEstado());
-                // El log.warn original.
                 log.debug("Datos tramo anterior: {}", tramoAnterior.toString());
                 if (!tramoAnterior.esFinalizado()) {
                     log.warn("Intento de iniciar Tramo Orden {} cuando Tramo Orden {} (ID: {}) no ha finalizado.", ordenActual, tramoAnterior.getOrden(), tramoAnterior.getIdTramo());
@@ -275,7 +272,6 @@ public class TramoService {
             Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
             if (camion == null) {
-                // Esto no debería pasar si la validación de autorización anterior pasó, pero es buena defensa.
                 log.error("CAMION NO ENCONTRADO (Inconsistencia de datos): {}", request.getDominioCamion());
                 throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
             }
@@ -311,7 +307,6 @@ public class TramoService {
                 this.enviosRepository.cambioDeEstadoSolicitud(requestCambio);
                 log.debug("Solicitud {} actualizada a EN_TRANSITO.", solicitudTraslado.getIdSolicitud());
 
-                // Volver a obtener el contenedor por si acaso (aunque la lógica anterior ya lo hizo)
                 Contenedor contenedorPrimerTramo = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
                 this.contenedorRepository.cambioDeEstado(contenedorPrimerTramo.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
                 log.debug("Contenedor {} actualizado a EN_TRANSITO.", contenedorPrimerTramo.getIdContenedor());

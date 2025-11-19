@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping("/api/ubicaciones/depositos")
 @RequiredArgsConstructor
 @Validated
-@Slf4j // <--- Añadido Logger
+@Slf4j
 @Tag(name = "Gestión de Depósitos", description = "Endpoints para crear, leer, actualizar y eliminar Depósitos.")
 public class DepositoController {
 

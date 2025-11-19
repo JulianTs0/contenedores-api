@@ -80,7 +80,6 @@ public class RutaService {
             throw ex;
         }
         catch (Exception ex) {
-            // Requisito TPI: No perder la traza de la excepción raíz
             log.error("Error interno inesperado al buscar Ruta por ID: {}", request.getIdRuta(), ex);
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
         }
@@ -188,7 +187,6 @@ public class RutaService {
                 tramo.setIdOrigen(origen.getIdUbicacion());
                 tramo.setIdDestino(destino.getIdUbicacion());
 
-                // ... (Lógica de negocio de TipoTramo) ...
                 if(origen.getDeposito() == null && destino.getDeposito() == null){
                     tramo.setTipoTramo(TipoTramo.ORIGEN_DESTINO);
                 }
@@ -224,7 +222,6 @@ public class RutaService {
             ruta.setCantidadTramos(tramos.size());
             ruta.setCantidadDepositos(depositos.size());
 
-            // ... (Lógica de negocio de Tarifa) ...
             tarifa.setPesoMax(contenedor.getPeso());
             tarifa.setVolumenMax(contenedor.getVolumen());
             tarifa.setCostoBase(costoBasePromedio.setScale(2,RoundingMode.HALF_UP));
@@ -243,6 +240,7 @@ public class RutaService {
 
             BigDecimal horas = BigDecimal.valueOf(tiempoTotal / 3600).setScale(2, RoundingMode.HALF_UP);
             log.debug("Tiempo estimado calculado: {} horas.", horas);
+
             log.debug("Valor original log.warn de horas: {}", horas);
 
             requestEdit.setTiempoEstimadoHoras(horas);

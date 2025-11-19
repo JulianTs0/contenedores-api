@@ -12,9 +12,9 @@ public class RouteResponse {
     private String geometry;
 
     @JsonProperty("distance")
-    private double distance; // metros
+    private double distance;
 
     @JsonProperty("duration")
-    private double duration; // Segundos
+    private double duration;
 
 }

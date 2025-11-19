@@ -167,24 +167,4 @@ public class TramoController {
         return ResponseEntity.ok().build();
     }
 
-    /* @PostMapping("/register")
-    public ResponseEntity<?> register(
-        @RequestBody @Valid TramoRegisterRequest request
-    ) {
-
-        this.tramoService.register(request);
-
-        return ResponseEntity.ok().build();
-    } */
-
-   /* @PatchMapping("/edit")
-    public ResponseEntity<EditResponse> edit(
-        @RequestBody @Valid EditRequest request
-    ) {
-
-        Contenedor contenedor = this.contenedorService.edit(request);
-
-        return ResponseEntity.ok(this.toResponsePatch(contenedor));
-    }*/
-
 }

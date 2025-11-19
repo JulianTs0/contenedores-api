@@ -43,7 +43,6 @@ public class ContenedorRepository {
                 EstadoContenedor.fromString(response.getEstado())
             );
         } catch (ServiceError ex) {
-            // Relanza el error para que el servicio lo maneje
             throw ex;
         } catch (Exception ex){
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);
@@ -52,15 +51,14 @@ public class ContenedorRepository {
 
     public Contenedor getByPesoVolumen(BigDecimal peso, BigDecimal volumen){
         try {
+
             GetByPesoVolumenRequest request = new GetByPesoVolumenRequest(peso, volumen);
-            // 1. Llama al endpoint de búsqueda
+
             ContenedorGetByPesoVolumenResponse response = this.contenedorClient.getByPesoVolumen(request);
 
-            // 2. Si lo encuentra, usa el ID para obtener el objeto completo
             return this.getById(response.getId());
 
         } catch (ServiceError ex) {
-            // Si el error es 404, es porque no lo encontró. Lo relanzamos.
             if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
                  throw new ServiceError("Contenedor no encontrado", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
             }
@@ -95,7 +93,6 @@ public class ContenedorRepository {
             log.info("Cliente asignado correctamente.");
 
         } catch (ServiceError ex) {
-            // Manejo de errores específicos de Feign
             if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
                 log.warn("API de contenedores no encontró el contenedor {} para asignar cliente.", idContenedor);
                 throw new ServiceError("Contenedor no encontrado al asignar cliente", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
@@ -104,7 +101,7 @@ public class ContenedorRepository {
                 log.warn("API de contenedores rechazó la asignación (400). Cliente: {}, Contenedor: {}", idCliente, idContenedor);
                 throw new ServiceError("Error de validacion al asignar cliente (e.g., ya asignado o cliente no válido)", Errores.ERROR_INTERNO, 400);
             }
-            throw ex; // Relanzar otros ServiceError
+            throw ex;
         } catch (Exception ex){
             log.error("Error inesperado al asignar cliente: {}", ex.getMessage(), ex);
             throw new ServiceError(ex.getMessage(), Errores.ERROR_INTERNO , 500);

@@ -24,7 +24,6 @@ public class EnviosRepository {
 
     public Tarifa getTarifaById(Long tarifaId) {
         try {
-            // GetTarifaByIdResponse response = this.envioClient.getTarifaById(tarifaId);
             return new Tarifa();
 
         } catch (ServiceError ex) {
@@ -67,7 +66,6 @@ public class EnviosRepository {
     public SeguimientoEnvio getSeguimientoEnvioById(Long seguimientoEnvioId) {
         try {
 
-            // GetSeguimientoEnvioByIdResponse response = this.envioClient.getSeguimientoEnvioById(seguimientoEnvioId);
             return new SeguimientoEnvio();
 
         } catch (ServiceError ex) {

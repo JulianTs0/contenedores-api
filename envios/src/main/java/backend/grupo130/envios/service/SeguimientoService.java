@@ -23,14 +23,13 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j // Anotación de Lombok para SLF4J
+@Slf4j
 public class SeguimientoService {
 
     private final SeguimientoEnvioRepository seguimientoRepository;
 
     private final SolicitudTrasladoRepository solicitudRepository;
 
-    // GET
 
     public SeguimientoGetByIdResponse getById(SeguimientoGetByIdRequest request) throws ServiceError {
         log.info("Inicio getById. Buscando seguimiento con ID: {}", request.getIdSeguimiento());
@@ -89,7 +88,6 @@ public class SeguimientoService {
                 throw new ServiceError("", Errores.ESTADO_INVALIDO, 400);
             }
 
-            // (Lógica de negocio sin cambios)
             SeguimientoEnvio seguimiento = new SeguimientoEnvio();
             seguimiento.setDescripcion(request.getDescripcion());
             seguimiento.setFechaHoraInicio(LocalDateTime.now());

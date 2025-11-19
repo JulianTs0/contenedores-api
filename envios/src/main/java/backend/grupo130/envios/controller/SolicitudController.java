@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/envios/solicitud")
 @RequiredArgsConstructor
-@Slf4j // Añadir anotación para logging
+@Slf4j
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
@@ -32,7 +32,6 @@ public class SolicitudController {
         @Positive(message = "{error.idSolicitud.positive}")
         @PathVariable Long id
     ) {
-        // LOG Nivel INFO: Evento importante de flujo
         log.info("Recibida solicitud GET en /getById/{}", id);
         SolicitudGetByIdRequest request = new SolicitudGetByIdRequest(id);
         return ResponseEntity.ok(this.solicitudService.getById(request));
@@ -49,7 +48,6 @@ public class SolicitudController {
         @RequestBody @Valid SolicitudRegisterRequest request
     ) {
         log.info("Recibida solicitud POST en /register para cliente ID: {}", request.getIdCliente());
-        // El servicio de registro ahora devuelve la solicitud creada
         return ResponseEntity.ok(this.solicitudService.register(request));
     }
 

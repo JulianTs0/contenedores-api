@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SeguimientoGetByIdRequest {
 
-    // El ID del seguimiento que se quiere buscar
     private final Long idSeguimiento;
 
 }
