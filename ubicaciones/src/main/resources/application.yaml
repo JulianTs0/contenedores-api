@@ -38,3 +38,8 @@ logging:
         backend.grupo130: DEBUG # O el nivel que quieras para tu código
         org.springframework: INFO
         org.hibernate: WARN
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0

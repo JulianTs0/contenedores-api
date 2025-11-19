@@ -132,8 +132,6 @@ services:
         depends_on:
             - db_usuarios
             - keycloak
-        volumes:
-            - logs_usuarios:/app/logs
 
     # Microservicio de Contenedores
     ms-contenedores:
@@ -156,8 +154,6 @@ services:
             - db_contenedores
             - ms-usuarios
             - keycloak
-        volumes:
-            - logs_contenedores:/app/logs
 
     # Microservicio de Tramos
     ms-tramos:
@@ -188,8 +184,6 @@ services:
             - ms-ubicaciones
             - ms-contenedores
             - keycloak
-        volumes:
-            - logs_tramos:/app/logs
             # ms-envios tiene una dependencia circular con ms-tramos.
             # He quitado 'ms-envios' de 'depends_on' aquí para evitar un error.
             # Asegúrate de que tus aplicaciones manejen esto (ej. con reintentos).
@@ -215,8 +209,6 @@ services:
             - db_camiones
             - ms-usuarios
             - keycloak
-        volumes:
-            - logs_camiones:/app/logs
 
     # Microservicio de Ubicaciones
     ms-ubicaciones:
@@ -237,8 +229,6 @@ services:
         depends_on:
             - db_ubicaciones
             - keycloak
-        volumes:
-            - logs_ubicaciones:/app/logs
 
     # Microservicio de Envios
     ms-envios:
@@ -269,8 +259,6 @@ services:
             - ms-ubicaciones
             - ms-contenedores
             - keycloak
-        volumes:
-            - logs_envios:/app/logs
 
     # Microservicio Gateway
     ms-gateway:
@@ -342,8 +330,48 @@ services:
             - ms-ubicaciones
             - ms-envios
             - keycloak
+
+    loki:
+        image: grafana/loki:3.0.0
+        container_name: loki
+        ports:
+            - "3100:3100"
         volumes:
-            - logs_gateway:/app/logs
+            - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
+            - loki_data:/loki
+        networks:
+            - microservices-net
+        command: -config.file=/etc/loki/local-config.yaml
+
+    promtail:
+        image: grafana/promtail:3.0.0
+        container_name: promtail
+        volumes:
+            # Lee logs de contenedores
+            - /var/lib/docker/containers:/var/lib/docker/containers:ro
+            # Detecta nombres de contenedores
+            - /var/run/docker.sock:/var/run/docker.sock
+            # Configuración
+            - ./observability/promtail-config.yaml:/etc/promtail/config.yml
+        networks:
+            - microservices-net
+        command: -config.file=/etc/promtail/config.yml
+        depends_on:
+            - loki
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        ports:
+            - "3000:3000"
+        volumes:
+            # Autoconfiguración del datasource
+            - ./observability/grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+            - grafana_data:/var/lib/grafana
+        networks:
+            - microservices-net
+        depends_on:
+            - loki
 
 # --- VOLÚMENES PERSISTENTES PARA LAS BASES DE DATOS ---
 volumes:
@@ -354,13 +382,8 @@ volumes:
     ubicaciones_db_data:
     envios_db_data:
     keycloak_data:
-    logs_usuarios:
-    logs_tramos:
-    logs_envios:
-    logs_ubicaciones:
-    logs_contenedores:
-    logs_camiones:
-    logs_gateway:
+    loki_data:
+    grafana_data:
 
 # --- RED ÚNICA PARA TODOS LOS SERVICIOS ---
 networks:

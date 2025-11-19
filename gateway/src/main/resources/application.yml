@@ -84,3 +84,7 @@ logging:
         org.springframework: INFO
         org.hibernate: WARN
 
+management:
+    tracing:
+        sampling:
+            probability: 1.0

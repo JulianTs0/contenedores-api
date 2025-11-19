@@ -1,68 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
 
-    <!--
-      Este archivo es genérico y reutilizable.
-      Toma el nombre de la aplicación desde application.yml
-    -->
-    <springProperty scope="context" name="spring.application.name" source="spring.application.name"/>
-
-    <!-- Variable para definir el directorio de los logs -->
-    <property name="LOGS_DIR" value="./logs" />
-
-    <!--
-      Variable para el patrón de log.
-      Incluye el "Correlation ID" usando %X{correlationId}
-    -->
-    <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{correlationId:-}] - %msg%n" />
-
-    <!-- Appender de Consola (para Docker) -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf8</charset>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeContext>false</includeContext>
+            <customFields>{"service":"${appName}"}</customFields>
         </encoder>
     </appender>
 
-    <!--
-      Appender de Archivo con Rotación (para persistencia)
-      Usa el nombre de la app dinámicamente.
-    -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--
-          ¡CLAVE! Usa el nombre del microservicio para el archivo de log
-          Ej: /logs/usuarios.log, /logs/tramos.log
-        -->
-        <file>${LOGS_DIR}/${spring.application.name}.log</file>
-
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf8</charset>
-        </encoder>
-
-        <!-- Política de Rotación (Rolling Policy) -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!--
-              ¡CLAVE! Usa el nombre del microservicio para el archivo archivado
-              Ej: /logs/archived/usuarios-2025-11-17.0.log.gz
-            -->
-            <fileNamePattern>${LOGS_DIR}/archived/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- Logger Raíz (root) -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
     </root>
-
-    <!--
-      El nivel de log específico para tu código (ej: backend.grupo130)
-      se debe manejar en cada application.yml, ya que es más flexible.
-    -->
-
 </configuration>
