@@ -55,7 +55,7 @@ public class ContenedorController {
     }
 
     @Operation(summary = "Buscar contenedor por peso y volumen",
-        description = "Busca un contenedor que coincida con el peso y/o volumen especificado.")
+        description = "Busca un contenedor que cumpla con los requisitos de capacidad especificados.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Contenedor encontrado",
             content = @Content(mediaType = "application/json",
@@ -69,13 +69,14 @@ public class ContenedorController {
     })
     @GetMapping("/getByPesoVolumen")
     public ResponseEntity<GetByPesoVolumenResponse> getByPesoVolumen(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Criterios de peso y volumen para la búsqueda", required = true,
-            content = @Content(schema = @Schema(implementation = GetByPesoVolumenRequest.class)))
+        // CORREGIDO: Se eliminó @RequestBody y se usa @Parameter para documentar los Query Params
+        @Parameter(description = "Capacidad de peso requerida", required = true, example = "1000.0")
         @Positive(message = "{error.peso.positive}")
         @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
         @RequestParam(value = "capacidadPeso")
         BigDecimal peso,
 
+        @Parameter(description = "Capacidad de volumen requerida", required = true, example = "15.5")
         @Positive(message = "{error.volumen.positive}")
         @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
         @RequestParam(value = "capacidadVolumen") BigDecimal volumen
@@ -91,14 +92,14 @@ public class ContenedorController {
         @ApiResponse(responseCode = "200", description = "Lista de contenedores filtrada por estado",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = GetAllResponse.class))),
-        @ApiResponse(responseCode = "400", description = "El estado proporcionado no es válido (Debe ser uno de: BORRADOR, PROGRAMADO, EN_TRANSITO, EN_DEPOSITO, ENTREGADO)",
+        @ApiResponse(responseCode = "400", description = "El estado proporcionado no es válido",
             content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
     @GetMapping("/getByEstado/{estado}")
     public ResponseEntity<GetAllResponse> getByEstado(
-        @Parameter(description = "Estado por el cual filtrar (BORRADOR, PROGRAMADO, EN_TRANSITO, EN_DEPOSITO, ENTREGADO)",
+        @Parameter(description = "Estado por el cual filtrar. Valores permitidos: BORRADOR, PROGRAMADO, EN_TRANSITO, EN_DEPOSITO, ENTREGADO",
             required = true, example = "PROGRAMADO")
         @NotNull(message = "{error.estado.notNull}")
         @PathVariable String estado
@@ -122,87 +123,74 @@ public class ContenedorController {
     }
 
     @Operation(summary = "Registrar un nuevo contenedor",
-        description = "Crea un nuevo contenedor con el peso, volumen y opcionalmente un cliente asignado. Comienza en estado BORRADOR.")
+        description = "Crea un nuevo contenedor. Comienza en estado BORRADOR por defecto.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Contenedor registrado exitosamente",
-            content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos de solicitud inválidos (p.ej. peso/volumen nulos o no positivos)",
+            content = @Content), // Podrías agregar el schema de RegisterResponse si existe
+        @ApiResponse(responseCode = "400", description = "Datos inválidos",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "El 'idCliente' proporcionado no existe",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo contenedor a registrar", required = true,
-            content = @Content(schema = @Schema(implementation = RegisterRequest.class)))
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo contenedor", required = true)
         @RequestBody @Valid RegisterRequest request
     ) {
-
         return ResponseEntity.ok(this.contenedorService.register(request));
     }
 
     @Operation(summary = "Editar un contenedor existente",
-        description = "Actualiza el peso, volumen o cliente de un contenedor existente. Solo se actualizan los campos proporcionados.")
+        description = "Actualiza el peso, volumen. El ID es obligatorio.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Contenedor actualizado exitosamente",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = EditResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos de solicitud inválidos (p.ej. ID nulo, valores no positivos)",
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o ID nulo",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "Contenedor ('id') o Cliente ('idCliente') no encontrado",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+        @ApiResponse(responseCode = "404", description = "Contenedor no encontrado",
             content = @Content)
     })
     @PatchMapping("/edit")
     public ResponseEntity<EditResponse> edit(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Campos a editar del contenedor. 'id' es obligatorio.", required = true,
-            content = @Content(schema = @Schema(implementation = EditRequest.class)))
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Campos a editar.", required = true)
         @RequestBody @Valid EditRequest request
     ) {
         return ResponseEntity.ok(this.contenedorService.edit(request));
     }
 
     @Operation(summary = "Cambiar el estado de un contenedor",
-        description = "Realiza una transición de estado para un contenedor (p.ej. de BORRADOR a PROGRAMADO). Valida la lógica de transiciones.")
+        description = "Realiza una transición de estado (ej: BORRADOR -> PROGRAMADO).")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Estado del contenedor actualizado",
+        @ApiResponse(responseCode = "200", description = "Estado actualizado",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = CambioDeEstadoResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Transición de estado inválida, estado no válido, o contenedor ya entregado",
+        @ApiResponse(responseCode = "400", description = "Transición inválida o contenedor entregado",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "Contenedor no encontrado",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
     @PutMapping("/cambioDeEstado")
     public ResponseEntity<CambioDeEstadoResponse> cambioDeEstado(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID del contenedor y el nuevo estado deseado", required = true,
-            content = @Content(schema = @Schema(implementation = CambioDeEstadoRequest.class)))
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID y nuevo estado", required = true)
         @RequestBody @Valid CambioDeEstadoRequest request
     ) {
         return ResponseEntity.ok(this.contenedorService.cambioDeEstado(request));
     }
 
     @Operation(summary = "Asignar un cliente a un contenedor",
-        description = "Asigna un cliente a un contenedor que esté en estado BORRADOR y sin cliente. El contenedor pasa a estado PROGRAMADO.")
+        description = "Asigna cliente a un contenedor en estado BORRADOR. Pasa a PROGRAMADO.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cliente asignado exitosamente al contenedor",
+        @ApiResponse(responseCode = "200", description = "Cliente asignado",
             content = @Content),
-        @ApiResponse(responseCode = "400", description = "El contenedor ya tiene un cliente asignado, o el usuario no es de rol 'CLIENTE'",
+        @ApiResponse(responseCode = "400", description = "Contenedor ya tiene cliente o usuario no es CLIENTE",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "Contenedor o Cliente no encontrado",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
     @PutMapping("/asignarCliente")
     public ResponseEntity<?> asignarCliente(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID del contenedor y ID del cliente a asignar", required = true,
-            content = @Content(schema = @Schema(implementation = AsignarClienteRequest.class)))
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID Contenedor y ID Cliente", required = true)
         @RequestBody @Valid AsignarClienteRequest request
     ) {
         this.contenedorService.asignarCliente(request);
@@ -210,15 +198,11 @@ public class ContenedorController {
     }
 
     @Operation(summary = "Eliminar un contenedor por ID",
-        description = "Elimina un contenedor de la base de datos permanentemente.")
+        description = "Elimina permanentemente un contenedor.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Contenedor eliminado exitosamente",
-            content = @Content),
-        @ApiResponse(responseCode = "400", description = "ID proporcionado inválido (debe ser positivo)",
+        @ApiResponse(responseCode = "200", description = "Contenedor eliminado",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "Contenedor no encontrado",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content)
     })
     @DeleteMapping("/delete/{id}")

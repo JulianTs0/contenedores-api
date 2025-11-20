@@ -390,8 +390,6 @@ public class TramoService {
 
             this.enviosRepository.editSolicitud(editRequest);
 
-            log.debug("AAaqaaaaaaaaaaaaaa {}", solicitudTraslado.getEstado().name());
-
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
 
             requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());

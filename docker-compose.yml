@@ -184,9 +184,6 @@ services:
             - ms-ubicaciones
             - ms-contenedores
             - keycloak
-            # ms-envios tiene una dependencia circular con ms-tramos.
-            # He quitado 'ms-envios' de 'depends_on' aquí para evitar un error.
-            # Asegúrate de que tus aplicaciones manejen esto (ej. con reintentos).
 
     # Microservicio de Camiones
     ms-camiones:
@@ -347,11 +344,8 @@ services:
         image: grafana/promtail:3.0.0
         container_name: promtail
         volumes:
-            # Lee logs de contenedores
             - /var/lib/docker/containers:/var/lib/docker/containers:ro
-            # Detecta nombres de contenedores
             - /var/run/docker.sock:/var/run/docker.sock
-            # Configuración
             - ./observability/promtail-config.yaml:/etc/promtail/config.yml
         networks:
             - microservices-net

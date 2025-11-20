@@ -251,31 +251,4 @@ public class RutaService {
         return response;
     }
 
-    /*public void confirmarSolicitud(RutaAsignarSolicitudRequest request) throws ServiceError {
-        log.info("Iniciando asignacion final de Solicitud ID {} a Ruta ID {}.", request.getIdSolicitud(), request.getIdRuta());
-
-        RutaTraslado ruta = this.rutaRepository.getById(request.getIdRuta());
-
-        if(ruta == null){
-            throw new ServiceError("", Errores.RUTA_NO_ENCONTRADA, 404);
-        }
-
-        SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
-
-        if(solicitud == null){
-            throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
-        }
-
-        List<Tramo> tramos = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
-
-        if(tramos == null || tramos.isEmpty()){
-            throw new ServiceError("", Errores.RUTA_SIN_TRAMOS, 400);
-        }
-
-        ruta.setIdSolicitud(solicitud.getIdSolicitud());
-
-        this.rutaRepository.update(ruta);
-        log.info("Asignacion final de Solicitud ID {} a Ruta ID {} completada.", request.getIdSolicitud(), request.getIdRuta());
-    }*/
-
 }

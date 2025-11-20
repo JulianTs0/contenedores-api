@@ -34,18 +34,19 @@ public class TramoController {
 
     private final TramoService tramoService;
 
-    @Operation(summary = "Obtener un tramo por su ID",
-        description = "Busca y devuelve un tramo específico utilizando su ID único, incluyendo detalles del camión y ubicaciones si están asignados.")
+    @Operation(
+        summary = "Obtener un tramo por su ID",
+        description = "Busca y devuelve un tramo específico utilizando su ID único, incluyendo detalles del camión y ubicaciones si están asignados."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Tramo encontrado",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = TramoGetByIdResponse.class)) }),
+        @ApiResponse(responseCode = "200", description = "Tramo encontrado exitosamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TramoGetByIdResponse.class))),
         @ApiResponse(responseCode = "404", description = "Tramo no encontrado", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping("/getById/{idTramo}")
     public ResponseEntity<TramoGetByIdResponse> getById(
-        @Parameter(description = "ID del tramo a buscar", required = true, example = "1")
+        @Parameter(description = "ID único del tramo a buscar", required = true, example = "1")
         @NotNull(message = "{error.idTramo.notNull}")
         @Positive(message = "{error.idTramo.positive}")
         @PathVariable Long idTramo
@@ -55,12 +56,13 @@ public class TramoController {
         return ResponseEntity.ok(this.tramoService.getById(request));
     }
 
-    @Operation(summary = "Obtener todos los tramos",
-        description = "Devuelve una lista de todos los tramos registrados en el sistema.")
+    @Operation(
+        summary = "Obtener todos los tramos",
+        description = "Devuelve una lista completa de todos los tramos registrados en el sistema."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = TramoGetAllResponse.class)) }),
+        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida exitosamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TramoGetAllResponse.class))),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping("/getAll")
@@ -69,17 +71,19 @@ public class TramoController {
         return ResponseEntity.ok(this.tramoService.getAll());
     }
 
-    @Operation(summary = "Asignar un camión a un tramo",
-        description = "Asigna un camión disponible (por su dominio) a un tramo que está en estado 'ESTIMADO'. " +
-            "Si todos los tramos de la ruta quedan asignados, la Solicitud de traslado pasa a 'PROGRAMADO'.")
+    @Operation(
+        summary = "Asignar un camión a un tramo",
+        description = "Asigna un camión disponible a un tramo en estado 'ESTIMADO'. Si se completan todos los tramos, la solicitud avanza a 'PROGRAMADO'."
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Camión asignado exitosamente", content = @Content),
-        @ApiResponse(responseCode = "400", description = "El tramo no está en estado 'ESTIMADO' o el camión no está disponible", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Tramo no está en estado 'ESTIMADO' o camión no disponible", content = @Content),
         @ApiResponse(responseCode = "404", description = "Tramo o Camión no encontrado", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PatchMapping("/asignarCamion")
     public ResponseEntity<?> asignarCamion(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de asignación (ID Tramo + Dominio Camión)", required = true)
         @RequestBody @Valid TramoAsignacionCamionRequest request
     ) {
         log.info("Iniciando PATCH /api/tramos/asignarCamion para Tramo ID: {}", request.getIdTramo());
@@ -87,12 +91,13 @@ public class TramoController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Obtener tramos por transportista (camión)",
-        description = "Devuelve una lista de todos los tramos asignados a un camión específico, identificado por su dominio (patente).")
+    @Operation(
+        summary = "Obtener tramos por transportista (camión)",
+        description = "Devuelve todos los tramos asignados a un camión específico."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = TramoGetAllResponse.class)) }),
+        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida exitosamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TramoGetAllResponse.class))),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping("/getByTransportista/{dominio}")
@@ -106,12 +111,13 @@ public class TramoController {
         return ResponseEntity.ok(this.tramoService.getByTransportista(request));
     }
 
-    @Operation(summary = "Obtener todos los tramos de una ruta",
-        description = "Devuelve una lista de todos los tramos que componen una ruta específica, identificada por su ID.")
+    @Operation(
+        summary = "Obtener todos los tramos de una ruta",
+        description = "Devuelve la secuencia de tramos que componen una ruta específica."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = TramoGetAllResponse.class)) }),
+        @ApiResponse(responseCode = "200", description = "Lista de tramos obtenida exitosamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TramoGetAllResponse.class))),
         @ApiResponse(responseCode = "404", description = "Ruta no encontrada", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
@@ -127,18 +133,20 @@ public class TramoController {
         return ResponseEntity.ok(this.tramoService.getTramosDeRuta(request));
     }
 
-    @Operation(summary = "Registrar el inicio de un tramo",
-        description = "Marca un tramo como 'INICIADO'. Requiere que el tramo esté 'ASIGNADO' y que el camión que realiza la solicitud sea el asignado. " +
-            "Si es el primer tramo, la Solicitud pasa a 'EN_TRANSITO'.")
+    @Operation(
+        summary = "Registrar el inicio de un tramo",
+        description = "Marca un tramo como 'INICIADO'. Requiere que el tramo esté 'ASIGNADO'. Actualiza el estado de la solicitud si corresponde."
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Inicio de tramo registrado", content = @Content),
-        @ApiResponse(responseCode = "400", description = "El tramo no está 'ASIGNADO' o el tramo anterior no ha finalizado", content = @Content),
-        @ApiResponse(responseCode = "403", description = "Acción no autorizada (el camión no coincide con el asignado)", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Estado incorrecto (no ASIGNADO) o secuencia inválida", content = @Content),
+        @ApiResponse(responseCode = "403", description = "No autorizado (camión incorrecto)", content = @Content),
         @ApiResponse(responseCode = "404", description = "Tramo o Camión no encontrado", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PatchMapping("/registrarInicio")
     public ResponseEntity<?> registrarInicio(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos para iniciar tramo (ID + Dominio)", required = true)
         @RequestBody @Valid TramoInicioTramoRequest request
     ) {
         log.info("Iniciando PATCH /api/tramos/registrarInicio para Tramo ID: {}", request.getIdTramo());
@@ -146,18 +154,20 @@ public class TramoController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Registrar el fin de un tramo",
-        description = "Marca un tramo como 'FINALIZADO'. Requiere que el tramo esté 'INICIADO' y que el camión que realiza la solicitud sea el asignado. " +
-            "Si es el último tramo, la Solicitud pasa a 'ENTREGADO'.")
+    @Operation(
+        summary = "Registrar el fin de un tramo",
+        description = "Marca un tramo como 'FINALIZADO'. Requiere que esté 'INICIADO'. Si es el último tramo, finaliza la solicitud."
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Fin de tramo registrado", content = @Content),
-        @ApiResponse(responseCode = "400", description = "El tramo no está 'INICIADO'", content = @Content),
-        @ApiResponse(responseCode = "403", description = "Acción no autorizada (el camión no coincide con el asignado)", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Estado incorrecto (no INICIADO)", content = @Content),
+        @ApiResponse(responseCode = "403", description = "No autorizado (camión incorrecto)", content = @Content),
         @ApiResponse(responseCode = "404", description = "Tramo o Camión no encontrado", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PatchMapping("/registrarFin")
     public ResponseEntity<?> registrarFin(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos para finalizar tramo (ID + Dominio)", required = true)
         @RequestBody @Valid TramoFinTramoRequest request
     ) {
         log.info("Iniciando PATCH /api/tramos/registrarFin para Tramo ID: {}", request.getIdTramo());

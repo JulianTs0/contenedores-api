@@ -36,8 +36,6 @@ spring:
                               - Path=/gateway/contenedores/**
                           filters:
                               - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
-
-                        # --- RUTAS AÑADIDAS ---
                         - id: ms-tramos
                           uri: http://localhost:8092
                           predicates:
