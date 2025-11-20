@@ -1,8 +1,7 @@
 package backend.grupo130.tramos.config.enums;
 
-import lombok.ToString;
-
 public enum EstadoContenedor {
+
     BORRADOR,
     PROGRAMADO,
     EN_TRANSITO,

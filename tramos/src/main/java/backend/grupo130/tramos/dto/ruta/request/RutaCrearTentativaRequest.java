@@ -13,16 +13,11 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RutaGetOpcionesRequest {
+public class RutaCrearTentativaRequest {
 
     @NotNull(message = "{error.idSolicitud.notNull}")
     @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
-
-    @NotNull(message = "{error.cargosGestion.notNull}")
-    @Positive(message = "{error.cargosGestion.positive}")
-    @Digits(integer = 8, fraction = 2, message = "{error.cargosGestion.digits}")
-    private final BigDecimal cargosGestionFijo;
 
     @NotNull(message = "{error.ubicaciones.notNull}")
     @Size(min = 2, message = "{error.ubicaciones.sizeMin}")

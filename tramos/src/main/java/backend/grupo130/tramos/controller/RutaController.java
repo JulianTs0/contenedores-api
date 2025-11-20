@@ -1,14 +1,10 @@
 package backend.grupo130.tramos.controller;
 
-import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
-import backend.grupo130.tramos.dto.ruta.request.RutaGetOpcionesRequest;
-import backend.grupo130.tramos.dto.ruta.request.RutaRegisterRequest;
-import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
+import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
-import backend.grupo130.tramos.dto.tramo.request.TramoAsignacionCamionRequest;
 import backend.grupo130.tramos.service.RutaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tramos/rutas")
@@ -85,13 +79,13 @@ public class RutaController {
     })
     @PostMapping("/crearRutaTentativa")
     public ResponseEntity<RutaGetOpcionesResponse> crearRutaTentativa(
-        @RequestBody @Valid RutaGetOpcionesRequest request
+        @RequestBody @Valid RutaCrearTentativaRequest request
     ) {
         log.info("Iniciando POST /api/rutas/getRutaTentativa para Solicitud ID: {}", request.getIdSolicitud());
         return ResponseEntity.ok(this.rutaService.getRutaTentativa(request));
     }
 
-    @Operation(summary = "Asignar una solicitud a una ruta",
+    /*@Operation(summary = "Asignar una solicitud a una ruta",
         description = "Asigna formalmente una solicitud de traslado a una ruta específica (previamente calculada) " +
             "que ya contiene sus tramos. Es el paso final para confirmar la ruta.")
     @ApiResponses(value = {
@@ -105,8 +99,8 @@ public class RutaController {
         @RequestBody @Valid RutaAsignarSolicitudRequest request
     ) {
         log.info("Iniciando PATCH /api/rutas/asignarSolicitud para Ruta ID: {} y Solicitud ID: {}", request.getIdRuta(), request.getIdSolicitud());
-        this.rutaService.asignarSolicitud(request);
+        this.rutaService.confirmarSolicitud(request);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
 }

@@ -28,7 +28,7 @@ public class RutaTraslado {
     @Column(name = "cargos_gestion_fijo", precision = 10, scale = 2, nullable = false)
     private BigDecimal cargosGestionFijo;
 
-    @Column(name = "id_solicitud")
+    @Column(name = "id_solicitud", unique = true)
     private Long idSolicitud;
 
 }

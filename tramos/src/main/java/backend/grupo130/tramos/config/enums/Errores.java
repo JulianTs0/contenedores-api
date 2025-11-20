@@ -22,6 +22,8 @@ public enum Errores {
     SOLICITUD_NO_ENCONTRADA("Solicitud no encontrada"),
     SOLICITUD_NO_PROGRAMADA("No se puede registar el inicio de un tramo de una solicitud que no esta programada"),
     SOLICITUD_NO_INICIADA("No se puede registar el fin de un tramo de una solicitud que no esta iniciada"),
+    SOLICITUD_YA_CONFIRMADA("La solicitud ya a sido confirmada"),
+    SOLICITUD_DEBE_CONFIRMAR("La solicitud debe estar confirmada"),
     CAMION_NO_ENCONTRADO("Camion no encontrado"),
     CAMION_NO_DISPONIBLE("El camion no esta disponible"),
     CAMIONES_NO_ENCONTRADOS("No se encontraros camiones disponibles"),

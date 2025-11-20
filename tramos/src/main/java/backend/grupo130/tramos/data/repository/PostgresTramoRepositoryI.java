@@ -2,6 +2,7 @@ package backend.grupo130.tramos.data.repository;
 
 import backend.grupo130.tramos.data.models.Tramo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,6 +16,10 @@ public interface PostgresTramoRepositoryI extends JpaRepository<Tramo, Long> {
 
     @Query("SELECT t FROM Tramo t WHERE t.dominioCamion = :dominio")
     List<Tramo> buscarPorDominio(@Param("dominio") String dominio);
+
+    @Modifying
+    @Query("DELETE FROM Tramo t WHERE t.rutaTraslado.idRuta = :idRuta")
+    void deleteByRutaId(@Param("idRuta") Long idRuta);
 
 }
 

@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface PostgresRutaRepositoryI extends JpaRepository<RutaTraslado, Long> {
 
+    RutaTraslado findByIdSolicitud(Long idSolicitud);
+
 }
 
 

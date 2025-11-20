@@ -1,9 +1,8 @@
 package backend.grupo130.envios.config.enums;
 
-import lombok.ToString;
-
 public enum EstadoSolicitud {
     BORRADOR,
+    CONFIRMADA,
     PROGRAMADO,
     EN_TRANSITO,
     ENTREGADO;

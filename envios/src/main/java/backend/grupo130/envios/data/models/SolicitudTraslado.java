@@ -64,4 +64,24 @@ public class SolicitudTraslado {
 
     @Column(name = "id_destino")
     private Long idDestino;
+
+    public boolean esBorrador(){
+        return this.estado.equals(EstadoSolicitud.BORRADOR);
+    }
+
+    public boolean esConfirmada(){
+        return this.estado.equals(EstadoSolicitud.CONFIRMADA);
+    }
+
+    public boolean esProgramada(){
+        return this.estado.equals(EstadoSolicitud.PROGRAMADO);
+    }
+
+    public boolean esEntregada(){
+        return this.estado.equals(EstadoSolicitud.ENTREGADO);
+    }
+
+    public boolean esEntransito(){
+        return this.estado.equals(EstadoSolicitud.EN_TRANSITO);
+    }
 }

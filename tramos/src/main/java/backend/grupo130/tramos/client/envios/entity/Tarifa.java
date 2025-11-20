@@ -1,5 +1,6 @@
 package backend.grupo130.tramos.client.envios.entity;
 
+import backend.grupo130.tramos.config.enums.PreciosNegocio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,15 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Tarifa {
 
-    private static final BigDecimal RANGO_PESO_BAJO = new BigDecimal("10000");
-    private static final BigDecimal RANGO_PESO_MEDIO = new BigDecimal("50000");
+    private static final BigDecimal RANGO_PESO_BAJO = PreciosNegocio.RANGO_PESO_BAJO.getValor();
+    private static final BigDecimal RANGO_PESO_MEDIO = PreciosNegocio.RANGO_PESO_MEDIO.getValor();
 
-    private static final BigDecimal MULTIPLICADOR_BAJO = new BigDecimal("1.0");
-    private static final BigDecimal MULTIPLICADOR_MEDIO = new BigDecimal("1.5");
-    private static final BigDecimal MULTIPLICADOR_ALTO = new BigDecimal("2.0");
-
-    private static final int MONETARY_SCALE = 2;
-    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+    private static final BigDecimal MULTIPLICADOR_BAJO = PreciosNegocio.MULTIPLICADOR_BAJO.getValor();
+    private static final BigDecimal MULTIPLICADOR_MEDIO = PreciosNegocio.MULTIPLICADOR_MEDIO.getValor();
+    private static final BigDecimal MULTIPLICADOR_ALTO = PreciosNegocio.MULTIPLICADOR_ALTO.getValor();
 
     private Long idTarifa;
 
@@ -30,7 +28,7 @@ public class Tarifa {
 
     private BigDecimal costoBase;
 
-    private BigDecimal valorLitro = new BigDecimal("10");
+    private BigDecimal valorLitro = PreciosNegocio.VALOR_LITRO.getValor();
 
     private BigDecimal consumoAprox;
 
@@ -56,7 +54,7 @@ public class Tarifa {
             .add(costoCombustible)
             .add(costoTotalEstadia)
             .add(cargosFijosTotales)
-            .setScale(MONETARY_SCALE, ROUNDING_MODE);
+            .setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calcularCostoFinal(BigDecimal distanciaTotalKm, BigDecimal cargosFijosTotales, BigDecimal costoTotalEstadiasReales) {
@@ -76,7 +74,7 @@ public class Tarifa {
             .add(costoCombustible)
             .add(costoEstadiaFinal)
             .add(cargosFijosFinal)
-            .setScale(MONETARY_SCALE, ROUNDING_MODE);
+            .setScale(2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal calcularCostoBaseAjustado() {

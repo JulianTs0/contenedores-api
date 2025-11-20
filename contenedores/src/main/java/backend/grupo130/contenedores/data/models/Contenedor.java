@@ -33,4 +33,24 @@ public class Contenedor {
     @Column(name = "estado", nullable = false)
     private EstadoContenedor estado;
 
+    public boolean esBorrador(){
+        return this.estado.equals(EstadoContenedor.BORRADOR);
+    }
+
+    public boolean esProgramado(){
+        return this.estado.equals(EstadoContenedor.PROGRAMADO);
+    }
+
+    public boolean esEnTransito(){
+        return this.estado.equals(EstadoContenedor.EN_TRANSITO);
+    }
+
+    public boolean esEnDeposito(){
+        return this.estado.equals(EstadoContenedor.EN_DEPOSITO);
+    }
+
+    public boolean esEntregado(){
+        return this.estado.equals(EstadoContenedor.ENTREGADO);
+    }
+
 }

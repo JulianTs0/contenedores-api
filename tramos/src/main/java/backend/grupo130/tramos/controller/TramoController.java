@@ -1,7 +1,5 @@
 package backend.grupo130.tramos.controller;
 
-import backend.grupo130.tramos.data.models.Tramo;
-import backend.grupo130.tramos.dto.ruta.request.RutaRegisterRequest;
 import backend.grupo130.tramos.dto.tramo.request.*;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;

@@ -149,9 +149,8 @@ public class ContenedorService {
         if (contenedor == null) {
             throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
         }
-        if(contenedor.getEstado() != EstadoContenedor.BORRADOR){
+        if(!contenedor.esBorrador()){
             throw new ServiceError("", Errores.CONTENEDOR_NO_DISPONIBLE, 400);
-
         }
 
         if (request.getPeso() != null) {
@@ -237,7 +236,7 @@ public class ContenedorService {
             }
             case EN_TRANSITO -> {
 
-                if(estadoContenedor !=EstadoContenedor.EN_DEPOSITO && estadoContenedor != backend.grupo130.contenedores.config.enums.EstadoContenedor.ENTREGADO){
+                if(estadoContenedor !=EstadoContenedor.EN_DEPOSITO && estadoContenedor != EstadoContenedor.ENTREGADO){
                     log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
                     throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
                 }
@@ -245,7 +244,7 @@ public class ContenedorService {
             }
             case EN_DEPOSITO -> {
 
-                if(estadoContenedor != backend.grupo130.contenedores.config.enums.EstadoContenedor.EN_TRANSITO && estadoContenedor != backend.grupo130.contenedores.config.enums.EstadoContenedor.ENTREGADO){
+                if(estadoContenedor != EstadoContenedor.EN_TRANSITO && estadoContenedor != EstadoContenedor.ENTREGADO){
                     log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
                     throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
                 }

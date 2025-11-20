@@ -24,6 +24,11 @@ public class RutaRepository {
         return models;
     }
 
+    public RutaTraslado getBySolicitud(Long id){
+        RutaTraslado rutaTraslado = this.rutaRepository.findByIdSolicitud(id);
+        return rutaTraslado;
+    }
+
     public RutaTraslado save(RutaTraslado ruta) {
         RutaTraslado saved = this.rutaRepository.save(ruta);
         return saved;

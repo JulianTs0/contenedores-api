@@ -43,6 +43,11 @@ public class TramoRepository {
         return updated;
     }
 
+    public void deleteByRutaId(Long id){
+        this.tramoRepository.deleteByRutaId(id);
+        return;
+    }
+
     public List<Tramo> buscarPorRuta(Long idRuta){
         List<Tramo> tramos = this.tramoRepository.buscarTodosPorIdRuta(idRuta);
         return tramos;

@@ -7,16 +7,14 @@ import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
-import backend.grupo130.tramos.config.enums.Errores;
-import backend.grupo130.tramos.config.enums.EstadoTramo;
-import backend.grupo130.tramos.config.enums.TipoTramo;
+import backend.grupo130.tramos.config.enums.*;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
 import backend.grupo130.tramos.dto.ruta.RutaMapperDto;
 import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
-import backend.grupo130.tramos.dto.ruta.request.RutaGetOpcionesRequest;
+import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
@@ -86,7 +84,7 @@ public class RutaService {
     }
 
 
-    public RutaGetOpcionesResponse getRutaTentativa(RutaGetOpcionesRequest request) throws ServiceError {
+    public RutaGetOpcionesResponse getRutaTentativa(RutaCrearTentativaRequest request) throws ServiceError {
         log.info("Iniciando calculo de Ruta Tentativa para Solicitud ID: {}", request.getIdSolicitud());
 
         SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
@@ -94,10 +92,8 @@ public class RutaService {
         if (solicitud == null) {
             throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
         }
-
-        Tarifa tarifa = solicitud.getTarifa();
-        if (tarifa == null) {
-            tarifa = new Tarifa();
+        if (!solicitud.esBorrador()) {
+            throw new ServiceError("", Errores.SOLICITUD_YA_CONFIRMADA, 404);
         }
 
         log.debug("Buscando Contenedor ID: {}", solicitud.getIdContenedor());
@@ -117,12 +113,20 @@ public class RutaService {
             throw new ServiceError("", Errores.CAMIONES_NO_ENCONTRADOS, 404);
         }
 
-        RutaTraslado ruta = new RutaTraslado();
-        ruta.setCargosGestionFijo(request.getCargosGestionFijo());
-        ruta.setCantidadTramos(0);
-        ruta.setCantidadDepositos(0);
+        RutaTraslado ruta = this.rutaRepository.getBySolicitud(request.getIdSolicitud());
 
-        this.rutaRepository.save(ruta);
+        if(ruta == null){
+            ruta = new RutaTraslado();
+
+            ruta.setCantidadTramos(0);
+            ruta.setCantidadDepositos(0);
+            ruta.setCargosGestionFijo(PreciosNegocio.CARGO_GESTION.getValor());
+
+            this.rutaRepository.save(ruta);
+        } else {
+            this.tramoRepository.deleteByRutaId(ruta.getIdRuta());
+        }
+
         log.info("Nueva Ruta (tentativa) creada con ID: {}", ruta.getIdRuta());
 
         List<Tramo> tramos = new ArrayList<>();
@@ -204,6 +208,12 @@ public class RutaService {
 
         ruta.setCantidadTramos(tramos.size());
         ruta.setCantidadDepositos(depositos.size());
+        ruta.setIdSolicitud(solicitud.getIdSolicitud());
+
+        Tarifa tarifa = solicitud.getTarifa();
+        if (tarifa == null) {
+            tarifa = new Tarifa();
+        }
 
         tarifa.setPesoMax(contenedor.getPeso());
         tarifa.setVolumenMax(contenedor.getVolumen());
@@ -241,7 +251,7 @@ public class RutaService {
         return response;
     }
 
-    public void asignarSolicitud(RutaAsignarSolicitudRequest request) throws ServiceError {
+    /*public void confirmarSolicitud(RutaAsignarSolicitudRequest request) throws ServiceError {
         log.info("Iniciando asignacion final de Solicitud ID {} a Ruta ID {}.", request.getIdSolicitud(), request.getIdRuta());
 
         RutaTraslado ruta = this.rutaRepository.getById(request.getIdRuta());
@@ -266,6 +276,6 @@ public class RutaService {
 
         this.rutaRepository.update(ruta);
         log.info("Asignacion final de Solicitud ID {} a Ruta ID {} completada.", request.getIdSolicitud(), request.getIdRuta());
-    }
+    }*/
 
 }

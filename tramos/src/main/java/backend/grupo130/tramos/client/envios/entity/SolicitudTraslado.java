@@ -46,6 +46,14 @@ public class SolicitudTraslado {
         return this.estado.equals(EstadoSolicitud.BORRADOR);
     }
 
+    public boolean esConfirmada(){
+        return this.estado.equals(EstadoSolicitud.CONFIRMADA);
+    }
+
+    public boolean esProgramada(){
+        return this.estado.equals(EstadoSolicitud.PROGRAMADO);
+    }
+
     public boolean esEntregada(){
         return this.estado.equals(EstadoSolicitud.ENTREGADO);
     }

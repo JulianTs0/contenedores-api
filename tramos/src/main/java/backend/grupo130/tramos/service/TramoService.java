@@ -125,6 +125,14 @@ public class TramoService {
             throw new ServiceError("", Errores.TRAMO_YA_ASIGNADO, 400);
         }
 
+        RutaTraslado rutaTraslado = tramo.getRutaTraslado();
+
+        SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(rutaTraslado.getIdSolicitud());
+
+        if(!solicitudTraslado.esConfirmada()){
+            throw new ServiceError("", Errores.SOLICITUD_DEBE_CONFIRMAR, 400);
+        }
+
         Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
 
         if (camion == null) {
@@ -141,7 +149,6 @@ public class TramoService {
 
         this.tramoRepository.update(tramo);
 
-        RutaTraslado rutaTraslado = tramo.getRutaTraslado();
         log.debug("Verificando estado de otros tramos para la Ruta ID: {}", rutaTraslado.getIdRuta());
         List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(rutaTraslado.getIdRuta());
 
@@ -152,8 +159,6 @@ public class TramoService {
 
         if (todosAsignados) {
             log.info("Todos los tramos de la Ruta ID {} han sido asignados. Actualizando estado de Solicitud {} a PROGRAMADO.", rutaTraslado.getIdRuta(), rutaTraslado.getIdSolicitud());
-
-            SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(rutaTraslado.getIdSolicitud());
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
             requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
@@ -227,7 +232,7 @@ public class TramoService {
 
         Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
 
-        if(contenedor.getEstado() != null && contenedor.getEstado().name().equals(EstadoContenedor.EN_DEPOSITO.name())){
+        if(contenedor.getEstado() != null && contenedor.esEnDeposito()){
             log.info("Contenedor {} sale de DEPOSITO. Actualizando a EN_TRANSITO.", contenedor.getIdContenedor());
             this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
         }
@@ -384,6 +389,8 @@ public class TramoService {
             editRequest.setTiempoRealHoras(tiempoRealHoras);
 
             this.enviosRepository.editSolicitud(editRequest);
+
+            log.debug("AAaqaaaaaaaaaaaaaa {}", solicitudTraslado.getEstado().name());
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
 

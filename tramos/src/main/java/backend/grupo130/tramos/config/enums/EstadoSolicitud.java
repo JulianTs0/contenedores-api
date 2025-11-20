@@ -3,17 +3,17 @@ package backend.grupo130.tramos.config.enums;
 public enum EstadoSolicitud {
 
     BORRADOR,
+    CONFIRMADA,
     PROGRAMADO,
     EN_TRANSITO,
     ENTREGADO;
 
     public static EstadoSolicitud fromString(String text) {
-        for (EstadoSolicitud e : EstadoSolicitud.values()) {
-            if (e.name().equalsIgnoreCase(text)) {
-                return e;
+        for (EstadoSolicitud b : EstadoSolicitud.values()) {
+            if (b.name().equalsIgnoreCase(text)) {
+                return b;
             }
         }
         return null;
     }
-
 }

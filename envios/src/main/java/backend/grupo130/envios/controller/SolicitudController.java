@@ -1,9 +1,6 @@
 package backend.grupo130.envios.controller;
 
-import backend.grupo130.envios.dto.solicitud.request.SolicitudCambioDeEstadoRequest;
-import backend.grupo130.envios.dto.solicitud.request.SolicitudEditRequest;
-import backend.grupo130.envios.dto.solicitud.request.SolicitudGetByIdRequest;
-import backend.grupo130.envios.dto.solicitud.request.SolicitudRegisterRequest;
+import backend.grupo130.envios.dto.solicitud.request.*;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudEditResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudGetAllResponse;
@@ -60,6 +57,13 @@ public class SolicitudController {
     ) {
         log.info("Recibida solicitud POST en /cambioDeEstado. Solicitud ID: {}, Nuevo Estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
         return ResponseEntity.ok(this.solicitudService.cambioDeEstado(request));
+    }
+
+    @PatchMapping("/confirmarSolicitud")
+    public ResponseEntity<SolicitudCambioDeEstadoResponse> confirmarSolicitud(
+        @RequestBody @Valid SolicitudConfirmarRuta request
+    ) {
+        return ResponseEntity.ok(this.solicitudService.confirmarSolicitud(request));
     }
 
     @PutMapping("/edit")
