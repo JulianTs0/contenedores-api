@@ -1,12 +1,12 @@
 package backend.grupo130.tramos.service;
 
-import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.contenedores.models.Contenedor;
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.camiones.entity.Camion;
+import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.*;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import backend.grupo130.tramos.data.models.RutaTraslado;
@@ -25,8 +25,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -314,21 +314,69 @@ public class TramoService {
                 throw new ServiceError("Solicitud sin tarifa", Errores.TARIFA_NO_ENCONTRADA, 404);
             }
 
-            BigDecimal costoFinalCalculado = tarifa.calcularCostoFinal(solicitudTraslado.getCostoEstimado(), todosLosTramos);
+            BigDecimal distanciaTotal = todosLosTramos.stream()
+                .map(Tramo::getDistancia)
+                .filter(java.util.Objects::nonNull)
+                .map(BigDecimal::valueOf)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            log.debug("Distancia Real Total: {} km", distanciaTotal);
+
+            BigDecimal costoTotalEstadiasReales = BigDecimal.ZERO;
+
+            for (int i = 0; i < todosLosTramos.size() - 1; i++) {
+                Tramo actual = todosLosTramos.get(i);
+
+                boolean esTramoDeposito = actual.getTipoTramo().equals(TipoTramo.ORIGEN_DEPOSITO) ||
+                    actual.getTipoTramo().equals(TipoTramo.DEPOSITO_DEPOSITO);
+
+                if (esTramoDeposito) {
+                    Tramo siguiente = todosLosTramos.get(i + 1);
+
+                    LocalDateTime finEstadia = actual.getFechaHoraFinReal();
+                    LocalDateTime inicioSiguiente = siguiente.getFechaHoraInicioReal();
+
+                    long horasEstadia = ChronoUnit.HOURS.between(finEstadia, inicioSiguiente);
+
+                    if (horasEstadia > 0) {
+                        long dias = (long) Math.ceil(horasEstadia / 24.0);
+
+                        Ubicacion ubicacionDeposito = this.ubicacionesRepository.getUbicacionById(actual.getIdDestino());
+
+                        BigDecimal costoDiario = ubicacionDeposito.getDeposito().getCostoEstadiaDiario();
+                        BigDecimal costoEstadiaTramo = costoDiario.multiply(new BigDecimal(dias));
+                        costoTotalEstadiasReales = costoTotalEstadiasReales.add(costoEstadiaTramo);
+
+                        log.debug("Estadia en deposito '{}': {} dias * ${} = ${}",
+                            ubicacionDeposito.getDeposito().getNombre(), dias, costoDiario, costoEstadiaTramo);
+                    }
+
+                }
+            }
+
+            BigDecimal cargoFijoUnitario = ruta.getCargosGestionFijo() != null ? ruta.getCargosGestionFijo() : BigDecimal.ZERO;
+            BigDecimal cargosFijosTotales = cargoFijoUnitario.multiply(new BigDecimal(todosLosTramos.size()));
+
+            BigDecimal costoFinalCalculado = tarifa.calcularCostoFinal(
+                distanciaTotal,
+                cargosFijosTotales,
+                costoTotalEstadiasReales
+            );
+
             log.info("Costo final calculado para Solicitud {}: ${}", solicitudTraslado.getIdSolicitud(), costoFinalCalculado);
 
             LocalDateTime inicio = todosLosTramos.getFirst().getFechaHoraInicioReal();
-            LocalDateTime fin = todosLosTramos.getFirst().getFechaHoraFinReal();
+            LocalDateTime fin = tramo.getFechaHoraFinReal();
 
-            Duration duration = Duration.between(inicio, fin);
+            BigDecimal tiempoRealHoras = BigDecimal.ZERO;
 
-            BigDecimal segundos = BigDecimal.valueOf(duration.getSeconds());
+            if(inicio != null && fin != null) {
+                Duration duration = Duration.between(inicio, fin);
 
-            BigDecimal tiempoRealHoras = segundos.divide(
-                BigDecimal.valueOf(3600),
-                2,
-                RoundingMode.HALF_UP
-            );
+                BigDecimal segundos = BigDecimal.valueOf(duration.getSeconds());
+
+                tiempoRealHoras = segundos.divide(BigDecimal.valueOf(3600), 2, RoundingMode.HALF_UP);
+            }
 
             SolicitudEditRequest editRequest = new SolicitudEditRequest();
             editRequest.setIdSolicitud(solicitudTraslado.getIdSolicitud());

@@ -1,10 +1,6 @@
 package backend.grupo130.tramos.client.envios.request;
 
-import backend.grupo130.tramos.client.envios.models.Tarifa;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

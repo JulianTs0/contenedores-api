@@ -11,14 +11,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SeguimientoRegisterRequest {
 
-    @NotNull(message = "El ID de la solicitud no puede ser nulo")
-    @Positive(message = "El ID de la solicitud debe ser positivo")
+    @NotNull(message = "{error.idSolicitud.notNull}")
+    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
-    @NotBlank(message = "El estado no puede estar vacío")
+    @NotBlank(message = "{error.estado.notBlank}")
     private final String estado;
 
-    @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
+    @Size(max = 255, message = "{error.descripcion.max}")
     private final String descripcion;
 
 }

@@ -48,4 +48,8 @@ public class CamionesMapperDto {
         );
     }
 
+    public static RegisterResponse toResponsePost(Camion camion) {
+        return new RegisterResponse(camion.getDominio());
+    }
+
 }

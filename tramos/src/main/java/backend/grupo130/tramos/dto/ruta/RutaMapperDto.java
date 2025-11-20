@@ -1,7 +1,7 @@
 package backend.grupo130.tramos.dto.ruta;
 
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;

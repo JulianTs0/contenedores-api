@@ -1,7 +1,7 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.contenedores.ContenedorClient;
-import backend.grupo130.tramos.client.contenedores.models.Contenedor;
+import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
 import backend.grupo130.tramos.client.contenedores.request.ContenedorCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorCambioDeEstadoResponse;
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorGetByIdResponse;

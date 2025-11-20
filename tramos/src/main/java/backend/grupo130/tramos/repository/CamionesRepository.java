@@ -1,7 +1,7 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.camiones.CamionClient;
-import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.camiones.request.CamionCambiarDisponibilidadRequest;
 import backend.grupo130.tramos.client.camiones.responses.*;
 import backend.grupo130.tramos.config.enums.Errores;

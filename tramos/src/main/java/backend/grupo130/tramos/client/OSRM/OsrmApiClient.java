@@ -1,7 +1,7 @@
 package backend.grupo130.tramos.client.OSRM;
 
 import backend.grupo130.tramos.client.OSRM.response.OsrmRouteResponse;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import lombok.RequiredArgsConstructor;

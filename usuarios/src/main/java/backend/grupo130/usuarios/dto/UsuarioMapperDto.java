@@ -4,6 +4,7 @@ import backend.grupo130.usuarios.data.models.Usuario;
 import backend.grupo130.usuarios.dto.response.EditResponse;
 import backend.grupo130.usuarios.dto.response.GetAllResponse;
 import backend.grupo130.usuarios.dto.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.response.RegisterResponse;
 
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class UsuarioMapperDto {
             usuario.getApellido(),
             usuario.getTelefono(),
             usuario.getEmail()
+        );
+    }
+
+    public static RegisterResponse toResponsePost(Usuario usuario) {
+        return new RegisterResponse(
+            usuario.getIdUsuario()
         );
     }
 

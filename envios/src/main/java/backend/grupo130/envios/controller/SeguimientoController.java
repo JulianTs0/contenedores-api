@@ -13,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.validation.annotation.Validated;
+
 @RestController
 @RequestMapping("/api/envios/seguimiento")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class SeguimientoController {
 
     private final SeguimientoService seguimientoService;

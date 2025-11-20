@@ -4,13 +4,13 @@ import backend.grupo130.ubicaciones.Repository.DepositoRepository;
 import backend.grupo130.ubicaciones.Repository.UbicacionRepository;
 import backend.grupo130.ubicaciones.config.enums.Errores;
 import backend.grupo130.ubicaciones.config.exceptions.ServiceError;
-import backend.grupo130.ubicaciones.data.models.Deposito;
 import backend.grupo130.ubicaciones.data.models.Ubicacion;
 import backend.grupo130.ubicaciones.dto.ubicaciones.UbicacionesMapperDto;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.*;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionRegisterResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class UbicacionService {
         return response;
     }
 
-    public void register(UbicacionRegisterRequest request) throws ServiceError {
+    public UbicacionRegisterResponse register(UbicacionRegisterRequest request) throws ServiceError {
         log.info("Iniciando register para nueva Ubicacion con direccion: {}", request.getDireccion());
 
         Ubicacion ubicacion = new Ubicacion();
@@ -68,9 +68,10 @@ public class UbicacionService {
         log.debug("Datos de nueva ubicacion a persistir: Direccion={}, Lat={}, Lon={}",
             ubicacion.getDireccionTextual(), ubicacion.getLatitud(), ubicacion.getLongitud());
 
-        this.ubicacionRepository.save(ubicacion);
+        Ubicacion savedUbicacion = this.ubicacionRepository.save(ubicacion);
 
         log.info("Ubicacion registrada exitosamente.");
+        return UbicacionesMapperDto.toResponsePost(savedUbicacion);
     }
 
     public UbicacionEditResponse edit(UbicacionEditRequest request) throws ServiceError {

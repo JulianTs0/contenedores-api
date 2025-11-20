@@ -8,6 +8,7 @@ import backend.grupo130.usuarios.dto.request.RegisterRequest;
 import backend.grupo130.usuarios.dto.response.EditResponse;
 import backend.grupo130.usuarios.dto.response.GetAllResponse;
 import backend.grupo130.usuarios.dto.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.response.RegisterResponse;
 import backend.grupo130.usuarios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -89,12 +90,10 @@ public class UsuarioController {
             content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<Void> register(
+    public ResponseEntity<RegisterResponse> register(
                                           @RequestBody @Valid RegisterRequest request
     ) {
-        this.usuarioService.register(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.usuarioService.register(request));
     }
 
 

@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.client.camiones.responses;
 
-import backend.grupo130.tramos.client.camiones.models.Camion;
+import backend.grupo130.tramos.client.camiones.entity.Camion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

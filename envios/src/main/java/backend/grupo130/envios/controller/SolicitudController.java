@@ -15,12 +15,16 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequestMapping("/api/envios/solicitud")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
@@ -47,7 +51,7 @@ public class SolicitudController {
         @RequestBody @Valid SolicitudRegisterRequest request
     ) {
         log.info("Recibida solicitud POST en /register para cliente ID: {}", request.getIdCliente());
-        return ResponseEntity.ok(this.solicitudService.register(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.solicitudService.register(request));
     }
 
     @PutMapping("/cambioDeEstado")

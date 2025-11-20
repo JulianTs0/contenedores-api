@@ -1,8 +1,8 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.ubicaciones.UbicacionClient;
-import backend.grupo130.tramos.client.ubicaciones.models.Deposito;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Deposito;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetDepositoByIdResponse;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetUbicacionByIdResponse;
 import backend.grupo130.tramos.client.ubicaciones.responses.GetUbicacionGetAllResponse;

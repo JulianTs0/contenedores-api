@@ -11,6 +11,7 @@ import backend.grupo130.usuarios.dto.request.RegisterRequest;
 import backend.grupo130.usuarios.dto.response.EditResponse;
 import backend.grupo130.usuarios.dto.response.GetAllResponse;
 import backend.grupo130.usuarios.dto.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.response.RegisterResponse;
 import backend.grupo130.usuarios.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,7 @@ public class UsuarioService {
 
     // POST
 
-    public void register(RegisterRequest request) throws ServiceError {
+    public RegisterResponse register(RegisterRequest request) throws ServiceError {
         log.info("Iniciando registro de nuevo usuario con email: {}", request.getEmail());
 
         Usuario usuario = new Usuario();
@@ -83,6 +84,7 @@ public class UsuarioService {
         this.usuarioRepository.save(usuario);
         log.info("Usuario registrado exitosamente con email: {}", usuario.getEmail());
 
+        return UsuarioMapperDto.toResponsePost(usuario);
     }
 
     // PATCH

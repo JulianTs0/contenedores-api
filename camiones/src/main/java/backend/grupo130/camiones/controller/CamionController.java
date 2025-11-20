@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -105,17 +106,16 @@ public class CamionController {
         description = "Crea un nuevo camión en el sistema con los datos proporcionados."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Camión registrado exitosamente", content = @Content),
+        @ApiResponse(responseCode = "201", description = "Camión registrado exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterResponse.class))),
         @ApiResponse(responseCode = "400", description = "Datos de registro inválidos (Campos faltantes o formato incorrecto)", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<RegisterResponse> register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo camión", required = true)
         @RequestBody @Valid RegisterRequest request
     ) {
-        this.camionService.register(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.camionService.register(request));
     }
 
     @Operation(

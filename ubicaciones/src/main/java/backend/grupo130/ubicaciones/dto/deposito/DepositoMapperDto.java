@@ -4,6 +4,7 @@ import backend.grupo130.ubicaciones.data.models.Deposito;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoRegisterResponse;
 
 import java.util.List;
 
@@ -30,6 +31,10 @@ public class DepositoMapperDto {
             deposito.getNombre(),
             deposito.getCostoEstadiaDiario()
         );
+    }
+
+    public static DepositoRegisterResponse toResponsePost(Deposito deposito) {
+        return new DepositoRegisterResponse(deposito.getIdDeposito());
     }
 
 }

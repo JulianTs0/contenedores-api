@@ -97,7 +97,7 @@ public class CamionService {
         return response;
     }
 
-    public void register(RegisterRequest request) throws ServiceError {
+    public RegisterResponse register(RegisterRequest request) throws ServiceError {
         log.info("Iniciando registro de nuevo camión con dominio: {}", request.getDominio());
 
         Camion camion = new Camion();
@@ -109,8 +109,10 @@ public class CamionService {
         camion.setCostoTrasladoBase(request.getCostoTrasladoBase());
         camion.setEstado(true);
 
-        this.camionRepository.save(camion);
-        log.info("Camión registrado exitosamente con dominio: {}", camion.getDominio());
+        Camion savedCamion = this.camionRepository.save(camion);
+        log.info("Camión registrado exitosamente con dominio: {}", savedCamion.getDominio());
+        
+        return CamionesMapperDto.toResponsePost(savedCamion);
     }
 
     public EditResponse cambiarDisponibilidad(CambiarDisponibilidadRequest request) throws ServiceError {

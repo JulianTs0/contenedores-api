@@ -342,7 +342,7 @@ Identify and stop the process that's listening on port 8092 or configure this ap
 2025-11-18 09:51:44.886 [http-nio-8092-exec-10] INFO  b.g.tramos.service.TramoService - [] - Iniciando registro de INICIO de Tramo ID 71 por Camion 22HTY01E.
 2025-11-18 09:51:44.909 [http-nio-8092-exec-10] ERROR b.g.tramos.service.TramoService - [] - Error interno inesperado al registrar INICIO de Tramo ID: 71
 java.lang.NullPointerException: Cannot invoke "backend.grupo130.tramos.config.enums.EstadoSolicitud.equals(Object)" because "this.estado" is null
-	at backend.grupo130.tramos.client.envios.models.SolicitudTraslado.esBorrador(SolicitudTraslado.java:48)
+	at backend.grupo130.tramos.client.envios.entity.SolicitudTraslado.esBorrador(SolicitudTraslado.java:48)
 	at backend.grupo130.tramos.service.TramoService.registrarInicioTramo(TramoService.java:253)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)

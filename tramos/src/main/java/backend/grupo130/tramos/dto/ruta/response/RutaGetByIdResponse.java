@@ -1,7 +1,6 @@
 package backend.grupo130.tramos.dto.ruta.response;
 
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
-import jakarta.persistence.*;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

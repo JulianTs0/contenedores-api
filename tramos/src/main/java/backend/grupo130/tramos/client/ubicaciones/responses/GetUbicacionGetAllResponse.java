@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.client.ubicaciones.responses;
 
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

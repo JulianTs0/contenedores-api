@@ -1,6 +1,5 @@
-package backend.grupo130.tramos.client.usuarios.models;
+package backend.grupo130.tramos.client.usuarios.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

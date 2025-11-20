@@ -2,12 +2,11 @@ package backend.grupo130.tramos.service;
 
 import backend.grupo130.tramos.client.OSRM.OsrmApiClient;
 import backend.grupo130.tramos.client.OSRM.response.RouteResponse;
-import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.contenedores.models.Contenedor;
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.enums.EstadoTramo;
 import backend.grupo130.tramos.config.enums.TipoTramo;
@@ -158,14 +157,18 @@ public class RutaService {
             log.debug("Calculando ruta OSRM entre {} ({}) y {} ({}).", origen.getIdUbicacion(), idOrigen, destino.getIdUbicacion(), idDestino);
             RouteResponse routeResponse = this.osrmApiClient.calcularDistancia(origen, destino).getRoutes().get(0);
 
+
+            double distancia = Math.round(routeResponse.getDistance() / 1000);
             Long segundos = Math.round(routeResponse.getDuration());
-            distanciaTotal += routeResponse.getDistance();
+
+            distanciaTotal += distancia;
             tiempoTotal += routeResponse.getDuration();
 
             LocalDateTime finTramo = tramo.getFechaHoraInicioEstimado().plusSeconds(segundos);
             tramo.setFechaHoraFinEstimado(finTramo);
             tramo.setIdOrigen(origen.getIdUbicacion());
             tramo.setIdDestino(destino.getIdUbicacion());
+            tramo.setDistancia(distancia);
 
             if(origen.getDeposito() == null && destino.getDeposito() == null){
                 tramo.setTipoTramo(TipoTramo.ORIGEN_DESTINO);
@@ -208,10 +211,9 @@ public class RutaService {
         tarifa.setConsumoAprox(consumoAprox);
         tarifa.setCostoEstadia(costoEstadiaTotal);
 
-        BigDecimal distanciaEnKm = BigDecimal.valueOf(distanciaTotal)
-            .divide(BigDecimal.valueOf(1000), 2, RoundingMode.HALF_UP);
+        BigDecimal distanciaEnKm = BigDecimal.valueOf(distanciaTotal);
 
-        BigDecimal costoEstiamdo = tarifa.calcularCostoEstimado(distanciaEnKm, ruta.getCargosGestionFijo(), tramos.size());
+        BigDecimal costoEstiamdo = tarifa.calcularCostoEstimado(distanciaEnKm, ruta.getCargosGestionFijo(), tramos.size(), 1);
         log.debug("Costo estimado calculado: {}", costoEstiamdo);
 
         SolicitudEditRequest requestEdit = new SolicitudEditRequest();

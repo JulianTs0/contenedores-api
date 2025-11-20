@@ -29,10 +29,10 @@ public class SolicitudTraslado {
     @Column(name = "fecha_fin")
     private LocalDateTime fechaFin;
 
-    @Column(name = "costo_estimado", precision = 10, scale = 2)
+    @Column(name = "costo_estimado", precision = 15, scale = 2)
     private BigDecimal costoEstimado;
 
-    @Column(name = "costo_final", precision = 10, scale = 2)
+    @Column(name = "costo_final", precision = 15, scale = 2)
     private BigDecimal costoFinal;
 
     @Column(name = "tiempo_estimado_horas", precision = 10, scale = 2)

@@ -15,26 +15,26 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SolicitudEditRequest {
 
-    @NotNull(message = "El ID de solicitud no puede ser nulo")
-    @Positive(message = "El ID de solicitud debe ser positivo")
+    @NotNull(message = "{error.idSolicitud.notNull}")
+    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
-    @FutureOrPresent(message = "La fecha de inicio no puede ser en el pasado")
+    @FutureOrPresent(message = "{error.fecha.futureOrPresent}")
     private final LocalDateTime fechaInicio;
 
-    @FutureOrPresent(message = "La fecha de fin no puede ser en el pasado")
+    @FutureOrPresent(message = "{error.fecha.futureOrPresent}")
     private final LocalDateTime fechaFin;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de costo inválido")
+    @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
     private final BigDecimal costoEstimado;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de costo inválido")
+    @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
     private final BigDecimal costoFinal;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de tiempo inválido")
+    @Digits(integer = 10, fraction = 2, message = "{error.tiempo.digits}")
     private final BigDecimal tiempoEstimadoHoras;
 
-    @Digits(integer = 10, fraction = 2, message = "Formato de tiempo inválido")
+    @Digits(integer = 10, fraction = 2, message = "{error.tiempo.digits}")
     private final BigDecimal tiempoRealHoras;
 
     private final Tarifa tarifa;

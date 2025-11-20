@@ -1,7 +1,6 @@
-package backend.grupo130.tramos.client.envios.models;
+package backend.grupo130.tramos.client.envios.entity;
 
 import backend.grupo130.tramos.config.enums.EstadoSolicitud;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

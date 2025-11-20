@@ -65,6 +65,9 @@ public class Tramo {
     @Column(name = "id_destino", nullable = false)
     private Long idDestino;
 
+    @Column(name = "distancia", nullable = false)
+    private Double distancia;
+
     public boolean esEstimado(){
         return estado.equals(EstadoTramo.ESTIMADO);
     }

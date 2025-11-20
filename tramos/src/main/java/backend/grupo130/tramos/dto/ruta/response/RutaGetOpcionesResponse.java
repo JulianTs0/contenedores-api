@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.dto.ruta.response;
 
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.data.models.RutaTraslado;
 import backend.grupo130.tramos.data.models.Tramo;
 import lombok.AllArgsConstructor;

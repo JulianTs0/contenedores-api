@@ -10,13 +10,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SolicitudCambioDeEstadoRequest {
 
-    @NotNull(message = "El ID de solicitud no puede ser nulo")
-    @Positive(message = "El ID de solicitud debe ser positivo")
+    @NotNull(message = "{error.idSolicitud.notNull}")
+    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
-    @NotBlank(message = "El nuevo estado no puede estar vacío")
+    @NotBlank(message = "{error.estado.notBlank}")
     private final String nuevoEstado;
 
-    @NotBlank(message = "La descripción del cambio no puede estar vacía")
+    @NotBlank(message = "{error.descripcion.notBlank}")
     private final String descripcion;
 }

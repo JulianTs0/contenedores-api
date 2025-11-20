@@ -1,6 +1,7 @@
 package backend.grupo130.ubicaciones.dto.ubicaciones;
 
 import backend.grupo130.ubicaciones.data.models.Ubicacion;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionRegisterResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
@@ -33,6 +34,10 @@ public class UbicacionesMapperDto {
             ubicacion.getLatitud(),
             ubicacion.getLongitud()
         );
+    }
+
+    public static UbicacionRegisterResponse toResponsePost(Ubicacion ubicacion) {
+        return new UbicacionRegisterResponse(ubicacion.getIdUbicacion());
     }
 
 }

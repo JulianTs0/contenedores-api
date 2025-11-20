@@ -2,10 +2,7 @@ package backend.grupo130.envios.dto.solicitud;
 
 import backend.grupo130.envios.data.models.SeguimientoEnvio;
 import backend.grupo130.envios.data.models.SolicitudTraslado;
-import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;
-import backend.grupo130.envios.dto.solicitud.response.SolicitudEditResponse;
-import backend.grupo130.envios.dto.solicitud.response.SolicitudGetAllResponse;
-import backend.grupo130.envios.dto.solicitud.response.SolicitudGetByIdResponse;
+import backend.grupo130.envios.dto.solicitud.response.*;
 
 import java.util.List;
 
@@ -57,4 +54,5 @@ public class SolicitudMapperDto {
                 nuevoSeguimiento.getIdSeguimiento()
         );
     }
+
 }

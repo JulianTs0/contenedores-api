@@ -1,7 +1,6 @@
 
 package backend.grupo130.ubicaciones.controller;
 
-import backend.grupo130.ubicaciones.data.models.Ubicacion;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionDeleteRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionEditRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetByIdRequest;
@@ -9,6 +8,7 @@ import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionRegisterReq
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionRegisterResponse;
 import backend.grupo130.ubicaciones.service.UbicacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,11 +22,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/ubicaciones/ubicaciones")
@@ -78,20 +77,21 @@ public class UbicacionController {
 
     @Operation(summary = "Registrar una nueva ubicación")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Ubicación registrada exitosamente", content = @Content),
+        @ApiResponse(responseCode = "201", description = "Ubicación registrada exitosamente", content = { @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UbicacionRegisterResponse.class)) }),
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos (latitud, longitud, dirección)", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<UbicacionRegisterResponse> register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la nueva ubicación", required = true,
             content = @Content(schema = @Schema(implementation = UbicacionRegisterRequest.class)))
         @RequestBody @Valid UbicacionRegisterRequest request
     ) {
         log.info("Iniciando register para nueva Ubicacion con direccion: {}", request.getDireccion());
-        this.ubicacionService.register(request);
+        UbicacionRegisterResponse response = this.ubicacionService.register(request);
         log.info("Finalizado register para nueva Ubicacion");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Editar una ubicación existente")

@@ -18,18 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 public class SolicitudRegisterRequest {
 
-    @NotNull(message = "El peso es obligatorio")
-    @Positive(message = "El peso debe ser positivo")
-    @Digits(integer = 8, fraction = 2, message = "Formato de peso inválido")
+    @NotNull(message = "{error.peso.notNull}")
+    @Positive(message = "{error.peso.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
     private final BigDecimal peso;
 
-    @NotNull(message = "El volumen es obligatorio")
-    @Positive(message = "El volumen debe ser positivo")
-    @Digits(integer = 8, fraction = 2, message = "Formato de volumen inválido")
+    @NotNull(message = "{error.volumen.notNull}")
+    @Positive(message = "{error.volumen.positive}")
+    @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
     private final BigDecimal volumen;
 
-    @NotNull(message = "El ID de cliente no puede ser nulo")
-    @Positive(message = "El ID de cliente debe ser positivo")
+    @NotNull(message = "{error.idCliente.notNull}")
+    @Positive(message = "{error.idCliente.positive}")
     private final Long idCliente;
 
 }

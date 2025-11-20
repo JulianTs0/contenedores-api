@@ -1,9 +1,9 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.client.envios.EnvioClient;
-import backend.grupo130.tramos.client.envios.models.SeguimientoEnvio;
-import backend.grupo130.tramos.client.envios.models.SolicitudTraslado;
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.envios.entity.SeguimientoEnvio;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
 import backend.grupo130.tramos.client.envios.responses.*;

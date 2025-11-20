@@ -1,8 +1,7 @@
 package backend.grupo130.tramos.dto.tramo;
 
-import backend.grupo130.tramos.client.camiones.models.Camion;
-import backend.grupo130.tramos.client.ubicaciones.models.Ubicacion;
-import backend.grupo130.tramos.data.models.RutaTraslado;
+import backend.grupo130.tramos.client.camiones.entity.Camion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.data.models.Tramo;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;

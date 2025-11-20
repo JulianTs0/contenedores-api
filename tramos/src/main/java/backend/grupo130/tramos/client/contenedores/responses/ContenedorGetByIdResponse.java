@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.client.contenedores.responses;
 
-import backend.grupo130.tramos.client.usuarios.models.Usuario;
+import backend.grupo130.tramos.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

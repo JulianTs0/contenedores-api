@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.client.envios.responses;
 
-import backend.grupo130.tramos.client.envios.models.Tarifa;
+import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

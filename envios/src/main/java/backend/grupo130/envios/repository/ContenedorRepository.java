@@ -1,7 +1,7 @@
 package backend.grupo130.envios.repository;
 
 import backend.grupo130.envios.client.contenedores.ContenedorClient;
-import backend.grupo130.envios.client.contenedores.models.Contenedor;
+import backend.grupo130.envios.client.contenedores.entity.Contenedor;
 import backend.grupo130.envios.client.contenedores.request.ContenedorAsignarClienteRequest;
 import backend.grupo130.envios.client.contenedores.request.ContenedorRegisterRequest;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdResponse;

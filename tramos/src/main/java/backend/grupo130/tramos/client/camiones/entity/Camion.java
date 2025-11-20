@@ -1,4 +1,4 @@
-package backend.grupo130.tramos.client.camiones.models;
+package backend.grupo130.tramos.client.camiones.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

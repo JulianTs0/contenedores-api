@@ -7,6 +7,7 @@ import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoRegisterResponse;
 import backend.grupo130.ubicaciones.service.DepositoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,11 +21,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/ubicaciones/depositos")
@@ -74,23 +74,25 @@ public class DepositoController {
         return ResponseEntity.ok(response);
     }
 
+
     @Operation(summary = "Registrar un nuevo depósito y asignarlo a una ubicación")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Depósito registrado exitosamente", content = @Content),
+        @ApiResponse(responseCode = "201", description = "Depósito registrado exitosamente", content = { @Content(mediaType = "application/json",
+                schema = @Schema(implementation = DepositoRegisterResponse.class)) }),
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos o la ubicación ya tiene un depósito", content = @Content),
         @ApiResponse(responseCode = "404", description = "Ubicación no encontrada", content = @Content),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<DepositoRegisterResponse> register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo depósito", required = true,
             content = @Content(schema = @Schema(implementation = DepositoRegisterRequest.class)))
         @RequestBody @Valid DepositoRegisterRequest request
     ) {
         log.info("Iniciando register para nuevo Deposito en Ubicacion ID: {}", request.getIdUbicacion());
-        this.depositoService.register(request);
+        DepositoRegisterResponse response = this.depositoService.register(request);
         log.info("Finalizado register para nuevo Deposito en Ubicacion ID: {}", request.getIdUbicacion());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Editar un depósito existente")

@@ -1,6 +1,6 @@
 package backend.grupo130.envios.service;
 
-import backend.grupo130.envios.client.contenedores.models.Contenedor;
+import backend.grupo130.envios.client.contenedores.entity.Contenedor;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import backend.grupo130.envios.config.exceptions.ServiceError;

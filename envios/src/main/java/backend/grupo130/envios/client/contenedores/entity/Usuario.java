@@ -1,4 +1,4 @@
-package backend.grupo130.envios.client.contenedores.models;
+package backend.grupo130.envios.client.contenedores.entity;
 
 import backend.grupo130.envios.config.enums.Rol;
 import lombok.AllArgsConstructor;

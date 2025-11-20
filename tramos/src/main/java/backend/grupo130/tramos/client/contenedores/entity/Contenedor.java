@@ -1,6 +1,6 @@
-package backend.grupo130.envios.client.contenedores.models;
+package backend.grupo130.tramos.client.contenedores.entity;
 
-import backend.grupo130.envios.config.enums.EstadoContenedor;
+import backend.grupo130.tramos.config.enums.EstadoContenedor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

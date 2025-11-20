@@ -15,6 +15,7 @@ import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.deposito.response.DepositoRegisterResponse;
 import backend.grupo130.ubicaciones.dto.ubicaciones.UbicacionesMapperDto;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionDeleteRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
@@ -67,7 +68,8 @@ public class DepositoService {
         return response;
     }
 
-    public void register(DepositoRegisterRequest request) throws ServiceError {
+
+    public DepositoRegisterResponse register(DepositoRegisterRequest request) throws ServiceError {
         log.info("Iniciando register para nuevo Deposito en Ubicacion ID: {}", request.getIdUbicacion());
 
         Ubicacion ubicacion = this.ubicacionRepository.getById(request.getIdUbicacion());
@@ -88,11 +90,13 @@ public class DepositoService {
 
         ubicacion.setDeposito(deposito);
 
-        this.depositoRepository.save(deposito);
+        Deposito savedDeposito = this.depositoRepository.save(deposito);
         this.ubicacionRepository.update(ubicacion);
 
         log.info("Deposito registrado (ID: {}) y asignado a Ubicacion (ID: {}) exitosamente.",
-            deposito.getIdDeposito(), ubicacion.getIdUbicacion());
+            savedDeposito.getIdDeposito(), ubicacion.getIdUbicacion());
+
+        return DepositoMapperDto.toResponsePost(savedDeposito);
     }
 
     public DepositoEditResponse edit(DepositoEditRequest request) throws ServiceError {
