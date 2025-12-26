@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Errores {
 
-    USUARIO_NO_ENCONTRADO("Usuario no encontrado"),
+    USUARIO_NO_ENCONTRADO("UsuarioModel no encontrado"),
     ROL_INVALIDO("El rol es invalido"),
     ERROR_INTERNO("Error interno");
 

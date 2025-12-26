@@ -1,6 +1,5 @@
 package backend.grupo130.usuarios.dto.response;
 
-import backend.grupo130.usuarios.data.models.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

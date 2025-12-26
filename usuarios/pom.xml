@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>backend.grupo130</groupId>
-	<artifactId>usuarios</artifactId>
+	<artifactId>usuarioModels</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>usuarios</name>
-	<description>Microserivicio de usuarios</description>
+	<name>usuarioModels</name>
+	<description>Microserivicio de usuarioModels</description>
 	<url/>
 	<licenses>
 		<license/>
