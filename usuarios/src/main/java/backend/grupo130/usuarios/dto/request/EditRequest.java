@@ -1,18 +1,16 @@
 package backend.grupo130.usuarios.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class EditRequest {
 
-    @NotNull(message = "{error.id.notNull}")
-    @Positive(message = "{error.id.positive}")
     private final Long id;
 
     @Size(max = 30, message = "{error.nombre.max}")

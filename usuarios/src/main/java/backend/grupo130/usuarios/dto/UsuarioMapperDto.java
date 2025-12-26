@@ -8,7 +8,6 @@ import backend.grupo130.usuarios.dto.response.GetByIdResponse;
 import backend.grupo130.usuarios.dto.response.RegisterResponse;
 
 import java.util.List;
-import java.util.Map;
 
 public class UsuarioMapperDto {
 
@@ -29,14 +28,14 @@ public class UsuarioMapperDto {
         );
     }
 
-    public static EditRequest toRequestPatchEdit(Long id, Map<String, Object> body) {
-        return new EditRequest(
-            id,
-            (String) body.get("nombre"),
-            (String) body.get("apellido"),
-            (String) body.get("telefono"),
-            (String) body.get("email")
-        );
+    public static EditRequest toRequestPatchEdit(Long id, EditRequest body) {
+        return EditRequest.builder()
+            .id(id)
+            .nombre(body.getNombre())
+            .apellido(body.getApellido())
+            .email(body.getEmail())
+            .telefono(body.getTelefono())
+            .build();
     }
 
     public static EditResponse toResponsePatchEdit(Usuario usuario) {

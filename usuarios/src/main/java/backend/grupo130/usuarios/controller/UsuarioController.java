@@ -25,8 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
@@ -38,18 +36,33 @@ public class UsuarioController {
 
     // GET
 
-    @Operation(summary = "Obtener un usuario por ID",
-        description = "Busca y devuelve los detalles de un usuario específico basado en su ID.")
+    @Operation(
+        summary = "Obtener un usuario por ID",
+        description = "Busca y devuelve los detalles de un usuario específico basado en su ID."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "UsuarioModel encontrado",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = GetByIdResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "ID inválido (no nulo o no positivo)",
-            content = @Content),
-        @ApiResponse(responseCode = "404", description = "UsuarioModel no encontrado (lanzado por el servicio)",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content)
+        @ApiResponse(
+            responseCode = "200", description = "UsuarioModel encontrado",
+            content = {
+                @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = GetByIdResponse.class))
+            }
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "ID inválido (no nulo o no positivo)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "UsuarioModel no encontrado (lanzado por el servicio)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
     @GetMapping("/{id}")
     public ResponseEntity<GetByIdResponse> getById(
@@ -64,14 +77,24 @@ public class UsuarioController {
         return ResponseEntity.ok(this.usuarioService.getById(request));
     }
 
-    @Operation(summary = "Obtener todos los usuarios",
-        description = "Devuelve una lista con todos los usuarios registrados en el sistema.")
+    @Operation(
+        summary = "Obtener todos los usuarios",
+        description = "Devuelve una lista con todos los usuarios registrados en el sistema."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = GetAllResponse.class)) }),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Lista de usuarios obtenida",
+            content = {
+                @Content(mediaType = "application/json",
+                schema = @Schema(implementation = GetAllResponse.class))
+            }
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
     @GetMapping("/")
     public ResponseEntity<GetAllResponse> getAll() {
@@ -80,15 +103,26 @@ public class UsuarioController {
 
     // POST
 
-    @Operation(summary = "Registrar un nuevo usuario",
-        description = "Crea un nuevo usuario con la información proporcionada. El email debe ser único.")
+    @Operation(
+        summary = "Registrar un nuevo usuario",
+        description = "Crea un nuevo usuario con la información proporcionada. El email debe ser único."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "UsuarioModel registrado exitosamente",
-            content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos de registro inválidos (campos faltantes, email incorrecto, rol inválido, etc.)",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content)
+        @ApiResponse(
+            responseCode = "201",
+            description = "UsuarioModel registrado exitosamente",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos de registro inválidos (campos faltantes, email incorrecto, rol inválido, etc.)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
     @PostMapping("/")
     public ResponseEntity<RegisterResponse> register(
@@ -98,26 +132,45 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Editar un usuario existente",
-        description = "Actualiza uno o más campos de un usuario existente. Los campos nulos en el request serán ignorados.")
+    @Operation(
+        summary = "Editar un usuario existente",
+        description = "Actualiza uno o más campos de un usuario existente. Los campos nulos en el request serán ignorados."
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "UsuarioModel editado exitosamente",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = EditResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "Datos de edición inválidos (ID nulo, campos con formato incorrecto)",
-            content = @Content),
-        @ApiResponse(responseCode = "404", description = "UsuarioModel no encontrado para editar (lanzado por el servicio)",
-            content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "UsuarioModel editado exitosamente",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = EditResponse.class))
+            }
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos de edición inválidos (ID nulo, campos con formato incorrecto)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "UsuarioModel no encontrado para editar (lanzado por el servicio)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
     @PatchMapping("/{id}")
     public ResponseEntity<EditResponse> edit(
         @Parameter(description = "ID del usuario a buscar", required = true, example = "1")
+        @NotNull(message = "{error.id.notNull}")
+        @Positive(message = "{error.id.positive}")
         @PathVariable Long id,
-        @RequestBody Map<String, Object> editBody
+        @RequestBody @Valid EditRequest body
     ) {
-        EditRequest request = UsuarioMapperDto.toRequestPatchEdit(id, editBody);
+        EditRequest request = UsuarioMapperDto.toRequestPatchEdit(id, body);
 
         return ResponseEntity.ok(this.usuarioService.edit(request));
     }
