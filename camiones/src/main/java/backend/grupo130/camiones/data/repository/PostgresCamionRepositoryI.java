@@ -1,7 +1,7 @@
 
 package backend.grupo130.camiones.data.repository;
 
-import backend.grupo130.camiones.data.models.Camion;
+import backend.grupo130.camiones.data.models.CamionModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface PostgresCamionRepositoryI extends JpaRepository<Camion, String> {
+public interface PostgresCamionRepositoryI extends JpaRepository<CamionModel, String> {
 
-    List<Camion> findByEstadoTrue();
+    List<CamionModel> findByEstadoTrue();
 
     @Query(value = "SELECT AVG(t.costo_traslado_base) " +
         "FROM ( " +

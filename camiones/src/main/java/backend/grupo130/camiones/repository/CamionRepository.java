@@ -1,7 +1,9 @@
 
 package backend.grupo130.camiones.repository;
 
-import backend.grupo130.camiones.data.models.Camion;
+import backend.grupo130.camiones.data.PersistanceMapper;
+import backend.grupo130.camiones.data.entity.Camion;
+import backend.grupo130.camiones.data.models.CamionModel;
 import backend.grupo130.camiones.data.repository.PostgresCamionRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,13 +18,13 @@ public class CamionRepository {
     private final PostgresCamionRepositoryI postgresRepository;
 
     public Camion getById(String dominio){
-        Camion model = this.postgresRepository.findById(dominio).orElse(null);
-        return model;
+        CamionModel model = this.postgresRepository.findById(dominio).orElse(null);
+        return PersistanceMapper.toDomain(model);
     }
 
     public List<Camion> getAll() {
-        List<Camion> models = this.postgresRepository.findAll();
-        return models;
+        List<CamionModel> models = this.postgresRepository.findAll();
+        return PersistanceMapper.toDomain(models);
     }
 
     public BigDecimal getPromedioCostoTraslado(BigDecimal peso, BigDecimal volumen){
@@ -36,23 +38,24 @@ public class CamionRepository {
     }
 
     public List<Camion> findDisponibilidad(){
-        List<Camion> models = this.postgresRepository.findByEstadoTrue();
-        return models;
+        List<CamionModel> models = this.postgresRepository.findByEstadoTrue();
+        return PersistanceMapper.toDomain(models);
     }
 
     public Camion save(Camion camion) {
-        Camion saved = this.postgresRepository.save(camion);
-        return saved;
+        CamionModel model = PersistanceMapper.toModel(camion);
+        CamionModel saved = this.postgresRepository.save(model);
+        return PersistanceMapper.toDomain(saved);
     }
 
     public Camion update(Camion camion) {
-        Camion updated = this.postgresRepository.save(camion);
-        return updated;
+        CamionModel model = PersistanceMapper.toModel(camion);
+        CamionModel updated = this.postgresRepository.save(model);
+        return PersistanceMapper.toDomain(updated);
     }
 
     public void delete(String dominio){
         this.postgresRepository.deleteById(dominio);
-        return;
     }
     
 }

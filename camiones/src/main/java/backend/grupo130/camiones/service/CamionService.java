@@ -1,21 +1,22 @@
 package backend.grupo130.camiones.service;
 
+import backend.grupo130.camiones.client.usuarios.UsuarioClient;
 import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import backend.grupo130.camiones.config.enums.Errores;
 import backend.grupo130.camiones.config.enums.Rol;
 import backend.grupo130.camiones.config.exceptions.ServiceError;
-import backend.grupo130.camiones.data.models.Camion;
+import backend.grupo130.camiones.data.entity.Camion;
 import backend.grupo130.camiones.dto.CamionesMapperDto;
 import backend.grupo130.camiones.dto.request.*;
 import backend.grupo130.camiones.dto.response.*;
 import backend.grupo130.camiones.repository.CamionRepository;
-import backend.grupo130.camiones.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 
@@ -27,7 +28,9 @@ public class CamionService {
 
     private final CamionRepository camionRepository;
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioClient usuarioClient;
+
+    // GET
 
     public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
 
@@ -41,12 +44,14 @@ public class CamionService {
 
         Usuario usuario = null;
 
-        if(camion.getIdTransportista() != null){
-            log.debug("Camion encontrado. Buscando datos del transportista ID: {}", camion.getIdTransportista());
-            usuario = this.usuarioRepository.getById(camion.getIdTransportista());
+        if(camion.getTransportista() != null && camion.getTransportista().getIdUsuario() != null){
+            log.debug("Camion encontrado. Buscando datos del transportista ID: {}", camion.getTransportista().getIdUsuario());
+            usuario = this.usuarioClient.getById(camion.getTransportista().getIdUsuario());
         }
 
-        GetByIdResponse response = CamionesMapperDto.toResponseGet(camion, usuario);
+        camion.setTransportista(usuario);
+
+        GetByIdResponse response = CamionesMapperDto.toResponseGetId(camion);
 
         log.info("Búsqueda exitosa para camión con dominio: {}", request.getDominio());
         return response;
@@ -57,7 +62,7 @@ public class CamionService {
 
         List<Camion> camiones = this.camionRepository.getAll();
 
-        GetAllResponse response = CamionesMapperDto.toResponseGet(camiones);
+        GetAllResponse response = CamionesMapperDto.toResponseGetAll(camiones);
 
         log.info("Se encontraron {} camiones en total", camiones.size());
         return response;
@@ -68,7 +73,7 @@ public class CamionService {
 
         List<Camion> camiones = this.camionRepository.findDisponibilidad();
 
-        GetAllResponse response = CamionesMapperDto.toResponseGet(camiones);
+        GetAllResponse response = CamionesMapperDto.toResponseGetAll(camiones);
 
         log.info("Se encontraron {} camiones disponibles", camiones.size());
         return response;
@@ -79,7 +84,7 @@ public class CamionService {
 
         BigDecimal promedio = this.camionRepository.getPromedioCostoTraslado(request.getCapacidadPeso(), request.getCapacidadVolumen());
 
-        GetPromedioCostoBaseResponse response = CamionesMapperDto.toResponsePromedioCostoBase(promedio);
+        GetPromedioCostoBaseResponse response = CamionesMapperDto.toResponsePromedioCostoBase(promedio.setScale(2, RoundingMode.HALF_UP));
 
         log.info("Costo aproximado calculado: {}", promedio);
         return response;
@@ -91,11 +96,13 @@ public class CamionService {
 
         BigDecimal promedio = this.camionRepository.getPromedioConsumoTotal();
 
-        GetPromedioCombustibleActualResponse response = CamionesMapperDto.toResponsePromedioCombustible(promedio);
+        GetPromedioCombustibleActualResponse response = CamionesMapperDto.toResponsePromedioCombustible(promedio.setScale(2, RoundingMode.HALF_UP));
 
         log.info("Consumo promedio total calculado: {}", promedio);
         return response;
     }
+
+    // POST
 
     public RegisterResponse register(RegisterRequest request) throws ServiceError {
         log.info("Iniciando registro de nuevo camión con dominio: {}", request.getDominio());
@@ -107,15 +114,18 @@ public class CamionService {
         camion.setCapacidadVolumen(request.getCapacidadVolumen());
         camion.setConsumoCombustible(request.getConsumoCombustible());
         camion.setCostoTrasladoBase(request.getCostoTrasladoBase());
-        camion.setEstado(true);
+        camion.setEstado(false);
+        camion.setTransportista(null);
 
         Camion savedCamion = this.camionRepository.save(camion);
         log.info("Camión registrado exitosamente con dominio: {}", savedCamion.getDominio());
         
-        return CamionesMapperDto.toResponsePost(savedCamion);
+        return CamionesMapperDto.toResponsePostRegister(savedCamion);
     }
 
-    public EditResponse cambiarDisponibilidad(CambiarDisponibilidadRequest request) throws ServiceError {
+    // PATCH
+
+    public CambiarDisponibilidadResponse cambiarDisponibilidad(CambiarDisponibilidadRequest request) throws ServiceError {
         log.info("Iniciando cambio de disponibilidad para camión: {}. Nuevo estado: {}", request.getDominio(), request.getEstado());
 
         Camion camion = this.camionRepository.getById(request.getDominio());
@@ -128,7 +138,7 @@ public class CamionService {
 
         this.camionRepository.update(camion);
 
-        EditResponse response = CamionesMapperDto.toResponsePatch(camion);
+        CambiarDisponibilidadResponse response = CamionesMapperDto.toResponsePatchDispo(camion);
 
         log.info("Disponibilidad cambiada exitosamente para camión: {}. Nuevo estado: {}", camion.getDominio(), camion.getEstado());
         return response;
@@ -162,13 +172,13 @@ public class CamionService {
 
         this.camionRepository.update(camion);
 
-        EditResponse response = CamionesMapperDto.toResponsePatch(camion);
+        EditResponse response = CamionesMapperDto.toResponsePatchEdit(camion);
 
         log.info("Camión editado exitosamente: {}", camion.getDominio());
         return response;
     }
 
-    public void asignarTransportista(AsignarTransportistaRequest request) throws ServiceError {
+    public AsignarTransportistaResponse asignarTransportista(AsignarTransportistaRequest request) throws ServiceError {
         log.info("Iniciando asignación de transportista ID {} a camión {}", request.getIdTransportista(), request.getDominio());
 
         Camion camion = this.camionRepository.getById(request.getDominio());
@@ -180,7 +190,7 @@ public class CamionService {
             throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
         }
 
-        Usuario usuario = this.usuarioRepository.getById(request.getIdTransportista());
+        Usuario usuario = this.usuarioClient.getById(request.getIdTransportista());
 
         if (usuario == null) {
             throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
@@ -190,11 +200,14 @@ public class CamionService {
             throw new ServiceError("", Errores.USUARIO_NO_TRANSPORTISTA, 400);
         }
 
-        camion.setIdTransportista(usuario.getIdUsuario());
+        camion.setTransportista(usuario);
 
-        this.camionRepository.update(camion);
+        Camion updated = this.camionRepository.update(camion);
         log.info("Transportista {} asignado exitosamente a camión {}", request.getIdTransportista(), request.getDominio());
+        return CamionesMapperDto.toResponsePatchTrans(updated, usuario);
     }
+
+    // DELETE
 
     public void delete(DeleteRequest request) throws ServiceError {
         log.info("Iniciando eliminación de camión: {}", request.getDominio());

@@ -1,4 +1,3 @@
-
 package backend.grupo130.camiones.dto.response;
 
 import lombok.AllArgsConstructor;
@@ -8,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class EditResponse {
+public class CambiarDisponibilidadResponse {
 
     private String dominio;
 

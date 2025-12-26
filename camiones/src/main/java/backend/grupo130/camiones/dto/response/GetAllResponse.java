@@ -1,6 +1,5 @@
 package backend.grupo130.camiones.dto.response;
 
-import backend.grupo130.camiones.data.models.Camion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GetAllResponse {
 
-    private final List<Camion> camiones;
+    private final List<GetByIdResponse> camiones;
 
 }

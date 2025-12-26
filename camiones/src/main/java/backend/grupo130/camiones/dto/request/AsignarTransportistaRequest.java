@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class AsignarTransportistaRequest {
 
-    @NotBlank(message = "{error.dominio.notBlank}")
-    @Size(max = 80, message = "{error.dominio.max}")
     private final String dominio;
 
     @NotNull(message = "{error.idTransportista.notNull}")

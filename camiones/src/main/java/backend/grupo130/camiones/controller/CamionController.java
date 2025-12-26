@@ -1,6 +1,6 @@
 package backend.grupo130.camiones.controller;
 
-import backend.grupo130.camiones.data.models.Camion;
+import backend.grupo130.camiones.dto.CamionesMapperDto;
 import backend.grupo130.camiones.dto.request.*;
 import backend.grupo130.camiones.dto.response.*;
 import backend.grupo130.camiones.service.CamionService;
@@ -12,7 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/camiones")
@@ -39,13 +41,25 @@ public class CamionController {
         description = "Busca y devuelve un camión específico usando su dominio (patente) como identificador único."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Camión encontrado exitosamente",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = GetByIdResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Camión no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Camión encontrado exitosamente",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetByIdResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Camión no encontrado",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getById/{dominio}")
+    @GetMapping("/{dominio}")
     public ResponseEntity<GetByIdResponse> getById(
         @Parameter(description = "Dominio (patente) del camión. Ejemplo: AA123BB", required = true, example = "AA123BB")
         @NotBlank(message = "{error.dominio.notBlank}")
@@ -61,12 +75,21 @@ public class CamionController {
         description = "Devuelve el listado completo de la flota de camiones registrada en el sistema."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista recuperada exitosamente",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = GetAllResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Lista recuperada exitosamente",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetAllResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getAll")
+    @GetMapping("/")
     public ResponseEntity<GetAllResponse> getAll() {
         return ResponseEntity.ok(this.camionService.getAll());
     }
@@ -76,12 +99,21 @@ public class CamionController {
         description = "Devuelve una lista de camiones cuyo estado es 'activo' (true) y están listos para asignaciones."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de disponibles recuperada exitosamente",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = GetAllResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Lista de disponibles recuperada exitosamente",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetAllResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getDisponibles")
+    @GetMapping("/disponibles")
     public ResponseEntity<GetAllResponse> getDisponibles() {
         return ResponseEntity.ok(this.camionService.getDisponibles());
     }
@@ -91,12 +123,21 @@ public class CamionController {
         description = "Calcula el promedio global de consumo de combustible basado en toda la flota registrada."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cálculo exitoso",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = GetPromedioCombustibleActualResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Cálculo exitoso",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetPromedioCombustibleActualResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getConsumoPromedio")
+    @GetMapping("/consumo/promedio")
     public ResponseEntity<GetPromedioCombustibleActualResponse> getConsumoPromedio() {
         return ResponseEntity.ok(this.camionService.getConsumoPromedio());
     }
@@ -106,12 +147,26 @@ public class CamionController {
         description = "Da de alta una nueva unidad en la flota. El estado inicial será 'activo' por defecto."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Camión creado exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos (ej. dominio vacío, valores negativos)", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "201",
+            description = "Camión creado exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RegisterResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos (ej. dominio vacío, valores negativos)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @PostMapping("/register")
+    @PostMapping("/")
     public ResponseEntity<RegisterResponse> register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo camión", required = true)
         @RequestBody @Valid RegisterRequest request
@@ -124,13 +179,26 @@ public class CamionController {
         description = "Calcula el costo base promedio basado en los 3 camiones más adecuados para la carga solicitada."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cálculo exitoso",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = GetPromedioCostoBaseResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Parámetros inválidos (valores negativos o nulos)", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Cálculo exitoso",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetPromedioCostoBaseResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Parámetros inválidos (valores negativos o nulos)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getCostoPromedio")
+    @GetMapping("/costo/promedio")
     public ResponseEntity<GetPromedioCostoBaseResponse> getCostoPromedio(
         @Parameter(description = "Peso total de la carga en kg", required = true, example = "1500.0")
         @NotNull(message = "{error.capacidadPeso.notNull}")
@@ -152,18 +220,39 @@ public class CamionController {
         description = "Actualiza los datos técnicos de un camión. Requiere que el camión esté disponible (estado = true)."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Actualización exitosa",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = EditResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o camión no disponible", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Camión no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Actualización exitosa",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = EditResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos o camión no disponible",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Camión no encontrado",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @PatchMapping("/edit")
+    @PatchMapping("/{dominio}")
     public ResponseEntity<EditResponse> edit(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos a modificar. El dominio identifica el camión.", required = true)
-        @RequestBody @Valid EditRequest request
+        @NotBlank(message = "{error.dominio.notBlank}")
+        @Size(max = 80, message = "{error.dominio.max}")
+        @PathVariable String dominio,
+        @RequestBody @Valid EditRequest body
     ) {
+        EditRequest request = CamionesMapperDto.toRequestPatchEdit(dominio, body);
+
         return ResponseEntity.ok(this.camionService.edit(request));
     }
 
@@ -172,16 +261,34 @@ public class CamionController {
         description = "Activa o desactiva un camión (Soft Delete lógico o mantenimiento)."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Estado modificado exitosamente",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = EditResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Camión no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Estado modificado exitosamente",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = EditResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Camión no encontrado",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @PutMapping("/cambiarDisponibilidad")
-    public ResponseEntity<EditResponse> cambiarDisponibilidad(
-        @RequestBody @Valid CambiarDisponibilidadRequest request
+    @PutMapping("/disponibilidad/{dominio}")
+    public ResponseEntity<CambiarDisponibilidadResponse> cambiarDisponibilidad(
+        @NotBlank(message = "{error.dominio.notBlank}")
+        @Size(max = 80, message = "{error.dominio.max}")
+        @PathVariable String dominio,
+        @RequestBody @Valid CambiarDisponibilidadRequest body
     ) {
+        CambiarDisponibilidadRequest request = CamionesMapperDto.toRequestPatchDispo(dominio, body);
+
         return ResponseEntity.ok(this.camionService.cambiarDisponibilidad(request));
     }
 
@@ -190,16 +297,32 @@ public class CamionController {
         description = "Vincula un usuario con rol TRANSPORTISTA a un camión disponible."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Asignación exitosa", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Camión no disponible o usuario no es transportista", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Camión o Usuario no encontrado", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Asignación exitosa",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Camión no disponible o usuario no es transportista",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Camión o Usuario no encontrado",
+            content = @Content
+        )
     })
-    @PatchMapping("/asignarTransportista")
-    public ResponseEntity<Void> asignarTransportista(
-        @RequestBody @Valid AsignarTransportistaRequest request
+    @PatchMapping("/transportista/{dominio}")
+    public ResponseEntity<AsignarTransportistaResponse> asignarTransportista(
+        @NotBlank(message = "{error.dominio.notBlank}")
+        @Size(max = 80, message = "{error.dominio.max}")
+        @PathVariable String dominio,
+        @RequestBody @Valid AsignarTransportistaRequest body
     ) {
-        this.camionService.asignarTransportista(request);
-        return ResponseEntity.ok().build();
+        AsignarTransportistaRequest request = CamionesMapperDto.toRequestPatchTrans(dominio, body);
+
+        return ResponseEntity.ok(this.camionService.asignarTransportista(request));
     }
 
     @Operation(
@@ -207,11 +330,23 @@ public class CamionController {
         description = "Elimina permanentemente un camión de la base de datos. Solo permitido si está disponible."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Eliminación exitosa", content = @Content),
-        @ApiResponse(responseCode = "400", description = "No se puede eliminar (camión no disponible)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Camión no encontrado", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Eliminación exitosa",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "No se puede eliminar (camión no disponible)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Camión no encontrado",
+            content = @Content
+        )
     })
-    @DeleteMapping("/delete/{dominio}")
+    @DeleteMapping("/{dominio}")
     public ResponseEntity<Void> delete(
         @Parameter(description = "Dominio del camión a eliminar", required = true, example = "AA123BB")
         @NotBlank(message = "{error.dominio.notBlank}")

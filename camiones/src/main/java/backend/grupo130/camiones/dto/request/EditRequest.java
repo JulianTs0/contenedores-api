@@ -3,16 +3,16 @@ package backend.grupo130.camiones.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class EditRequest {
 
-    @NotBlank(message = "{error.dominio.notBlank}")
-    @Size(max = 80, message = "{error.dominio.max}")
     private String dominio;
 
     @Positive(message = "{error.capacidadPeso.positve}")

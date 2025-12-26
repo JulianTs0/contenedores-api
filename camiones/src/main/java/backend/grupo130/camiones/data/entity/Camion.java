@@ -1,16 +1,21 @@
+package backend.grupo130.camiones.data.entity;
 
-package backend.grupo130.camiones.dto.response;
-
+import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class EditResponse {
+public class Camion {
 
     private String dominio;
+
 
     private BigDecimal capacidadPeso;
 
@@ -21,5 +26,7 @@ public class EditResponse {
     private BigDecimal costoTrasladoBase;
 
     private Boolean estado;
+
+    private Usuario transportista;
 
 }

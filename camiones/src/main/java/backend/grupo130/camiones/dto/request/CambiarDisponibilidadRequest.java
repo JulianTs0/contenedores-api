@@ -4,14 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class CambiarDisponibilidadRequest {
 
-    @NotBlank(message = "{error.dominio.notBlank}")
-    @Size(max = 80, message = "{error.dominio.max}")
     private final String dominio;
 
     @NotNull(message = "{error.estado.notNull}")
