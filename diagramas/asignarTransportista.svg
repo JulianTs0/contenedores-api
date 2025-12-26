@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="323px" preserveAspectRatio="none" style="width:602px;height:323px;" version="1.1" viewBox="0 0 602 323" width="602px" zoomAndPan="magnify"><defs><filter height="300%" id="fl1dx1fh161cc" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="331" x="136.5" y="26.708">CamionService - asignarTransportista</text><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="175.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="263" y="117.3828"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="29.1328" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="401" y="146.5156"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="30" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="401" y="263.0469"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="29.1328" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="537" y="204.7813"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="54" x2="54" y1="86.25" y2="311.0469"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="268" x2="268" y1="86.25" y2="311.0469"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="406" x2="406" y1="86.25" y2="311.0469"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="542" x2="542" y1="86.25" y2="311.0469"/><rect fill="#FEFECE" filter="url(#fl1dx1fh161cc)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="88" x="8" y="50.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="74" x="15" y="70.9482">Cliente/API</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="102" x="214" y="82.9482">CamionService</text><ellipse cx="268" cy="53.9531" fill="#FEFECE" filter="url(#fl1dx1fh161cc)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><polygon fill="#A80036" points="264,41.9531,270,36.9531,268,41.9531,270,46.9531,264,41.9531" style="stroke: #A80036; stroke-width: 1.0;"/><rect fill="#FEFECE" filter="url(#fl1dx1fh161cc)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="140" x="334" y="50.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="341" y="70.9482">CamionRepository</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="102" x="488" y="82.9482">UsuarioService</text><ellipse cx="542" cy="53.9531" fill="#FEFECE" filter="url(#fl1dx1fh161cc)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><polygon fill="#A80036" points="538,41.9531,544,36.9531,542,41.9531,544,46.9531,538,41.9531" style="stroke: #A80036; stroke-width: 1.0;"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="175.6641" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="263" y="117.3828"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="29.1328" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="401" y="146.5156"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="30" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="401" y="263.0469"/><rect fill="#FFFFFF" filter="url(#fl1dx1fh161cc)" height="29.1328" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="537" y="204.7813"/><polygon fill="#A80036" points="251,113.3828,261,117.3828,251,121.3828,255,117.3828" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="54" x2="257" y1="117.3828" y2="117.3828"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="190" x="61" y="112.3169">asignarTransportista(request)</text><polygon fill="#A80036" points="389,142.5156,399,146.5156,389,150.5156,393,146.5156" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273" x2="395" y1="146.5156" y2="146.5156"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="109" x="280" y="141.4497">getById(dominio)</text><polygon fill="#A80036" points="284,171.6484,274,175.6484,284,179.6484,280,175.6484" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="278" x2="405" y1="175.6484" y2="175.6484"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="47" x="290" y="170.5825">camion</text><polygon fill="#A80036" points="525,200.7813,535,204.7813,525,208.7813,529,204.7813" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273" x2="531" y1="204.7813" y2="204.7813"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="153" x="280" y="199.7153">getById(idTransportista)</text><polygon fill="#A80036" points="284,229.9141,274,233.9141,284,237.9141,280,233.9141" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="278" x2="541" y1="233.9141" y2="233.9141"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="47" x="290" y="228.8481">usuario</text><polygon fill="#A80036" points="389,259.0469,399,263.0469,389,267.0469,393,263.0469" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273" x2="395" y1="263.0469" y2="263.0469"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="102" x="280" y="257.981">update(camion)</text><!--MD5=[d514d19c1d1a2a9c3e297e88a26d9825]
+@startuml
+title CamionService - asignarTransportista
+
+hide footbox
+
+participant "Cliente/API" as C
+control "CamionService" as CS
+participant "CamionRepository" as CR
+control "UsuarioService" as US
+
+C -> CS: asignarTransportista(request)
+activate CS
+
+CS -> CR: getById(dominio)
+activate CR
+CR - -> CS: camion
+deactivate CR
+
+CS -> US: getById(idTransportista)
+activate US
+US - -> CS: usuario
+deactivate US
+
+CS -> CR: update(camion)
+activate CR
+deactivate CR
+
+deactivate CS
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 07:22:07 ART 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 21.0.8+9-LTS
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

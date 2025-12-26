@@ -1,0 +1,71 @@
+@startuml
+title TramoService - registrarInicioTramo
+
+hide footbox
+
+actor "Cliente/API" as C
+control "TramoService" as TS
+participant "TramoRepository" as TR
+control "EnviosService" as ES
+control "CamionService" as CMS
+control "ContenedorService" as CS
+control "UsuarioServie" as US
+
+C -> TS: registrarInicioTramo(request)
+activate TS
+
+TS -> TR: getById(idTramo)
+activate TR
+TR --> TS: tramo
+deactivate TR
+
+TS -> ES: getSolicitudTrasladoById(idSolicitud)
+activate ES
+ES --> TS: solicitud
+deactivate ES
+
+TS -> TR: buscarPorRuta(idRuta)
+activate TR
+TR --> TS: listaTramos
+deactivate TR
+
+TS -> CMS: getById(dominio)
+activate CMS
+CMS --> TS: camion
+deactivate CMS
+
+TS -> CMS: cambiarDisponibilidad(false)
+activate CMS
+CMS --> TS: response
+deactivate CMS
+
+TS -> CS: getById(idContenedor)
+activate CS
+CS --> TS: contenedor
+deactivate CS
+
+alt Contenedor en Deposito
+    TS -> CS: cambioDeEstado(en_transito)
+    activate CS
+    CS --> TS: response
+    deactivate CS
+end
+
+TS -> TR: update(tramo)
+activate TR
+deactivate TR
+
+alt Primer Tramo (Orden 1)
+    TS -> ES: cambioDeEstadoSolicitud(en_transito)
+    activate ES
+    ES --> TS: response
+    deactivate ES
+
+    TS -> CS: cambioDeEstado(en_transito)
+    activate CS
+    CS --> TS: response
+    deactivate CS
+end
+
+deactivate TS
+@enduml

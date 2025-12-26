@@ -1,0 +1,29 @@
+@startuml
+title CamionService - asignarTransportista
+
+hide footbox
+
+participant "Cliente/API" as C
+control "CamionService" as CS
+participant "CamionRepository" as CR
+control "UsuarioService" as US
+
+C -> CS: asignarTransportista(request)
+activate CS
+
+CS -> CR: getById(dominio)
+activate CR
+CR --> CS: camion
+deactivate CR
+
+CS -> US: getById(idTransportista)
+activate US
+US --> CS: usuario
+deactivate US
+
+CS -> CR: update(camion)
+activate CR
+deactivate CR
+
+deactivate CS
+@enduml

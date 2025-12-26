@@ -1,0 +1,58 @@
+@startuml
+title Diagrama de Secuencia - register 
+
+hide footbox
+
+actor "Cliente/API" as C
+control "SolicitudService" as SS
+control "ContenedorService" as CS
+participant "ContenedorRepository" as CR
+control "UsuarioService" as US
+participant "SolicitudRepository" as STR
+
+C -> SS: register(request)
+
+activate SS
+
+group Try [Buscar Contenedor]
+    SS -> CS: getByPesoVolumen(peso, volumen)
+    activate CS
+    CS --> SS: contenedor
+    deactivate CS
+    
+    SS -> CS: asignarCliente(idContenedor, idCliente)
+    activate CS
+    CS -> US: getById(idCliente)
+    activate US
+    US --> CS: usuario
+    deactivate US
+    CS -> CR: update(contenedor)
+    CS --> SS: void
+    deactivate CS
+
+else Catch [ServiceError 404]
+    SS -> CS: register(peso, volumen, idCliente)
+    activate CS
+    CS -> US: getById(idCliente)
+    activate US
+    US --> CS: usuario
+    deactivate US
+    CS -> CR: save(contenedor)
+    CS --> SS: nuevoId
+    deactivate CS
+
+    SS -> CS: getById(nuevoId)
+    activate CS
+    CS --> SS: contenedor
+    deactivate CS
+end
+
+SS -> STR: save(solicitud)
+
+activate STR
+STR --> SS: solicitudGuardada
+deactivate STR
+
+SS --> C: response
+deactivate SS
+@enduml

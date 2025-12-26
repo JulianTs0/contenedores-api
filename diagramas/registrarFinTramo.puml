@@ -1,0 +1,88 @@
+@startuml
+title TramoService - registrarFinTramo
+
+hide footbox
+
+actor "Cliente/API" as C
+control "TramoService" as TS
+participant "TramoRepository" as TR
+control "EnviosService" as ES
+control "CamionService" as CMS
+control "ContenedorService" as CS
+control "UbicacionService" as UBS
+
+C -> TS: registrarFinTramo(request)
+activate TS
+
+TS -> TR: getById(idTramo)
+activate TR
+TR --> TS: tramo
+deactivate TR
+
+TS -> ES: getSolicitudTrasladoById(idSolicitud)
+activate ES
+ES --> TS: solicitud
+deactivate ES
+
+TS -> CMS: getById(dominio)
+activate CMS
+CMS --> TS: camion
+deactivate CMS
+
+TS -> CMS: cambiarDisponibilidad(true)
+activate CMS
+CMS --> TS: response
+deactivate CMS
+
+TS -> TR: update(tramo)
+activate TR
+deactivate TR
+
+opt Fin en Depósito
+    TS -> CS: getById(idContenedor)
+    activate CS
+    CS --> TS: contenedor
+    deactivate CS
+
+    TS -> CS: cambioDeEstado(en_deposito)
+    activate CS
+    CS --> TS: response
+    deactivate CS
+end
+
+opt Ultimo Tramo
+    TS -> CS: getById(idContenedor)
+    activate CS
+    CS --> TS: contenedor
+    deactivate CS
+
+    TS -> CS: cambioDeEstado(entregado)
+    activate CS
+    CS --> TS: response
+    deactivate CS
+
+    TS -> TR: buscarPorRuta(idRuta)
+    activate TR
+    TR --> TS: listaTramos
+    deactivate TR
+    
+    loop Calcular costo estadías
+        TS -> UBS: getUbicacionById(idDestino)
+        activate UBS
+        UBS --> TS: ubicacion
+        deactivate UBS
+    end
+    
+    TS -> ES: editSolicitud(costoFinal, tiempoReal)
+    activate ES
+    ES --> TS: response
+    deactivate ES
+
+    TS -> ES: cambioDeEstadoSolicitud(entregado)
+    activate ES
+    ES --> TS: response
+    deactivate ES
+end
+
+deactivate TS
+@enduml

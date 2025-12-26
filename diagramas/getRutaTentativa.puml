@@ -1,0 +1,95 @@
+@startuml
+title RutaService - getRutaTentativa 
+
+hide footbox
+
+actor "Cliente/API" as C
+control "RutaService" as RS
+control "EnviosService" as ES
+control "ContenedorService" as CS
+control "UsuarioService" as US
+control "CamionService" as CMS
+participant "RutaRepository" as RR
+participant "TramoRepository" as TR
+control "UbicacionService" as UBS
+participant "OsrmApiClient" as OSRM
+
+C -> RS: getRutaTentativa(request)
+
+activate RS
+
+RS -> ES: getSolicitudTrasladoById(idSolicitud)
+activate ES
+ES --> RS: solicitud
+deactivate ES
+
+RS -> CS: getById(idContenedor)
+activate CS
+    opt idCliente != null
+        CS -> US: getById(idCliente)
+        activate US
+        US --> CS: usuario
+        deactivate US
+    end
+CS --> RS: contenedor
+deactivate CS
+
+RS -> CMS: getPromedioCostoBase(peso, volumen)
+activate CMS
+CMS --> RS: costoBase
+deactivate CMS
+
+RS -> CMS: getConsumoPromedio()
+activate CMS
+CMS --> RS: consumoPromedio
+deactivate CMS
+
+RS -> RR: getBySolicitud(idSolicitud)
+activate RR
+RR --> RS: rutaExistente
+deactivate RR
+
+alt rutaExiste
+    RS -> TR: deleteByRutaId(idRuta)
+else nuevaRuta
+    RS -> RR: save(ruta)
+    activate RR
+    RR --> RS: rutaGuardada
+    deactivate RR
+end
+
+loop Para cada par de ubicaciones
+    RS -> UBS: getUbicacionById(idOrigen)
+    activate UBS
+    UBS --> RS: ubicacionOrigen
+    deactivate UBS
+
+    RS -> UBS: getUbicacionById(idDestino)
+    activate UBS
+    UBS --> RS: ubicacionDestino
+    deactivate UBS
+
+    RS -> OSRM: calcularDistancia(origen, destino)
+    activate OSRM
+    OSRM --> RS: routeResponse
+    deactivate OSRM
+end
+
+RS -> TR: saveAll(tramos)
+activate TR
+TR --> RS: tramosGuardados
+deactivate TR
+
+RS -> ES: editSolicitud(requestEdit)
+activate ES
+ES --> RS: response
+deactivate ES
+
+RS -> RR: update(ruta)
+activate RR
+RR --> RS: rutaActualizada
+deactivate RR
+
+RS --> C: response
+deactivate RS
+@enduml
