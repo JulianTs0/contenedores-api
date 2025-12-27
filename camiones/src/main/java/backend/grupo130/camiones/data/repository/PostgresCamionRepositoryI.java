@@ -15,21 +15,26 @@ public interface PostgresCamionRepositoryI extends JpaRepository<CamionModel, St
 
     List<CamionModel> findByEstadoTrue();
 
-    @Query(value = "SELECT AVG(t.costo_traslado_base) " +
-        "FROM ( " +
-        "    SELECT c.costo_traslado_base " +
-        "    FROM Camion c " +
-        "    WHERE c.estado = true " +
-        "    AND c.capacidad_peso >= :peso " +
-        "    AND c.capacidad_volumen >= :volumen " +
-        ") as t",
+    @Query(value = """
+        SELECT AVG(t.costo_traslado_base) 
+        FROM ( 
+            SELECT c.costo_traslado_base 
+            FROM Camion c
+            WHERE c.estado = true
+            AND c.capacidad_peso >= :peso
+            AND c.capacidad_volumen >= :volumen
+        ) as t
+        """,
         nativeQuery = true)
     BigDecimal findAverageCostoTraslado(
         @Param("peso") BigDecimal peso,
         @Param("volumen") BigDecimal volumen
     );
 
-    @Query("SELECT AVG(c.consumoCombustible) FROM Camion c")
+    @Query("""
+        SELECT AVG(c.consumoCombustible) 
+        FROM Camion c
+    """)
     BigDecimal findAverageConsumoCombustible();
 
 }
