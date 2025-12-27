@@ -1,14 +1,13 @@
 
 package backend.grupo130.ubicaciones.service;
 
-import backend.grupo130.ubicaciones.Repository.DepositoRepository;
-import backend.grupo130.ubicaciones.Repository.UbicacionRepository;
+import backend.grupo130.ubicaciones.data.entity.Deposito;
+import backend.grupo130.ubicaciones.data.entity.Ubicacion;
+import backend.grupo130.ubicaciones.repository.DepositoRepository;
+import backend.grupo130.ubicaciones.repository.UbicacionRepository;
 import backend.grupo130.ubicaciones.config.enums.Errores;
 import backend.grupo130.ubicaciones.config.exceptions.ServiceError;
-import backend.grupo130.ubicaciones.data.models.Deposito;
-import backend.grupo130.ubicaciones.data.models.Ubicacion;
 import backend.grupo130.ubicaciones.dto.deposito.DepositoMapperDto;
-import backend.grupo130.ubicaciones.dto.deposito.request.DepositoDeleteRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoEditRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest;
@@ -16,9 +15,6 @@ import backend.grupo130.ubicaciones.dto.deposito.response.DepositoEditResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetAllResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdResponse;
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoRegisterResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.UbicacionesMapperDto;
-import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionDeleteRequest;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +46,7 @@ public class DepositoService {
         Long idUbicacion = this.ubicacionRepository.findByDepositoId(deposito.getIdDeposito());
         log.debug("Ubicacion asociada ID: {}", idUbicacion);
 
-        DepositoGetByIdResponse response = DepositoMapperDto.toResponseGet(deposito, idUbicacion);
+        DepositoGetByIdResponse response = DepositoMapperDto.toResponseGetById(deposito, idUbicacion);
 
         log.info("Finalizado getById para Deposito con ID: {}", request.getIdDeposito());
         return response;
@@ -62,7 +58,7 @@ public class DepositoService {
         List<Deposito> depositos = this.depositoRepository.getAll();
         log.debug("Se encontraron {} depositos", depositos.size());
 
-        DepositoGetAllResponse response = DepositoMapperDto.toResponseGet(depositos);
+        DepositoGetAllResponse response = DepositoMapperDto.toResponseGetAll(depositos);
 
         log.info("Finalizado getAll para Depositos. Total: {}", depositos.size());
         return response;
@@ -88,15 +84,16 @@ public class DepositoService {
         log.debug("Datos de nuevo deposito a persistir: Nombre={}, Costo={}",
             deposito.getNombre(), deposito.getCostoEstadiaDiario());
 
-        ubicacion.setDeposito(deposito);
-
         Deposito savedDeposito = this.depositoRepository.save(deposito);
+
+        ubicacion.setDeposito(savedDeposito);
+
         this.ubicacionRepository.update(ubicacion);
 
         log.info("Deposito registrado (ID: {}) y asignado a Ubicacion (ID: {}) exitosamente.",
             savedDeposito.getIdDeposito(), ubicacion.getIdUbicacion());
 
-        return DepositoMapperDto.toResponsePost(savedDeposito);
+        return DepositoMapperDto.toResponsePostRegister(savedDeposito);
     }
 
     public DepositoEditResponse edit(DepositoEditRequest request) throws ServiceError {
@@ -123,16 +120,16 @@ public class DepositoService {
         log.debug("Deposito DESPUES de editar: ID={}, Nombre={}, Costo={}",
             deposito.getIdDeposito(), deposito.getNombre(), deposito.getCostoEstadiaDiario());
 
-        DepositoEditResponse response = DepositoMapperDto.toResponsePatch(deposito);
+        DepositoEditResponse response = DepositoMapperDto.toResponsePatchEdit(deposito);
 
         log.info("Finalizado edit para Deposito con ID: {}", request.getIdDeposito());
         return response;
     }
 
-    public void delete(DepositoDeleteRequest request) throws ServiceError {
-        log.info("Iniciando delete para Deposito con ID: {}", request.getIdDeposito());
+    public void delete(Long id) throws ServiceError {
+        log.info("Iniciando delete para Deposito con ID: {}", id);
 
-        Deposito deposito = this.depositoRepository.getById(request.getIdDeposito());
+        Deposito deposito = this.depositoRepository.getById(id);
 
         if (deposito == null) {
             throw new ServiceError("", Errores.DEPOSITO_NO_ENCONTRADO, 404);
@@ -150,7 +147,7 @@ public class DepositoService {
         this.ubicacionRepository.update(ubicacion);
 
         this.depositoRepository.delete(deposito.getIdDeposito());
-        log.info("Finalizado delete para Deposito con ID: {}", request.getIdDeposito());
+        log.info("Finalizado delete para Deposito con ID: {}", id);
     }
 
 }

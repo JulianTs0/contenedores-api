@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Deposito {
+public class DepositoModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

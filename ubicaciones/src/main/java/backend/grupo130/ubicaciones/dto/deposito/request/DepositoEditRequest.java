@@ -3,16 +3,16 @@ package backend.grupo130.ubicaciones.dto.deposito.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class DepositoEditRequest {
 
-    @NotNull(message = "{error.idDeposito.notNull}")
-    @Positive(message = "{error.idDeposito.positive}")
     private final Long idDeposito;
 
     @Size(min = 1, message = "{error.nombreDeposito.size}")

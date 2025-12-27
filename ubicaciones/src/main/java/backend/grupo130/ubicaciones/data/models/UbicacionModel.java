@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Ubicacion {
+public class UbicacionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,6 @@ public class Ubicacion {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_deposito", referencedColumnName = "id_deposito", unique = true)
-    private Deposito deposito;
+    private DepositoModel deposito;
 
 }

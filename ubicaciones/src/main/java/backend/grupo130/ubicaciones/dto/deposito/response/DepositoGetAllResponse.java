@@ -1,6 +1,6 @@
 package backend.grupo130.ubicaciones.dto.deposito.response;
 
-import backend.grupo130.ubicaciones.data.models.Deposito;
+import backend.grupo130.ubicaciones.data.entity.Deposito;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,19 +1,18 @@
 
 package backend.grupo130.ubicaciones.dto.ubicaciones.request;
 
-import backend.grupo130.ubicaciones.data.models.Deposito;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class UbicacionEditRequest {
 
-    @NotNull(message = "{error.idUbicacion.notNull}")
-    @Positive(message = "{error.idUbicacion.positive}")
     private final Long idUbicacion;
 
     @Size(min = 1, message = "{error.direccion.notBlank}")

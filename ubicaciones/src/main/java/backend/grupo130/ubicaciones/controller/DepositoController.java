@@ -1,6 +1,7 @@
+
 package backend.grupo130.ubicaciones.controller;
 
-import backend.grupo130.ubicaciones.dto.deposito.request.DepositoDeleteRequest;
+import backend.grupo130.ubicaciones.dto.deposito.DepositoMapperDto;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoEditRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.deposito.request.DepositoRegisterRequest;
@@ -10,15 +11,11 @@ import backend.grupo130.ubicaciones.dto.deposito.response.DepositoGetByIdRespons
 import backend.grupo130.ubicaciones.dto.deposito.response.DepositoRegisterResponse;
 import backend.grupo130.ubicaciones.service.DepositoService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,115 +23,155 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/ubicaciones/depositos")
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-@Tag(name = "Gestión de Depósitos", description = "Endpoints para crear, leer, actualizar y eliminar Depósitos.")
+@Tag(name = "Depositos", description = "Endpoints para la gestión de Depositos.")
 public class DepositoController {
 
     private final DepositoService depositoService;
 
-    @Operation(summary = "Obtener un depósito por su ID")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Depósito encontrado",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DepositoGetByIdResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "ID inválido (no es positivo)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Depósito no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @GetMapping("/getById/{idDeposito}")
-    public ResponseEntity<DepositoGetByIdResponse> getById(
-        @Parameter(description = "ID del depósito a buscar", required = true, example = "1")
-        @NotNull(message = "{error.idDeposito.notNull}")
-        @Positive(message = "{error.idDeposito.positive}")
-        @PathVariable Long idDeposito
-    ) {
-        log.info("Iniciando getById para Deposito con ID: {}", idDeposito);
-        DepositoGetByIdRequest request = new DepositoGetByIdRequest(idDeposito);
+    @Operation(
+            summary = "Obtener un Deposito por su ID",
+            description = "Devuelve un único Deposito.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Deposito encontrado.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = DepositoGetByIdResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Deposito no encontrado."
+                    )
+            }
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<DepositoGetByIdResponse> getById(@PathVariable Long id) {
+        DepositoGetByIdRequest request = new DepositoGetByIdRequest(id);
         DepositoGetByIdResponse response = this.depositoService.getById(request);
-        log.info("Finalizado getById para Deposito con ID: {}", idDeposito);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Obtener todos los depósitos")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Listado de depósitos",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DepositoGetAllResponse.class)) }),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @GetMapping("/getAll")
+    @Operation(
+            summary = "Obtener todos los Depositos",
+            description = "Devuelve una lista de todos los Depositos.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Lista de Depositos.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = DepositoGetAllResponse.class
+                                    )
+                            )
+                    )
+            }
+    )
+    @GetMapping("/")
     public ResponseEntity<DepositoGetAllResponse> getAll() {
-        log.info("Iniciando getAll para Depositos");
         DepositoGetAllResponse response = this.depositoService.getAll();
-        log.info("Finalizado getAll para Depositos, total encontrados: {}", response.getDepositos().size());
         return ResponseEntity.ok(response);
     }
 
 
-    @Operation(summary = "Registrar un nuevo depósito y asignarlo a una ubicación")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Depósito registrado exitosamente", content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DepositoRegisterResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos o la ubicación ya tiene un depósito", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Ubicación no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @PostMapping("/register")
-    public ResponseEntity<DepositoRegisterResponse> register(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del nuevo depósito", required = true,
-            content = @Content(schema = @Schema(implementation = DepositoRegisterRequest.class)))
-        @RequestBody @Valid DepositoRegisterRequest request
-    ) {
-        log.info("Iniciando register para nuevo Deposito en Ubicacion ID: {}", request.getIdUbicacion());
+    @Operation(
+            summary = "Registrar un nuevo Deposito y asignarlo a una ubicación",
+            description = "Crea un nuevo Deposito y lo devuelve.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Datos del nuevo Deposito.",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DepositoRegisterRequest.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Deposito creado exitosamente.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = DepositoRegisterResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Solicitud inválida."
+                    )
+            }
+    )
+    @PostMapping("/")
+    public ResponseEntity<DepositoRegisterResponse> register(@RequestBody @Valid DepositoRegisterRequest request) {
         DepositoRegisterResponse response = this.depositoService.register(request);
-        log.info("Finalizado register para nuevo Deposito en Ubicacion ID: {}", request.getIdUbicacion());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Editar un depósito existente")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Depósito editado exitosamente",
-            content = { @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DepositoEditResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Depósito no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @PatchMapping("/edit")
-    public ResponseEntity<DepositoEditResponse> edit(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos a modificar del depósito. El ID es obligatorio.", required = true,
-            content = @Content(schema = @Schema(implementation = DepositoEditRequest.class)))
-        @RequestBody @Valid DepositoEditRequest request
-    ) {
-        log.info("Iniciando edit para Deposito con ID: {}", request.getIdDeposito());
-        DepositoEditResponse response = this.depositoService.edit(request);
-        log.info("Finalizado edit para Deposito con ID: {}", request.getIdDeposito());
+    @Operation(
+            summary = "Actualizar un Deposito existente",
+            description = "Actualiza un Deposito existente y lo devuelve.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Datos para actualizar el Deposito.",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DepositoEditRequest.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Deposito actualizado exitosamente.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = DepositoEditResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Deposito no encontrado."
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Solicitud inválida."
+                    )
+            }
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<DepositoEditResponse> edit(@PathVariable Long id, @RequestBody @Valid DepositoEditRequest request) {
+        DepositoEditRequest requestWithId = DepositoMapperDto.toRequestPatchEdit(id, request);
+        DepositoEditResponse response = this.depositoService.edit(requestWithId);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Eliminar un depósito por su ID")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Depósito eliminado exitosamente", content = @Content),
-        @ApiResponse(responseCode = "400", description = "ID inválido (no es positivo)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Depósito no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(
-        @Parameter(description = "ID del depósito a eliminar", required = true, example = "1")
-        @NotNull(message = "{error.idDeposito.notNull}")
-        @Positive(message = "{error.idDeposito.positive}")
-        @PathVariable Long id
-    ) {
-        log.info("Iniciando delete para Deposito con ID: {}", id);
-        DepositoDeleteRequest request = new DepositoDeleteRequest(id);
-        this.depositoService.delete(request);
-        log.info("Finalizado delete para Deposito con ID: {}", id);
-        return ResponseEntity.ok().build();
+    @Operation(
+            summary = "Eliminar un Deposito por su ID",
+            description = "Elimina un Deposito existente.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Deposito eliminado exitosamente."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Deposito no encontrado."
+                    )
+            }
+    )
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        this.depositoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
+

@@ -1,6 +1,5 @@
 package backend.grupo130.ubicaciones.dto.ubicaciones.response;
 
-import backend.grupo130.ubicaciones.data.models.Deposito;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
