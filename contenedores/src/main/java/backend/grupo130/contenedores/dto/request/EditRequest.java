@@ -1,17 +1,18 @@
 package backend.grupo130.contenedores.dto.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class EditRequest {
 
-    @NotNull(message = "{error.idContenedor.notNull}")
-    @Positive(message = "{error.idContenedor.positive}")
     private final Long id;
 
     @Positive(message = "{error.peso.positive}")

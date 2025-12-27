@@ -1,21 +1,31 @@
 package backend.grupo130.contenedores.service;
 
+import backend.grupo130.contenedores.client.usuarios.UsuarioClient;
 import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.config.enums.Errores;
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import backend.grupo130.contenedores.config.enums.Rol;
 import backend.grupo130.contenedores.config.exceptions.ServiceError;
-import backend.grupo130.contenedores.data.models.Contenedor;
+import backend.grupo130.contenedores.data.entity.Contenedor;
 import backend.grupo130.contenedores.dto.ContenedorMapperDto;
-import backend.grupo130.contenedores.dto.request.*;
-import backend.grupo130.contenedores.dto.response.*;
+import backend.grupo130.contenedores.dto.request.AsignarClienteRequest;
+import backend.grupo130.contenedores.dto.request.CambioDeEstadoRequest;
+import backend.grupo130.contenedores.dto.request.EditRequest;
+import backend.grupo130.contenedores.dto.request.RegisterRequest;
+import backend.grupo130.contenedores.dto.response.AsignarClienteResponse;
+import backend.grupo130.contenedores.dto.response.CambioDeEstadoResponse;
+import backend.grupo130.contenedores.dto.response.EditResponse;
+import backend.grupo130.contenedores.dto.response.GetAllResponse;
+import backend.grupo130.contenedores.dto.response.GetByIdResponse;
+import backend.grupo130.contenedores.dto.response.GetByPesoVolumenResponse;
+import backend.grupo130.contenedores.dto.response.RegisterResponse;
 import backend.grupo130.contenedores.repository.ContenedorRepository;
-import backend.grupo130.contenedores.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -26,16 +36,16 @@ public class ContenedorService {
 
     private final ContenedorRepository contenedorRepository;
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioClient usuarioClient;
 
     // GET
 
-    public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
-        log.info("Iniciando búsqueda de contenedor por ID: {}", request.getIdContenedor());
+    public GetByIdResponse getById(Long id) throws ServiceError {
+        log.info("Iniciando búsqueda de contenedor por ID: {}", id);
 
-        log.debug("Llamando al repositorio para buscar por ID: {}", request.getIdContenedor());
+        log.debug("Llamando al repositorio para buscar por ID: {}", id);
 
-        Contenedor contenedor = this.contenedorRepository.getById(request.getIdContenedor());
+        Contenedor contenedor = this.contenedorRepository.getById(id);
 
         if (contenedor == null) {
             throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
@@ -43,39 +53,41 @@ public class ContenedorService {
 
         Usuario usuario = null;
 
-        if(contenedor.getIdCliente() != null){
-            log.debug("Contenedor encontrado. Buscando datos del cliente ID: {}", contenedor.getIdCliente());
-            usuario = this.usuarioRepository.getById(contenedor.getIdCliente());
+        if(contenedor.getCliente() != null && contenedor.getCliente().getIdUsuario() != null){
+            log.debug("Contenedor encontrado. Buscando datos del cliente ID: {}", contenedor.getCliente().getIdUsuario());
+            usuario = this.usuarioClient.getById(contenedor.getCliente().getIdUsuario());
         }
 
-        GetByIdResponse response = ContenedorMapperDto.toResponseGet(contenedor, usuario);
+        contenedor.setCliente(usuario);
 
-        log.info("Búsqueda exitosa del contenedor ID: {}", request.getIdContenedor());
+        GetByIdResponse response = ContenedorMapperDto.toResponseGetById(contenedor);
+
+        log.info("Búsqueda exitosa del contenedor ID: {}", id);
         return response;
 
     }
 
-    public GetByPesoVolumenResponse getByPesoVolumen(GetByPesoVolumenRequest request) throws ServiceError {
-        log.info("Iniciando búsqueda de contenedor por peso {} y volumen {}", request.getPeso(), request.getVolumen());
+    public GetByPesoVolumenResponse getByPesoVolumen(BigDecimal peso, BigDecimal volumen) throws ServiceError {
+        log.info("Iniciando búsqueda de contenedor por peso {} y volumen {}", peso, volumen);
 
         log.debug("Llamando al repositorio para buscar por peso y volumen.");
-        Contenedor contenedor = this.contenedorRepository.findByPesoVolumen(request.getPeso(), request.getVolumen());
+        Contenedor contenedor = this.contenedorRepository.findByPesoVolumen(peso, volumen);
 
         if (contenedor == null) {
             throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
         }
 
-        GetByPesoVolumenResponse response = ContenedorMapperDto.toResponseGet(contenedor);
+        GetByPesoVolumenResponse response = ContenedorMapperDto.toResponseGetByPesoVolumen(contenedor);
 
         log.info("Búsqueda por peso/volumen exitosa. Contenedor encontrado: {}", response.getId());
         return response;
     }
 
-    public GetAllResponse getByEstado(GetByEstado request) throws ServiceError {
-        log.info("Iniciando búsqueda de contenedores por estado: {}", request.getEstado());
+    public GetAllResponse getByEstado(String estado) throws ServiceError {
+        log.info("Iniciando búsqueda de contenedores por estado: {}", estado);
 
-        log.debug("Validando estado: {}", request.getEstado());
-        EstadoContenedor estadoContenedor = EstadoContenedor.fromString(request.getEstado());
+        log.debug("Validando estado: {}", estado);
+        EstadoContenedor estadoContenedor = EstadoContenedor.fromString(estado);
 
         if (estadoContenedor == null) {
             throw new ServiceError("", Errores.ESTADO_INVALIDO, 400);
@@ -84,9 +96,9 @@ public class ContenedorService {
         log.debug("Llamando al repositorio para buscar por estado: {}", estadoContenedor);
         List<Contenedor> contenedores = this.contenedorRepository.findByEstado(estadoContenedor);
 
-        GetAllResponse response = ContenedorMapperDto.toResponseGet(contenedores);
+        GetAllResponse response = ContenedorMapperDto.toResponseGetAll(contenedores);
 
-        log.info("Búsqueda por estado {} completada. Se encontraron {} contenedores.", request.getEstado(), contenedores.size());
+        log.info("Búsqueda por estado {} completada. Se encontraron {} contenedores.", estado, contenedores.size());
         return response;
     }
 
@@ -96,7 +108,7 @@ public class ContenedorService {
         log.debug("Llamando al repositorio para obtener todos los contenedores.");
         List<Contenedor> contenedores = this.contenedorRepository.getAll();
 
-        GetAllResponse response = ContenedorMapperDto.toResponseGet(contenedores);
+        GetAllResponse response = ContenedorMapperDto.toResponseGetAll(contenedores);
 
         log.info("Búsqueda de todos los contenedores completada. Se encontraron {} contenedores.", contenedores.size());
         return response;
@@ -117,9 +129,9 @@ public class ContenedorService {
             log.debug("Registrando con cliente ID: {}. Estado inicial: BORRADOR.", request.getIdCliente());
 
             try {
-                Usuario usuario = this.usuarioRepository.getById(request.getIdCliente());
+                Usuario usuario = this.usuarioClient.getById(request.getIdCliente());
 
-                contenedor.setIdCliente(usuario.getIdUsuario());
+                contenedor.setCliente(usuario);
 
             } catch (ServiceError ex) {
 
@@ -135,7 +147,7 @@ public class ContenedorService {
         Contenedor saved = this.contenedorRepository.save(contenedor);
 
         log.info("Nuevo contenedor registrado exitosamente en el repositorio.");
-        return ContenedorMapperDto.toResponsePost(saved);
+        return ContenedorMapperDto.toResponsePostRegister(saved);
     }
 
     // PATCH
@@ -165,11 +177,11 @@ public class ContenedorService {
         this.contenedorRepository.update(contenedor);
         log.info("Contenedor ID: {} actualizado exitosamente.", request.getId());
 
-        EditResponse response = ContenedorMapperDto.toResponsePatch(contenedor);
+        EditResponse response = ContenedorMapperDto.toResponsePatchEdit(contenedor);
         return response;
     }
 
-    public void asignarCliente(AsignarClienteRequest request) throws ServiceError {
+    public AsignarClienteResponse asignarCliente(AsignarClienteRequest request) throws ServiceError {
         log.info("Iniciando asignación de cliente ID: {} a contenedor ID: {}", request.getIdCliente(), request.getId());
 
         log.debug("Buscando contenedor ID: {} para asignar cliente.", request.getId());
@@ -178,23 +190,26 @@ public class ContenedorService {
         if (contenedor == null) {
             throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
         }
-        if (contenedor.getIdCliente() != null){
+        if (contenedor.getCliente() != null){
             throw new ServiceError("", Errores.USUARIO_YA_ASIGNADO, 400);
         }
 
         log.debug("Buscando usuario ID: {} para asignación.", request.getIdCliente());
 
-        Usuario usuario = this.usuarioRepository.getById(request.getIdCliente());
+        Usuario usuario = this.usuarioClient.getById(request.getIdCliente());
 
         if(!(usuario.getRol().equals(Rol.CLIENTE.name()))){
             throw new ServiceError("", Errores.USUARIO_NO_CLIENTE, 400);
         }
 
         log.debug("Asignando cliente y cambiando estado a PROGRAMADO para contenedor ID: {}.", request.getId());
-        contenedor.setIdCliente(usuario.getIdUsuario());
+        contenedor.setCliente(usuario);
+        contenedor.setEstado(EstadoContenedor.PROGRAMADO);
 
         this.contenedorRepository.update(contenedor);
         log.info("Cliente ID: {} asignado exitosamente al contenedor ID: {}.", request.getIdCliente(), request.getId());
+
+        return ContenedorMapperDto.toResponsePatchCliente(contenedor, usuario);
     }
 
     public CambioDeEstadoResponse cambioDeEstado(CambioDeEstadoRequest request) throws ServiceError {
@@ -261,7 +276,7 @@ public class ContenedorService {
         contenedor.setEstado(estadoContenedor);
         this.contenedorRepository.update(contenedor);
 
-        CambioDeEstadoResponse response = ContenedorMapperDto.toResponsePatch(contenedor.getIdContenedor(), estadoContenedor);
+        CambioDeEstadoResponse response = ContenedorMapperDto.toResponsePatchEstado(contenedor);
 
         log.info("Contenedor ID: {} actualizado al estado: {}.", request.getId(), estadoContenedor);
         return response;
@@ -270,18 +285,18 @@ public class ContenedorService {
 
     // DELETE
 
-    public void delete(DeleteRequest request) throws ServiceError {
-        log.info("Iniciando eliminación de contenedor ID: {}", request.getIdContenedor());
+    public void delete(Long id) throws ServiceError {
+        log.info("Iniciando eliminación de contenedor ID: {}", id);
 
-        log.debug("Buscando contenedor ID: {} para eliminar.", request.getIdContenedor());
-        Contenedor contenedor = this.contenedorRepository.getById(request.getIdContenedor());
+        log.debug("Buscando contenedor ID: {} para eliminar.", id);
+        Contenedor contenedor = this.contenedorRepository.getById(id);
 
         if (contenedor == null) {
             throw new ServiceError("", Errores.CONTENEDOR_NO_ENCONTRADO, 404);
         }
 
-        this.contenedorRepository.delete(contenedor.getIdContenedor());
-        log.info("Contenedor ID: {} eliminado exitosamente.", request.getIdContenedor());
+        this.contenedorRepository.delete(id);
+        log.info("Contenedor ID: {} eliminado exitosamente.", id);
     }
 
 }

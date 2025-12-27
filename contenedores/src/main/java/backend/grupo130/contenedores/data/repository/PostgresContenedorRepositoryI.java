@@ -1,18 +1,18 @@
 package backend.grupo130.contenedores.data.repository;
 
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
+import backend.grupo130.contenedores.data.models.ContenedorModel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import backend.grupo130.contenedores.data.models.Contenedor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 
-public interface PostgresContenedorRepositoryI extends JpaRepository<Contenedor, Long> {
+public interface PostgresContenedorRepositoryI extends JpaRepository<ContenedorModel, Long> {
 
-    Contenedor findFirstByPesoAndVolumenAndIdClienteIsNull(BigDecimal peso, BigDecimal volumen);
+    ContenedorModel findFirstByPesoAndVolumenAndIdClienteIsNull(BigDecimal peso, BigDecimal volumen);
 
-    List<Contenedor> findByEstado(EstadoContenedor estadoContenedor);
+    List<ContenedorModel> findByEstado(EstadoContenedor estadoContenedor);
 
 }
 

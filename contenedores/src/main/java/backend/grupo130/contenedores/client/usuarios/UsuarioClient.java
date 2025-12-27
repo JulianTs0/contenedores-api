@@ -1,15 +1,32 @@
 package backend.grupo130.contenedores.client.usuarios;
 
+import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.client.usuarios.responses.UsuarioGetByIdResponse;
-import org.springframework.cloud.openfeign.FeignClient;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+@Component
+@AllArgsConstructor
+public class UsuarioClient {
 
-@FeignClient(name = "usuarios", url = "${spring.clients.usuarios.url}")
-public interface UsuarioClient {
+    private final UsuarioGateway usuarioGateway;
 
-    @GetMapping("/getById/{id}")
-    UsuarioGetByIdResponse getById(@PathVariable("id") Long id);
+    public Usuario getById(Long usuarioId){
+
+        UsuarioGetByIdResponse response = this.usuarioGateway.getById(usuarioId);
+
+        Usuario usuario = Usuario.builder()
+            .idUsuario(response.getId())
+            .nombre(response.getNombre())
+            .apellido(response.getApellido())
+            .telefono(response.getTelefono())
+            .email(response.getEmail())
+            .rol(response.getRol())
+            .build();
+
+        return usuario;
+
+    }
 
 }

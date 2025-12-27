@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class CambioDeEstadoResponse {
+public class AsignarClienteResponse {
 
-    private final Long idContenedor;
+    private Long idContenedor;
 
-    private final BigDecimal peso;
+    private BigDecimal peso;
 
-    private final BigDecimal volumen;
+    private BigDecimal volumen;
 
-    private final Usuario cliente;
+    private Usuario cliente;
 
-    private final String estado;
+    private EstadoContenedor estado;
 
 }

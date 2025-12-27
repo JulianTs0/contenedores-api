@@ -1,36 +1,28 @@
-package backend.grupo130.contenedores.data.models;
+package backend.grupo130.contenedores.data.entity;
 
+import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "contenedores")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Contenedor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_contenedor")
     private Long idContenedor;
 
-    @Column(name = "peso", precision = 10, scale = 2, nullable = false)
     private BigDecimal peso;
 
-    @Column(name = "volumen", precision = 10, scale = 2, nullable = false)
     private BigDecimal volumen;
 
-    @Column(name = "id_cliente")
-    private Long idCliente;
+    private Usuario cliente;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
     private EstadoContenedor estado;
 
     public boolean esBorrador(){
