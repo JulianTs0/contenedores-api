@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.dto.tramo.response;
 
-import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.data.entity.Tramo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

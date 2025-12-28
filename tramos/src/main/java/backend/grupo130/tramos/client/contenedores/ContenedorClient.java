@@ -1,18 +1,44 @@
 package backend.grupo130.tramos.client.contenedores;
 
-import backend.grupo130.tramos.client.contenedores.request.ContenedorCambioDeEstadoRequest;
+import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorCambioDeEstadoResponse;
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorGetByIdResponse;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import backend.grupo130.tramos.config.enums.EstadoContenedor;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
 
-@FeignClient(name = "contenedores", url = "${spring.clients.contenedores.url}")
-public interface ContenedorClient {
+import java.util.HashMap;
+import java.util.Map;
 
-    @GetMapping("/getById/{id}")
-    ContenedorGetByIdResponse getBYId(@PathVariable("id") Long id);
+@Repository
+@AllArgsConstructor
+public class ContenedorClient {
 
-    @PutMapping("/cambioDeEstado")
-    ContenedorCambioDeEstadoResponse cambioDeEstado(@RequestBody ContenedorCambioDeEstadoRequest request);
+    private final ContenedorGateway contenedorGateway;
+
+    public Contenedor getById(Long id){
+
+        ContenedorGetByIdResponse response = this.contenedorGateway.getBYId(id);
+
+        Contenedor contenedor = new Contenedor(
+            response.getIdContenedor(),
+            response.getPeso(),
+            response.getVolumen(),
+            response.getCliente(),
+            EstadoContenedor.fromString(response.getEstado())
+        );
+
+        return contenedor;
+
+    }
+
+    public ContenedorCambioDeEstadoResponse cambioDeEstado(Long idContenedor, String nuevoEstado) {
+
+        Map<String, Object> request = new HashMap<>();
+
+        request.put("estado", nuevoEstado);
+
+        return this.contenedorGateway.cambioDeEstado(idContenedor, request);
+    }
 
 }

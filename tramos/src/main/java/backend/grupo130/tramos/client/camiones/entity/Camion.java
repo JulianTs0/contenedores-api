@@ -1,12 +1,15 @@
 package backend.grupo130.tramos.client.camiones.entity;
 
+import backend.grupo130.tramos.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Camion {
@@ -23,6 +26,6 @@ public class Camion {
 
     private Boolean estado;
 
-    private Integer idTransportista;
+    private Usuario transportista;
 
 }

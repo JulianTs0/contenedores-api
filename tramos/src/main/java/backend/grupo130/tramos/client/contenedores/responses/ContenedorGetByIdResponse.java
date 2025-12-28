@@ -19,4 +19,5 @@ public class ContenedorGetByIdResponse {
     private final Usuario cliente;
 
     private final String estado;
+
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 
+// TODO: Hacer una bdd
 @Getter
 public enum PreciosNegocio {
 

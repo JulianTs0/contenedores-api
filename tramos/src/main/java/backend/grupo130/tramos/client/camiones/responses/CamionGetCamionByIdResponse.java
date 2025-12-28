@@ -1,5 +1,6 @@
 package backend.grupo130.tramos.client.camiones.responses;
 
+import backend.grupo130.tramos.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,6 +22,6 @@ public class CamionGetCamionByIdResponse {
 
     private Boolean estado;
 
-    private Integer idTransportista;
+    private Usuario transportista;
 
 }

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>backend.grupo130</groupId>
-	<artifactId>tramos</artifactId>
+	<artifactId>tramoModels</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>tramos</name>
+	<name>tramoModels</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

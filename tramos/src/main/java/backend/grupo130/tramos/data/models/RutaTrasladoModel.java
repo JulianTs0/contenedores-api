@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RutaTraslado {
+public class RutaTrasladoModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

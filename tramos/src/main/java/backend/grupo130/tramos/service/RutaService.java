@@ -1,33 +1,43 @@
 package backend.grupo130.tramos.service;
 
-import backend.grupo130.tramos.client.OSRM.OsrmApiClient;
-import backend.grupo130.tramos.client.OSRM.response.RouteResponse;
+import backend.grupo130.tramos.client.camiones.CamionClient;
+import backend.grupo130.tramos.client.contenedores.ContenedorClient;
 import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
+import backend.grupo130.tramos.client.envios.EnviosClient;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
+import backend.grupo130.tramos.client.ubicaciones.UbicacionesClient;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
-import backend.grupo130.tramos.config.enums.*;
+import backend.grupo130.tramos.config.enums.Errores;
+import backend.grupo130.tramos.config.enums.EstadoTramo;
+import backend.grupo130.tramos.config.enums.PreciosNegocio;
+import backend.grupo130.tramos.config.enums.TipoTramo;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
-import backend.grupo130.tramos.data.models.RutaTraslado;
-import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.data.entity.RutaTraslado;
+import backend.grupo130.tramos.data.entity.Tramo;
 import backend.grupo130.tramos.dto.ruta.RutaMapperDto;
-import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
-import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
+import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
-import backend.grupo130.tramos.repository.*;
+import backend.grupo130.tramos.external.OSRM.OsrmApiClient;
+import backend.grupo130.tramos.external.OSRM.response.RouteResponse;
+import backend.grupo130.tramos.repository.RutaRepository;
+import backend.grupo130.tramos.repository.TramoRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.RoundingMode;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -39,15 +49,15 @@ public class RutaService {
 
     private final TramoRepository tramoRepository;
 
-    private final EnviosRepository enviosRepository;
+    private final EnviosClient enviosClient;
 
-    private final UbicacionesRepository ubicacionesRepository;
+    private final UbicacionesClient ubicacionesClient;
 
     private final OsrmApiClient osrmApiClient;
 
-    private final ContenedorRepository contenedorRepository;
+    private final ContenedorClient contenedorClient;
 
-    private final CamionesRepository camionesRepository;
+    private final CamionClient camionClient;
 
     public RutaGetByIdResponse getById(RutaGetByIdRequest request) throws ServiceError {
 
@@ -63,10 +73,10 @@ public class RutaService {
 
         if (ruta.getIdSolicitud() != null){
             log.debug("Buscando Solicitud asociada: {}", ruta.getIdSolicitud());
-            solicitud = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+            solicitud = this.enviosClient.getSolicitudTrasladoById(ruta.getIdSolicitud());
         }
 
-        RutaGetByIdResponse response = RutaMapperDto.toResponseGet(ruta, solicitud);
+        RutaGetByIdResponse response = RutaMapperDto.toResponseGetById(ruta, solicitud);
 
         log.info("Busqueda de Ruta por ID {} completada exitosamente.", request.getIdRuta());
         return response;
@@ -77,7 +87,7 @@ public class RutaService {
 
         List<RutaTraslado> rutas = this.rutaRepository.getAll();
 
-        RutaGetAllResponse response = RutaMapperDto.toResponseGet(rutas);
+        RutaGetAllResponse response = RutaMapperDto.toResponseGetAll(rutas);
 
         log.info("Busqueda de todas las Rutas completada. Encontradas: {} rutas.", rutas.size());
         return response;
@@ -87,7 +97,7 @@ public class RutaService {
     public RutaGetOpcionesResponse getRutaTentativa(RutaCrearTentativaRequest request) throws ServiceError {
         log.info("Iniciando calculo de Ruta Tentativa para Solicitud ID: {}", request.getIdSolicitud());
 
-        SolicitudTraslado solicitud = this.enviosRepository.getSolicitudTrasladoById(request.getIdSolicitud());
+        SolicitudTraslado solicitud = this.enviosClient.getSolicitudTrasladoById(request.getIdSolicitud());
 
         if (solicitud == null) {
             throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
@@ -97,17 +107,17 @@ public class RutaService {
         }
 
         log.debug("Buscando Contenedor ID: {}", solicitud.getIdContenedor());
-        Contenedor contenedor = this.contenedorRepository.getById(solicitud.getIdContenedor());
+        Contenedor contenedor = this.contenedorClient.getById(solicitud.getIdContenedor());
 
         log.debug("Calculando costo base promedio para peso {} y volumen {}.", contenedor.getPeso(), contenedor.getVolumen());
-        BigDecimal costoBasePromedio = this.camionesRepository.getPromedioCostoBase(contenedor.getPeso(), contenedor.getVolumen());
+        BigDecimal costoBasePromedio = this.camionClient.getPromedioCostoBase(contenedor.getPeso(), contenedor.getVolumen());
 
         if (costoBasePromedio.equals(BigDecimal.ZERO)){
             throw new ServiceError("", Errores.CAMIONES_NO_ENCONTRADOS, 404);
         }
 
         log.debug("Calculando consumo promedio de combustible.");
-        BigDecimal consumoAprox = this.camionesRepository.getConsumoPromedio();
+        BigDecimal consumoAprox = this.camionClient.getConsumoPromedio();
 
         if (consumoAprox.equals(BigDecimal.ZERO)){
             throw new ServiceError("", Errores.CAMIONES_NO_ENCONTRADOS, 404);
@@ -135,17 +145,17 @@ public class RutaService {
         double distanciaTotal = 0;
         double tiempoTotal = 0;
 
-        log.debug("Iniciando procesamiento de {} ubicaciones para crear tramos.", request.getUbicaciones().size());
+        log.debug("Iniciando procesamiento de {} ubicaciones para crear tramoModels.", request.getUbicaciones().size());
         for (int orden = 0; orden < request.getUbicaciones().size() - 1; orden++){
 
             Long idOrigen = request.getUbicaciones().get(orden);
-            Ubicacion origen = this.ubicacionesRepository.getUbicacionById(idOrigen);
+            Ubicacion origen = this.ubicacionesClient.getUbicacionById(idOrigen);
             if (origen == null){
                 throw new ServiceError("", Errores.TRAMOS_UBICACION_INVALIDA, 404);
             }
 
             Long idDestino = request.getUbicaciones().get(orden + 1);
-            Ubicacion destino = this.ubicacionesRepository.getUbicacionById(idDestino);
+            Ubicacion destino = this.ubicacionesClient.getUbicacionById(idDestino);
             if (destino == null){
                 throw new ServiceError("", Errores.TRAMOS_UBICACION_INVALIDA, 404);
             }
@@ -198,12 +208,12 @@ public class RutaService {
             tramo.setEstado(EstadoTramo.ESTIMADO);
 
             tramos.add(tramo);
-            log.debug("Tramo {} (Orden {}) creado.", tramo.getIdTramo(), tramo.getOrden());
+            log.debug("TramoModel {} (Orden {}) creado.", tramo.getIdTramo(), tramo.getOrden());
         }
 
         if (!tramos.isEmpty()) {
             this.tramoRepository.saveAll(tramos);
-            log.info("Guardados {} tramos para la Ruta ID: {}", tramos.size(), ruta.getIdRuta());
+            log.info("Guardados {} tramoModels para la Ruta ID: {}", tramos.size(), ruta.getIdRuta());
         }
 
         ruta.setCantidadTramos(tramos.size());
@@ -241,9 +251,9 @@ public class RutaService {
         requestEdit.setIdDestino(tramos.getLast().getIdDestino());
 
         log.info("Actualizando Solicitud ID: {} con datos de ruta tentativa.", solicitud.getIdSolicitud());
-        this.enviosRepository.editSolicitud(requestEdit);
+        this.enviosClient.editSolicitud(requestEdit);
 
-        RutaGetOpcionesResponse response = RutaMapperDto.toResponseGet(tarifa,horas, ruta, tramos);
+        RutaGetOpcionesResponse response = RutaMapperDto.toResponseGetOpciones(tarifa,horas, ruta, tramos);
 
         this.rutaRepository.update(ruta);
         log.info("Ruta Tentativa para Solicitud ID {} calculada exitosamente. Ruta ID: {}", request.getIdSolicitud(), ruta.getIdRuta());

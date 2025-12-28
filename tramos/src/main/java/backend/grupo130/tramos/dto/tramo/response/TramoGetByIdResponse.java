@@ -2,7 +2,7 @@ package backend.grupo130.tramos.dto.tramo.response;
 
 import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
-import backend.grupo130.tramos.data.models.RutaTraslado;
+import backend.grupo130.tramos.data.entity.RutaTraslado;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

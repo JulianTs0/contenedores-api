@@ -9,14 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "tramos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tramo {
+public class TramoModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +56,7 @@ public class Tramo {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ruta", nullable = false)
-    private RutaTraslado rutaTraslado;
+    private RutaTrasladoModel rutaTraslado;
 
     @Column(name = "id_origen", nullable = false)
     private Long idOrigen;
@@ -68,20 +67,5 @@ public class Tramo {
     @Column(name = "distancia", nullable = false)
     private Double distancia;
 
-    public boolean esEstimado(){
-        return estado.equals(EstadoTramo.ESTIMADO);
-    }
-
-    public boolean esAsignado() {
-        return  estado.equals(EstadoTramo.ASIGNADO);
-    }
-
-    public boolean esIniciado() {
-        return  estado.equals(EstadoTramo.INICIADO);
-    }
-
-    public boolean esFinalizado(){
-        return  estado.equals(EstadoTramo.FINALIZADO);
-    }
 
 }

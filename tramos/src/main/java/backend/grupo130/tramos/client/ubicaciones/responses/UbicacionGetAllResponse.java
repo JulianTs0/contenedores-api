@@ -1,6 +1,5 @@
 package backend.grupo130.tramos.client.ubicaciones.responses;
 
-import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,8 +7,8 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetUbicacionGetAllResponse {
+public class UbicacionGetAllResponse {
 
-    private final List<Ubicacion> ubicaciones;
+    private final List<UbicacionGetByIdResponse> ubicaciones;
 
 }

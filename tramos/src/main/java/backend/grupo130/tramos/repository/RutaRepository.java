@@ -1,7 +1,8 @@
 package backend.grupo130.tramos.repository;
 
-import backend.grupo130.tramos.data.models.RutaTraslado;
-import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.data.PersistenceMapper;
+import backend.grupo130.tramos.data.entity.RutaTraslado;
+import backend.grupo130.tramos.data.models.RutaTrasladoModel;
 import backend.grupo130.tramos.data.repository.PostgresRutaRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,28 +16,30 @@ public class RutaRepository {
     private final PostgresRutaRepositoryI rutaRepository;
 
     public RutaTraslado getById(Long idRuta){
-        RutaTraslado model = this.rutaRepository.findById(idRuta).orElse(null);
-        return model;
+        RutaTrasladoModel model = this.rutaRepository.findById(idRuta).orElse(null);
+        return PersistenceMapper.toDomain(model);
     }
 
     public List<RutaTraslado> getAll() {
-        List<RutaTraslado> models = this.rutaRepository.findAll();
-        return models;
+        List<RutaTrasladoModel> models = this.rutaRepository.findAll();
+        return PersistenceMapper.toDomainRuta(models);
     }
 
     public RutaTraslado getBySolicitud(Long id){
-        RutaTraslado rutaTraslado = this.rutaRepository.findByIdSolicitud(id);
-        return rutaTraslado;
+        RutaTrasladoModel rutaTrasladoModel = this.rutaRepository.findByIdSolicitud(id);
+        return PersistenceMapper.toDomain(rutaTrasladoModel);
     }
 
     public RutaTraslado save(RutaTraslado ruta) {
-        RutaTraslado saved = this.rutaRepository.save(ruta);
-        return saved;
+        RutaTrasladoModel model = PersistenceMapper.toModel(ruta);
+        RutaTrasladoModel saved = this.rutaRepository.save(model);
+        return PersistenceMapper.toDomain(saved);
     }
 
     public RutaTraslado update(RutaTraslado ruta) {
-        RutaTraslado updated = this.rutaRepository.save(ruta);
-        return updated;
+        RutaTrasladoModel model = PersistenceMapper.toModel(ruta);
+        RutaTrasladoModel updated = this.rutaRepository.save(model);
+        return PersistenceMapper.toDomain(updated);
     }
 
 }

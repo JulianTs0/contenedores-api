@@ -2,8 +2,8 @@ package backend.grupo130.tramos.dto.ruta;
 
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
-import backend.grupo130.tramos.data.models.RutaTraslado;
-import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.data.entity.RutaTraslado;
+import backend.grupo130.tramos.data.entity.Tramo;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class RutaMapperDto {
 
-    public static RutaGetByIdResponse toResponseGet(RutaTraslado ruta, SolicitudTraslado solicitud) {
+    public static RutaGetByIdResponse toResponseGetById(RutaTraslado ruta, SolicitudTraslado solicitud) {
         return new RutaGetByIdResponse(
             ruta.getIdRuta(),
             ruta.getCantidadTramos(),
@@ -23,13 +23,13 @@ public class RutaMapperDto {
         );
     }
 
-    public static RutaGetAllResponse toResponseGet(List<RutaTraslado> rutas) {
+    public static RutaGetAllResponse toResponseGetAll(List<RutaTraslado> rutas) {
         return new RutaGetAllResponse(
             rutas
         );
     }
 
-    public static RutaGetOpcionesResponse toResponseGet(Tarifa tarifaAprox, BigDecimal tiempoEstimado, RutaTraslado ruta, List<Tramo> tramos){
+    public static RutaGetOpcionesResponse toResponseGetOpciones(Tarifa tarifaAprox, BigDecimal tiempoEstimado, RutaTraslado ruta, List<Tramo> tramos){
         return new RutaGetOpcionesResponse(
             tarifaAprox,
             tiempoEstimado,

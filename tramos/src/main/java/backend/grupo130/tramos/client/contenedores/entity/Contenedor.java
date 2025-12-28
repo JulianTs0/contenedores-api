@@ -1,14 +1,16 @@
 package backend.grupo130.tramos.client.contenedores.entity;
 
+import backend.grupo130.tramos.client.usuarios.entity.Usuario;
 import backend.grupo130.tramos.config.enums.EstadoContenedor;
-import backend.grupo130.tramos.config.enums.EstadoSolicitud;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Contenedor {
@@ -19,7 +21,7 @@ public class Contenedor {
 
     private BigDecimal volumen;
 
-    private Long idCliente;
+    private Usuario cliente;
 
     private EstadoContenedor estado;
 

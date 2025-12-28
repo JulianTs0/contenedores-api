@@ -1,8 +1,7 @@
 package backend.grupo130.tramos.controller;
 
-import backend.grupo130.tramos.dto.ruta.request.RutaAsignarSolicitudRequest;
-import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
+import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
 import backend.grupo130.tramos.service.RutaService;
@@ -37,20 +36,34 @@ public class RutaController {
         description = "Busca y devuelve una ruta específica utilizando su ID único, incluyendo la solicitud asociada si existe."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Ruta encontrada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RutaGetByIdResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Ruta no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ruta encontrada exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RutaGetByIdResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Ruta no encontrada",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getById/{idRuta}")
+    @GetMapping("/{id}")
     public ResponseEntity<RutaGetByIdResponse> getById(
         @Parameter(description = "ID único de la ruta a buscar", required = true, example = "1")
         @NotNull(message = "{error.idRuta.notNull}")
         @Positive(message = "{error.idRuta.positive}")
-        @PathVariable Long idRuta
+        @PathVariable Long id
     ) {
-        log.info("Iniciando GET /api/rutas/getById/{}", idRuta);
-        RutaGetByIdRequest request = new RutaGetByIdRequest(idRuta);
+        log.info("Iniciando GET /api/rutas/getById/{}", id);
+        RutaGetByIdRequest request = new RutaGetByIdRequest(id);
         return ResponseEntity.ok(this.rutaService.getById(request));
     }
 
@@ -59,10 +72,18 @@ public class RutaController {
         description = "Devuelve una lista completa de todas las rutas de traslado registradas en el sistema."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de rutas obtenida exitosamente", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Lista de rutas obtenida exitosamente",
+            content = @Content(mediaType = "application/json")
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @GetMapping("/getAll")
+    @GetMapping("/")
     public ResponseEntity<?> getAll() {
         log.info("Iniciando GET /api/rutas/getAll");
         return ResponseEntity.ok(this.rutaService.getAll());
@@ -73,13 +94,31 @@ public class RutaController {
         description = "Calcula la ruta óptima (distancia, tiempo, costo) basada en una solicitud y una lista de ubicaciones. Devuelve opciones sin confirmar."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Ruta tentativa calculada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RutaGetOpcionesResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos (ej: faltan ubicaciones)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Solicitud o Ubicación no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ruta tentativa calculada exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RutaGetOpcionesResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos de entrada inválidos (ej: faltan ubicaciones)",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Solicitud o Ubicación no encontrada",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content
+        )
     })
-    @PostMapping("/crearRutaTentativa")
+    @PostMapping("/")
     public ResponseEntity<RutaGetOpcionesResponse> crearRutaTentativa(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos para el cálculo de la ruta (Solicitud + Ubicaciones)", required = true)
         @RequestBody @Valid RutaCrearTentativaRequest request

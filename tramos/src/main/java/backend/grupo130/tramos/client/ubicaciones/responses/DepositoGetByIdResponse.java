@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class GetDepositoByIdResponse {
+public class DepositoGetByIdResponse {
 
     private final Long idDeposito;
 

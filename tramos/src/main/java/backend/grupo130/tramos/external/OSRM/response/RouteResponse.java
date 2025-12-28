@@ -1,4 +1,4 @@
-package backend.grupo130.tramos.client.OSRM.response;
+package backend.grupo130.tramos.external.OSRM.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

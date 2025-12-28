@@ -1,21 +1,25 @@
 package backend.grupo130.tramos.service;
 
+import backend.grupo130.tramos.client.camiones.CamionClient;
 import backend.grupo130.tramos.client.camiones.entity.Camion;
+import backend.grupo130.tramos.client.contenedores.ContenedorClient;
 import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
+import backend.grupo130.tramos.client.envios.EnviosClient;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
+import backend.grupo130.tramos.client.ubicaciones.UbicacionesClient;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.*;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
-import backend.grupo130.tramos.data.models.RutaTraslado;
-import backend.grupo130.tramos.data.models.Tramo;
+import backend.grupo130.tramos.data.entity.RutaTraslado;
+import backend.grupo130.tramos.data.entity.Tramo;
 import backend.grupo130.tramos.dto.tramo.TramoMapperDto;
 import backend.grupo130.tramos.dto.tramo.request.*;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;
-import backend.grupo130.tramos.repository.*;
+import backend.grupo130.tramos.repository.TramoRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,16 +40,16 @@ public class TramoService {
 
     private final TramoRepository tramoRepository;
 
-    private final CamionesRepository camionesRepository;
+    private final CamionClient camionClient;
 
-    private final UbicacionesRepository ubicacionesRepository;
+    private final UbicacionesClient ubicacionesClient;
 
-    private final ContenedorRepository contenedorRepository;
+    private final ContenedorClient contenedorClient;
 
-    private final EnviosRepository enviosRepository;
+    private final EnviosClient enviosClient;
 
     public TramoGetByIdResponse getById(TramoGetByIdRequest request) throws ServiceError {
-        log.info("Iniciando busqueda de Tramo por ID: {}", request.getIdTramo());
+        log.info("Iniciando busqueda de TramoModel por ID: {}", request.getIdTramo());
 
         Tramo tramo = this.tramoRepository.getById(request.getIdTramo());
 
@@ -53,7 +57,7 @@ public class TramoService {
             throw new ServiceError("", Errores.TRAMO_NO_ENCONTRADO, 404);
         }
 
-        log.debug("Tramo encontrado: {}", tramo.getIdTramo());
+        log.debug("TramoModel encontrado: {}", tramo.getIdTramo());
 
         Camion camion = null;
         Ubicacion origen = null;
@@ -61,20 +65,20 @@ public class TramoService {
 
         if(tramo.getDominioCamion() != null){
             log.debug("Buscando Camion asociado: {}", tramo.getDominioCamion());
-            camion = this.camionesRepository.getById(tramo.getDominioCamion());
+            camion = this.camionClient.getById(tramo.getDominioCamion());
         }
         if(tramo.getIdOrigen() != null){
             log.debug("Buscando Ubicacion Origen: {}", tramo.getIdOrigen());
-            origen = this.ubicacionesRepository.getUbicacionById(tramo.getIdOrigen());
+            origen = this.ubicacionesClient.getUbicacionById(tramo.getIdOrigen());
         }
         if(tramo.getIdDestino() != null){
             log.debug("Buscando Ubicacion Destino: {}", tramo.getIdDestino());
-            destino = this.ubicacionesRepository.getUbicacionById(tramo.getIdDestino());
+            destino = this.ubicacionesClient.getUbicacionById(tramo.getIdDestino());
         }
 
-        TramoGetByIdResponse response = TramoMapperDto.toResponseGet(tramo,camion,origen,destino);
+        TramoGetByIdResponse response = TramoMapperDto.toResponseGetById(tramo,camion,origen,destino);
 
-        log.info("Busqueda de Tramo por ID {} completada exitosamente.", request.getIdTramo());
+        log.info("Busqueda de TramoModel por ID {} completada exitosamente.", request.getIdTramo());
         return response;
     }
 
@@ -83,9 +87,9 @@ public class TramoService {
 
         List<Tramo> tramos = this.tramoRepository.getByDominio(request.getDominioCamion());
 
-        log.info("Busqueda por Transportista {} completada. Encontrados: {} tramos.", request.getDominioCamion(), tramos.size());
+        log.info("Busqueda por Transportista {} completada. Encontrados: {} tramoModels.", request.getDominioCamion(), tramos.size());
 
-        TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramos);
+        TramoGetAllResponse response = TramoMapperDto.toResponseGetAll(tramos);
 
         return response;
     }
@@ -93,10 +97,10 @@ public class TramoService {
     public TramoGetAllResponse getTramosDeRuta(TramoGetByRutaIdRequest request) throws ServiceError {
         log.info("Iniciando busqueda de Tramos por Ruta ID: {}", request.getIdRuta());
 
-        List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(request.getIdRuta());
-        log.info("Busqueda de Tramos por Ruta ID {} completada. Encontrados: {} tramos.", request.getIdRuta(), tramosDeLaRuta.size());
+        List<Tramo> tramos = this.tramoRepository.buscarPorRuta(request.getIdRuta());
+        log.info("Busqueda de Tramos por Ruta ID {} completada. Encontrados: {} tramos.", request.getIdRuta(), tramos.size());
 
-        TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramosDeLaRuta);
+        TramoGetAllResponse response = TramoMapperDto.toResponseGetAll(tramos);
 
         return response;
     }
@@ -105,15 +109,15 @@ public class TramoService {
         log.info("Iniciando busqueda de todos los Tramos.");
 
         List<Tramo> tramos = this.tramoRepository.getAll();
-        log.info("Busqueda de todos los Tramos completada. Encontrados: {} tramos.", tramos.size());
+        log.info("Busqueda de todos los Tramos completada. Encontrados: {} tramoModels.", tramos.size());
 
-        TramoGetAllResponse response = TramoMapperDto.toResponseGet(tramos);
+        TramoGetAllResponse response = TramoMapperDto.toResponseGetAll(tramos);
 
         return response;
     }
 
     public void asignarCamion(TramoAsignacionCamionRequest request) throws ServiceError {
-        log.info("Iniciando asignacion de Camion {} a Tramo {}.", request.getDominioCamion(), request.getIdTramo());
+        log.info("Iniciando asignacion de Camion {} a TramoModel {}.", request.getDominioCamion(), request.getIdTramo());
 
         Tramo tramo = this.tramoRepository.getById(request.getIdTramo());
 
@@ -127,13 +131,13 @@ public class TramoService {
 
         RutaTraslado rutaTraslado = tramo.getRutaTraslado();
 
-        SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(rutaTraslado.getIdSolicitud());
+        SolicitudTraslado solicitudTraslado = this.enviosClient.getSolicitudTrasladoById(rutaTraslado.getIdSolicitud());
 
         if(!solicitudTraslado.esConfirmada()){
             throw new ServiceError("", Errores.SOLICITUD_DEBE_CONFIRMAR, 400);
         }
 
-        Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
+        Camion camion =  this.camionClient.getById(request.getDominioCamion());
 
         if (camion == null) {
             throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
@@ -143,16 +147,16 @@ public class TramoService {
             throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
         }
 
-        log.debug("Asignando camion {} a tramo {}. Cambiando estado a ASIGNADO.", camion.getDominio(), tramo.getIdTramo());
+        log.debug("Asignando camion {} a tramoModel {}. Cambiando estado a ASIGNADO.", camion.getDominio(), tramo.getIdTramo());
         tramo.setDominioCamion(camion.getDominio());
         tramo.setEstado(EstadoTramo.ASIGNADO);
 
         this.tramoRepository.update(tramo);
 
         log.debug("Verificando estado de otros tramos para la Ruta ID: {}", rutaTraslado.getIdRuta());
-        List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(rutaTraslado.getIdRuta());
+        List<Tramo> tramos = this.tramoRepository.buscarPorRuta(rutaTraslado.getIdRuta());
 
-        boolean todosAsignados = tramosDeLaRuta.stream()
+        boolean todosAsignados = tramos.stream()
             .allMatch(Tramo::esAsignado);
 
         log.debug("Estado de asignacion de tramos de la ruta: {}", todosAsignados ? "TODOS ASIGNADOS" : "PENDIENTES");
@@ -165,18 +169,18 @@ public class TramoService {
             requestCambio.setNuevoEstado(EstadoSolicitud.PROGRAMADO.name());
             requestCambio.setDescripcion("Todos los tramos fueron asignados");
 
-            this.enviosRepository.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
             log.debug("Solicitud {} actualizada a PROGRAMADO.", solicitudTraslado.getIdSolicitud());
 
-            this.contenedorRepository.cambioDeEstado(solicitudTraslado.getIdContenedor(), EstadoContenedor.PROGRAMADO.name());
+            this.contenedorClient.cambioDeEstado(solicitudTraslado.getIdContenedor(), EstadoContenedor.PROGRAMADO.name());
             log.debug("Contenedor {} actualizado a PROGRAMADO.", solicitudTraslado.getIdContenedor());
         }
 
-        log.info("Asignacion de Camion {} a Tramo {} completada.", request.getDominioCamion(), request.getIdTramo());
+        log.info("Asignacion de Camion {} a TramoModel {} completada.", request.getDominioCamion(), request.getIdTramo());
     }
 
     public void registrarInicioTramo(TramoInicioTramoRequest request) throws ServiceError {
-        log.info("Iniciando registro de INICIO de Tramo ID {} por Camion {}.", request.getIdTramo(), request.getDominioCamion());
+        log.info("Iniciando registro de INICIO de TramoModel ID {} por Camion {}.", request.getIdTramo(), request.getDominioCamion());
 
         Tramo tramo = this.tramoRepository.getById(request.getIdTramo());
 
@@ -193,28 +197,28 @@ public class TramoService {
         }
 
         RutaTraslado ruta = tramo.getRutaTraslado();
-        SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+        SolicitudTraslado solicitudTraslado = this.enviosClient.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
         if(solicitudTraslado.esBorrador() || solicitudTraslado.esEntregada()){
             throw new ServiceError("", Errores.SOLICITUD_NO_PROGRAMADA, 400);
         }
 
-        List<Tramo> tramosDeLaRuta = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
+        List<Tramo> tramos = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
         int ordenActual = tramo.getOrden() ;
-        log.debug("Iniciando Tramo Orden: {}", ordenActual);
+        log.debug("Iniciando TramoModel Orden: {}", ordenActual);
 
         if (ordenActual > 1) {
-            Tramo tramoAnterior = tramosDeLaRuta.get(ordenActual - 2);
+            Tramo tramoAnterior = tramos.get(ordenActual - 2);
 
-            log.debug("Verificando tramo anterior (Orden: {}). Estado: {}", tramoAnterior.getOrden(), tramoAnterior.getEstado());
-            log.debug("Datos tramo anterior: {}", tramoAnterior);
+            log.debug("Verificando tramoModel anterior (Orden: {}). Estado: {}", tramoAnterior.getOrden(), tramoAnterior.getEstado());
+            log.debug("Datos tramoModel anterior: {}", tramoAnterior);
 
             if (!tramoAnterior.esFinalizado()) {
                 throw new ServiceError("", Errores.TRAMO_ANTERIOR_NO_FINALIZADO, 400);
             }
         }
 
-        Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
+        Camion camion =  this.camionClient.getById(request.getDominioCamion());
 
         if (camion == null) {
             throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
@@ -224,42 +228,42 @@ public class TramoService {
             throw new ServiceError("", Errores.CAMION_NO_DISPONIBLE, 400);
         }
 
-        this.camionesRepository.cambiarDisponibilidad(camion.getDominio(), false);
+        this.camionClient.cambiarDisponibilidad(camion.getDominio(), false);
 
         tramo.setFechaHoraInicioReal(LocalDateTime.now());
         tramo.setEstado(EstadoTramo.INICIADO);
-        log.debug("Tramo ID {} actualizado a INICIADO.", tramo.getIdTramo());
+        log.debug("TramoModel ID {} actualizado a INICIADO.", tramo.getIdTramo());
 
-        Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
+        Contenedor contenedor = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
 
         if(contenedor.getEstado() != null && contenedor.esEnDeposito()){
             log.info("Contenedor {} sale de DEPOSITO. Actualizando a EN_TRANSITO.", contenedor.getIdContenedor());
-            this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
+            this.contenedorClient.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
         }
 
         this.tramoRepository.update(tramo);
 
         if(tramo.getOrden() == 1){
-            log.info("Iniciando primer tramo (Orden 1). Actualizando Solicitud {} y Contenedor {} a EN_TRANSITO.", solicitudTraslado.getIdSolicitud(), contenedor.getIdContenedor());
+            log.info("Iniciando primer tramoModel (Orden 1). Actualizando Solicitud {} y Contenedor {} a EN_TRANSITO.", solicitudTraslado.getIdSolicitud(), contenedor.getIdContenedor());
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
             requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
             requestCambio.setNuevoEstado(EstadoSolicitud.EN_TRANSITO.name());
-            requestCambio.setDescripcion("El primer tramo inicio");
+            requestCambio.setDescripcion("El primer tramoModel inicio");
 
-            this.enviosRepository.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
             log.debug("Solicitud {} actualizada a EN_TRANSITO.", solicitudTraslado.getIdSolicitud());
 
-            Contenedor contenedorPrimerTramo = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
-            this.contenedorRepository.cambioDeEstado(contenedorPrimerTramo.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
+            Contenedor contenedorPrimerTramo = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
+            this.contenedorClient.cambioDeEstado(contenedorPrimerTramo.getIdContenedor(), EstadoContenedor.EN_TRANSITO.name());
             log.debug("Contenedor {} actualizado a EN_TRANSITO.", contenedorPrimerTramo.getIdContenedor());
         }
 
-        log.info("Registro de INICIO de Tramo ID {} completado.", request.getIdTramo());
+        log.info("Registro de INICIO de TramoModel ID {} completado.", request.getIdTramo());
     }
 
     public void registrarFinTramo(TramoFinTramoRequest request) throws ServiceError {
-        log.info("Iniciando registro de FIN de Tramo ID {} por Camion {}.", request.getIdTramo(), request.getDominioCamion());
+        log.info("Iniciando registro de FIN de TramoModel ID {} por Camion {}.", request.getIdTramo(), request.getDominioCamion());
 
         Tramo tramo = this.tramoRepository.getById(request.getIdTramo());
 
@@ -276,50 +280,50 @@ public class TramoService {
         }
 
         RutaTraslado ruta = tramo.getRutaTraslado();
-        SolicitudTraslado solicitudTraslado = this.enviosRepository.getSolicitudTrasladoById(ruta.getIdSolicitud());
+        SolicitudTraslado solicitudTraslado = this.enviosClient.getSolicitudTrasladoById(ruta.getIdSolicitud());
 
         if(!solicitudTraslado.esEntransito()){
             throw new ServiceError("",Errores.SOLICITUD_NO_INICIADA, 400);
         }
 
-        Camion camion =  this.camionesRepository.getById(request.getDominioCamion());
+        Camion camion =  this.camionClient.getById(request.getDominioCamion());
 
         if (camion == null) {
             throw new ServiceError("", Errores.CAMION_NO_ENCONTRADO, 404);
         }
 
-        this.camionesRepository.cambiarDisponibilidad(camion.getDominio(), true);
+        this.camionClient.cambiarDisponibilidad(camion.getDominio(), true);
 
         tramo.setFechaHoraFinReal(LocalDateTime.now());
         tramo.setEstado(EstadoTramo.FINALIZADO);
-        log.debug("Tramo ID {} actualizado a FINALIZADO.", tramo.getIdTramo());
+        log.debug("TramoModel ID {} actualizado a FINALIZADO.", tramo.getIdTramo());
 
         this.tramoRepository.update(tramo);
 
         if (tramo.getTipoTramo().equals(TipoTramo.ORIGEN_DEPOSITO) || tramo.getTipoTramo().equals(TipoTramo.DEPOSITO_DEPOSITO)){
 
-            Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
-            log.info("Tramo finalizado en deposito. Actualizando Contenedor {} a EN_DEPOSITO.", contenedor.getIdContenedor());
+            Contenedor contenedor = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
+            log.info("TramoModel finalizado en deposito. Actualizando Contenedor {} a EN_DEPOSITO.", contenedor.getIdContenedor());
 
-            this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_DEPOSITO.name());
+            this.contenedorClient.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.EN_DEPOSITO.name());
         }
 
         if(tramo.getOrden().equals(ruta.getCantidadTramos())) {
-            log.info("Detectado fin del ultimo tramo (Orden {} de {}). Finalizando Solicitud {} y Contenedor {}.", tramo.getOrden(), ruta.getCantidadTramos(), solicitudTraslado.getIdSolicitud(), solicitudTraslado.getIdContenedor());
+            log.info("Detectado fin del ultimo tramoModel (Orden {} de {}). Finalizando Solicitud {} y Contenedor {}.", tramo.getOrden(), ruta.getCantidadTramos(), solicitudTraslado.getIdSolicitud(), solicitudTraslado.getIdContenedor());
 
-            Contenedor contenedor = this.contenedorRepository.getById(solicitudTraslado.getIdContenedor());
+            Contenedor contenedor = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
 
-            this.contenedorRepository.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.ENTREGADO.name());
+            this.contenedorClient.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.ENTREGADO.name());
             log.debug("Contenedor {} actualizado a ENTREGADO.", contenedor.getIdContenedor());
 
-            List<Tramo> todosLosTramos = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
+            List<Tramo> todosLosTramo = this.tramoRepository.buscarPorRuta(ruta.getIdRuta());
             Tarifa tarifa = solicitudTraslado.getTarifa();
 
             if (tarifa == null) {
                 throw new ServiceError("Solicitud sin tarifa", Errores.TARIFA_NO_ENCONTRADA, 404);
             }
 
-            BigDecimal distanciaTotal = todosLosTramos.stream()
+            BigDecimal distanciaTotal = todosLosTramo.stream()
                 .map(Tramo::getDistancia)
                 .filter(java.util.Objects::nonNull)
                 .map(BigDecimal::valueOf)
@@ -329,14 +333,14 @@ public class TramoService {
 
             BigDecimal costoTotalEstadiasReales = BigDecimal.ZERO;
 
-            for (int i = 0; i < todosLosTramos.size() - 1; i++) {
-                Tramo actual = todosLosTramos.get(i);
+            for (int i = 0; i < todosLosTramo.size() - 1; i++) {
+                Tramo actual = todosLosTramo.get(i);
 
                 boolean esTramoDeposito = actual.getTipoTramo().equals(TipoTramo.ORIGEN_DEPOSITO) ||
                     actual.getTipoTramo().equals(TipoTramo.DEPOSITO_DEPOSITO);
 
                 if (esTramoDeposito) {
-                    Tramo siguiente = todosLosTramos.get(i + 1);
+                    Tramo siguiente = todosLosTramo.get(i + 1);
 
                     LocalDateTime finEstadia = actual.getFechaHoraFinReal();
                     LocalDateTime inicioSiguiente = siguiente.getFechaHoraInicioReal();
@@ -346,7 +350,7 @@ public class TramoService {
                     if (horasEstadia > 0) {
                         long dias = (long) Math.ceil(horasEstadia / 24.0);
 
-                        Ubicacion ubicacionDeposito = this.ubicacionesRepository.getUbicacionById(actual.getIdDestino());
+                        Ubicacion ubicacionDeposito = this.ubicacionesClient.getUbicacionById(actual.getIdDestino());
 
                         BigDecimal costoDiario = ubicacionDeposito.getDeposito().getCostoEstadiaDiario();
                         BigDecimal costoEstadiaTramo = costoDiario.multiply(new BigDecimal(dias));
@@ -360,7 +364,7 @@ public class TramoService {
             }
 
             BigDecimal cargoFijoUnitario = ruta.getCargosGestionFijo() != null ? ruta.getCargosGestionFijo() : BigDecimal.ZERO;
-            BigDecimal cargosFijosTotales = cargoFijoUnitario.multiply(new BigDecimal(todosLosTramos.size()));
+            BigDecimal cargosFijosTotales = cargoFijoUnitario.multiply(new BigDecimal(todosLosTramo.size()));
 
             BigDecimal costoFinalCalculado = tarifa.calcularCostoFinal(
                 distanciaTotal,
@@ -370,7 +374,7 @@ public class TramoService {
 
             log.info("Costo final calculado para Solicitud {}: ${}", solicitudTraslado.getIdSolicitud(), costoFinalCalculado);
 
-            LocalDateTime inicio = todosLosTramos.getFirst().getFechaHoraInicioReal();
+            LocalDateTime inicio = todosLosTramo.getFirst().getFechaHoraInicioReal();
             LocalDateTime fin = tramo.getFechaHoraFinReal();
 
             BigDecimal tiempoRealHoras = BigDecimal.ZERO;
@@ -388,7 +392,7 @@ public class TramoService {
             editRequest.setCostoFinal(costoFinalCalculado);
             editRequest.setTiempoRealHoras(tiempoRealHoras);
 
-            this.enviosRepository.editSolicitud(editRequest);
+            this.enviosClient.editSolicitud(editRequest);
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
 
@@ -396,11 +400,11 @@ public class TramoService {
             requestCambio.setNuevoEstado(EstadoSolicitud.ENTREGADO.name());
             requestCambio.setDescripcion("Todos los tramos fueron finalizados");
 
-            this.enviosRepository.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
             log.debug("Solicitud {} actualizada a ENTREGADO.", solicitudTraslado.getIdSolicitud());
         }
 
-        log.info("Registro de FIN de Tramo ID {} completado.", request.getIdTramo());
+        log.info("Registro de FIN de TramoModel ID {} completado.", request.getIdTramo());
     }
 
 }
