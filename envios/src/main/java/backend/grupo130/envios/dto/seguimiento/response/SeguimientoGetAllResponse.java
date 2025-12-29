@@ -1,6 +1,6 @@
 package backend.grupo130.envios.dto.seguimiento.response;
 
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
+import backend.grupo130.envios.data.entity.SeguimientoEnvio;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

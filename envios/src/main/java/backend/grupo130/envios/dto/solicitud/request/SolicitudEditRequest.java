@@ -1,22 +1,22 @@
 package backend.grupo130.envios.dto.solicitud.request;
 
-import backend.grupo130.envios.data.models.Tarifa;
+import backend.grupo130.envios.data.entity.Tarifa;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class SolicitudEditRequest {
 
-    @NotNull(message = "{error.idSolicitud.notNull}")
-    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
     @FutureOrPresent(message = "{error.fecha.futureOrPresent}")

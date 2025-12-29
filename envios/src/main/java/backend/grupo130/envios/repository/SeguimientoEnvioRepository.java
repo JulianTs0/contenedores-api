@@ -1,8 +1,9 @@
 package backend.grupo130.envios.repository;
 
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
+import backend.grupo130.envios.data.PersistenceMapper;
+import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.data.models.SeguimientoEnvioModel;
 import backend.grupo130.envios.data.repository.PostgresSeguimientoEnvioRepositoryI;
-import backend.grupo130.envios.data.repository.PostgresSolicitudRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,31 +14,32 @@ import java.util.List;
 public class SeguimientoEnvioRepository {
 
     private final PostgresSeguimientoEnvioRepositoryI seguimientoRepository;
+    private final PersistenceMapper persistenceMapper;
 
     public SeguimientoEnvio getById(Long seguimientoId){
-        SeguimientoEnvio model = this.seguimientoRepository.findById(seguimientoId).orElse(null);
-        return model;
+        SeguimientoEnvioModel model = this.seguimientoRepository.findById(seguimientoId).orElse(null);
+        return PersistenceMapper.toDomain(model);
     }
 
     public List<SeguimientoEnvio> getAll() {
-        List<SeguimientoEnvio> models = this.seguimientoRepository.findAll();
-        return models;
+        List<SeguimientoEnvioModel> models = this.seguimientoRepository.findAll();
+        return PersistenceMapper.toSeguimientoEnvioDomainList(models);
     }
 
-
     public SeguimientoEnvio save(SeguimientoEnvio seguimientoEnvio) {
-        SeguimientoEnvio saved = this.seguimientoRepository.save(seguimientoEnvio);
-        return saved;
+        SeguimientoEnvioModel model = PersistenceMapper.toModel(seguimientoEnvio);
+        SeguimientoEnvioModel saved = this.seguimientoRepository.save(model);
+        return PersistenceMapper.toDomain(saved);
     }
 
     public SeguimientoEnvio update(SeguimientoEnvio seguimientoEnvio) {
-        SeguimientoEnvio updated = this.seguimientoRepository.save(seguimientoEnvio);
-        return updated;
+        SeguimientoEnvioModel model = PersistenceMapper.toModel(seguimientoEnvio);
+        SeguimientoEnvioModel updated = this.seguimientoRepository.save(model);
+        return PersistenceMapper.toDomain(updated);
     }
 
     public void delete(Long seguimientoId){
         this.seguimientoRepository.deleteById(seguimientoId);
-        return;
     }
 
 }

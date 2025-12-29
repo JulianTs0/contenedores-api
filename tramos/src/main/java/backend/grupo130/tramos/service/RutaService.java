@@ -132,7 +132,7 @@ public class RutaService {
             ruta.setCantidadDepositos(0);
             ruta.setCargosGestionFijo(PreciosNegocio.CARGO_GESTION.getValor());
 
-            this.rutaRepository.save(ruta);
+            ruta = this.rutaRepository.save(ruta);
         } else {
             this.tramoRepository.deleteByRutaId(ruta.getIdRuta());
         }
@@ -237,7 +237,6 @@ public class RutaService {
         log.debug("Costo estimado calculado: {}", costoEstiamdo);
 
         SolicitudEditRequest requestEdit = new SolicitudEditRequest();
-        requestEdit.setIdSolicitud(solicitud.getIdSolicitud());
         requestEdit.setCostoEstimado(costoEstiamdo);
 
         BigDecimal horas = BigDecimal.valueOf(tiempoTotal / 3600).setScale(2, RoundingMode.HALF_UP);
@@ -251,7 +250,7 @@ public class RutaService {
         requestEdit.setIdDestino(tramos.getLast().getIdDestino());
 
         log.info("Actualizando Solicitud ID: {} con datos de ruta tentativa.", solicitud.getIdSolicitud());
-        this.enviosClient.editSolicitud(requestEdit);
+        this.enviosClient.editSolicitud(solicitud.getIdSolicitud(), requestEdit);
 
         RutaGetOpcionesResponse response = RutaMapperDto.toResponseGetOpciones(tarifa,horas, ruta, tramos);
 

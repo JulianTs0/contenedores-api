@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudTraslado {
+public class SolicitudTrasladoModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,7 @@ public class SolicitudTraslado {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_tarifa", referencedColumnName = "id_tarifa")
-    private Tarifa tarifa;
+    private TarifaModel tarifa;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
@@ -51,7 +51,7 @@ public class SolicitudTraslado {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_solicitud")
-    private List<SeguimientoEnvio> seguimientos;
+    private List<SeguimientoEnvioModel> seguimientos;
 
     @Column(name = "id_contenedor", nullable = false)
     private Long idContenedor;
@@ -65,23 +65,4 @@ public class SolicitudTraslado {
     @Column(name = "id_destino")
     private Long idDestino;
 
-    public boolean esBorrador(){
-        return this.estado.equals(EstadoSolicitud.BORRADOR);
-    }
-
-    public boolean esConfirmada(){
-        return this.estado.equals(EstadoSolicitud.CONFIRMADA);
-    }
-
-    public boolean esProgramada(){
-        return this.estado.equals(EstadoSolicitud.PROGRAMADO);
-    }
-
-    public boolean esEntregada(){
-        return this.estado.equals(EstadoSolicitud.ENTREGADO);
-    }
-
-    public boolean esEntransito(){
-        return this.estado.equals(EstadoSolicitud.EN_TRANSITO);
-    }
 }

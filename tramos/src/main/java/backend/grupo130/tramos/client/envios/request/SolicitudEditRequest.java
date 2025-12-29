@@ -34,4 +34,5 @@ public class SolicitudEditRequest {
     private Long idOrigen;
 
     private Long idDestino;
+
 }

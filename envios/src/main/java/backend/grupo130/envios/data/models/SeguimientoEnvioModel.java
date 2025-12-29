@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeguimientoEnvio {
+public class SeguimientoEnvioModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

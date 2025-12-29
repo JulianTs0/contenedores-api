@@ -6,11 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ContenedorGetByPesoVolumenResponse {
 
-    private Long id;
+    private final Long id;
 
 }

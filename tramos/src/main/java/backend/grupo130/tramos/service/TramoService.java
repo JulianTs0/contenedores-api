@@ -165,11 +165,10 @@ public class TramoService {
             log.info("Todos los tramos de la Ruta ID {} han sido asignados. Actualizando estado de Solicitud {} a PROGRAMADO.", rutaTraslado.getIdRuta(), rutaTraslado.getIdSolicitud());
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
-            requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
             requestCambio.setNuevoEstado(EstadoSolicitud.PROGRAMADO.name());
             requestCambio.setDescripcion("Todos los tramos fueron asignados");
 
-            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(solicitudTraslado.getIdSolicitud(), requestCambio);
             log.debug("Solicitud {} actualizada a PROGRAMADO.", solicitudTraslado.getIdSolicitud());
 
             this.contenedorClient.cambioDeEstado(solicitudTraslado.getIdContenedor(), EstadoContenedor.PROGRAMADO.name());
@@ -247,11 +246,10 @@ public class TramoService {
             log.info("Iniciando primer tramoModel (Orden 1). Actualizando Solicitud {} y Contenedor {} a EN_TRANSITO.", solicitudTraslado.getIdSolicitud(), contenedor.getIdContenedor());
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
-            requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
             requestCambio.setNuevoEstado(EstadoSolicitud.EN_TRANSITO.name());
             requestCambio.setDescripcion("El primer tramoModel inicio");
 
-            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(solicitudTraslado.getIdSolicitud(), requestCambio);
             log.debug("Solicitud {} actualizada a EN_TRANSITO.", solicitudTraslado.getIdSolicitud());
 
             Contenedor contenedorPrimerTramo = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
@@ -387,20 +385,20 @@ public class TramoService {
                 tiempoRealHoras = segundos.divide(BigDecimal.valueOf(3600), 2, RoundingMode.HALF_UP);
             }
 
+            Long idSolicitud = solicitudTraslado.getIdSolicitud();
+
             SolicitudEditRequest editRequest = new SolicitudEditRequest();
-            editRequest.setIdSolicitud(solicitudTraslado.getIdSolicitud());
             editRequest.setCostoFinal(costoFinalCalculado);
             editRequest.setTiempoRealHoras(tiempoRealHoras);
 
-            this.enviosClient.editSolicitud(editRequest);
+            this.enviosClient.editSolicitud(idSolicitud, editRequest);
 
             SolicitudCambioDeEstadoRequest requestCambio = new SolicitudCambioDeEstadoRequest();
 
-            requestCambio.setIdSolicitud(solicitudTraslado.getIdSolicitud());
             requestCambio.setNuevoEstado(EstadoSolicitud.ENTREGADO.name());
             requestCambio.setDescripcion("Todos los tramos fueron finalizados");
 
-            this.enviosClient.cambioDeEstadoSolicitud(requestCambio);
+            this.enviosClient.cambioDeEstadoSolicitud(idSolicitud, requestCambio);
             log.debug("Solicitud {} actualizada a ENTREGADO.", solicitudTraslado.getIdSolicitud());
         }
 

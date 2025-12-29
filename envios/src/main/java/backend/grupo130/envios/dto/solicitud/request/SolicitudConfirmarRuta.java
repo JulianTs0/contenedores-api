@@ -9,8 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SolicitudConfirmarRuta {
 
-    @NotNull(message = "{error.idSolicitud.notNull}")
-    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
 }

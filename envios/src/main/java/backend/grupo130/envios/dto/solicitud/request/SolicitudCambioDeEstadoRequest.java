@@ -4,14 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class SolicitudCambioDeEstadoRequest {
 
-    @NotNull(message = "{error.idSolicitud.notNull}")
-    @Positive(message = "{error.idSolicitud.positive}")
     private final Long idSolicitud;
 
     @NotBlank(message = "{error.estado.notBlank}")

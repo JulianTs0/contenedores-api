@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tarifa {
+public class TarifaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

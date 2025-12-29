@@ -16,11 +16,11 @@ import java.util.List;
 @Slf4j
 public class UbicacionesClient {
 
-    private final UbicacionGateway ubicacionGateway;
+    private final UbicacionesGateway ubicacionesGateway;
 
     public Deposito getDepositoById(Long depositoId) {
 
-        DepositoGetByIdResponse response = this.ubicacionGateway.getDepositoById(depositoId);
+        DepositoGetByIdResponse response = this.ubicacionesGateway.getDepositoById(depositoId);
 
         Deposito deposito = new Deposito(
             response.getIdDeposito(),
@@ -33,7 +33,7 @@ public class UbicacionesClient {
 
     public Ubicacion getUbicacionById(Long ubicacionId) {
 
-        UbicacionGetByIdResponse response = this.ubicacionGateway.getUbicacionById(ubicacionId);
+        UbicacionGetByIdResponse response = this.ubicacionesGateway.getUbicacionById(ubicacionId);
 
         Ubicacion ubicacion = new Ubicacion(
             response.getIdUbicacion(),
@@ -48,7 +48,7 @@ public class UbicacionesClient {
 
     public List<Ubicacion> getUbicacionAll() {
 
-        UbicacionGetAllResponse response = this.ubicacionGateway.getUbicacionAll();
+        UbicacionGetAllResponse response = this.ubicacionesGateway.getUbicacionAll();
 
         return response.getUbicaciones().stream()
             .map(

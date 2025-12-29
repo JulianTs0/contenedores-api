@@ -20,8 +20,8 @@ public interface CamionGateway {
 
     @GetMapping("/costo/promedio")
     CamionGetPromedioCostoBaseResponse getCostoPromedio(
-        @RequestParam(value = "capacidadPeso") BigDecimal capacidadPeso,
-        @RequestParam(value = "capacidadVolumen") BigDecimal capacidadVolumen
+        @RequestParam(value = "peso") BigDecimal capacidadPeso,
+        @RequestParam(value = "volumen") BigDecimal capacidadVolumen
     );
 
     @GetMapping("/consumo/promedio")

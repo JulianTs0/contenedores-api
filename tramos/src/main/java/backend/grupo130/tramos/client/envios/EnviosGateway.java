@@ -12,15 +12,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "envios", url = "${spring.clients.envios.url}")
-public interface EnvioGateway {
+public interface EnviosGateway {
 
-    @GetMapping("/solicitud/getById/{id}")
-    SolicitudGetByIdResponse getSolicitudTrasladoById(@PathVariable("id") Long id);
+    @GetMapping("/solicitud/{id}")
+    SolicitudGetByIdResponse getSolicitudTrasladoById(
+        @PathVariable("id") Long id
+    );
 
-    @PutMapping("/solicitud/edit")
-    SolicitudEditResponse editSolicitud(@RequestBody SolicitudEditRequest request);
+    @PutMapping("/solicitud/{id}")
+    SolicitudEditResponse editSolicitud(
+        @PathVariable("id") Long id,
+        @RequestBody SolicitudEditRequest request
+    );
 
-    @PutMapping("/solicitud/cambioDeEstado")
-    SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(@RequestBody SolicitudCambioDeEstadoRequest request);
+    @PutMapping("/solicitud/{id}/estado")
+    SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(
+        @PathVariable("id") Long id,
+        @RequestBody SolicitudCambioDeEstadoRequest request
+    );
 
 }

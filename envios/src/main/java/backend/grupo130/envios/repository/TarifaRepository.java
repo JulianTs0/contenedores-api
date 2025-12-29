@@ -1,12 +1,14 @@
 package backend.grupo130.envios.repository;
 
-import backend.grupo130.envios.data.models.Tarifa;
-import backend.grupo130.envios.data.repository.PostgresSolicitudRepositoryI;
+import backend.grupo130.envios.data.PersistenceMapper;
+import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.data.models.TarifaModel;
 import backend.grupo130.envios.data.repository.PostgresTarifaRepositoryI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -15,29 +17,30 @@ public class TarifaRepository {
     private final PostgresTarifaRepositoryI tarifaRepository;
 
     public Tarifa getById(Long tarifaId){
-        Tarifa model = this.tarifaRepository.findById(tarifaId).orElse(null);
-        return model;
+        TarifaModel model = this.tarifaRepository.findById(tarifaId).orElse(null);
+        return PersistenceMapper.toDomain(model);
     }
 
     public List<Tarifa> getAll() {
-        List<Tarifa> models = this.tarifaRepository.findAll();
-        return models;
+        List<TarifaModel> models = this.tarifaRepository.findAll();
+        return models.stream().map(PersistenceMapper::toDomain).collect(Collectors.toList());
     }
 
 
     public Tarifa save(Tarifa tarifa) {
-        Tarifa saved = this.tarifaRepository.save(tarifa);
-        return saved;
+        TarifaModel model = PersistenceMapper.toModel(tarifa);
+        TarifaModel saved = this.tarifaRepository.save(model);
+        return PersistenceMapper.toDomain(saved);
     }
 
     public Tarifa update(Tarifa tarifa) {
-        Tarifa updated = this.tarifaRepository.save(tarifa);
-        return updated;
+        TarifaModel model = PersistenceMapper.toModel(tarifa);
+        TarifaModel updated = this.tarifaRepository.save(model);
+        return PersistenceMapper.toDomain(updated);
     }
 
     public void delete(Long tarifaId){
         this.tarifaRepository.deleteById(tarifaId);
-        return;
     }
 
 }

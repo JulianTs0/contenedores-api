@@ -1,0 +1,149 @@
+package backend.grupo130.envios.data;
+
+import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.data.entity.SolicitudTraslado;
+import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.data.models.SeguimientoEnvioModel;
+import backend.grupo130.envios.data.models.SolicitudTrasladoModel;
+import backend.grupo130.envios.data.models.TarifaModel;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class PersistenceMapper {
+
+    public static SolicitudTraslado toDomain(SolicitudTrasladoModel model) {
+        if (model == null) {
+            return null;
+        }
+
+        return new SolicitudTraslado(
+                model.getIdSolicitud(),
+                model.getFechaInicio(),
+                model.getFechaFin(),
+                model.getCostoEstimado(),
+                model.getCostoFinal(),
+                model.getTiempoEstimadoHoras(),
+                model.getTiempoRealHoras(),
+                PersistenceMapper.toDomain(model.getTarifa()),
+                model.getEstado(),
+                PersistenceMapper.toSeguimientoEnvioDomainList(model.getSeguimientos()),
+                model.getIdContenedor(),
+                model.getIdCliente(),
+                model.getIdOrigen(),
+                model.getIdDestino()
+        );
+    }
+
+    public static SolicitudTrasladoModel toModel(SolicitudTraslado domain) {
+        if (domain == null) {
+            return null;
+        }
+        
+        SolicitudTrasladoModel model = new SolicitudTrasladoModel();
+        model.setIdSolicitud(domain.getIdSolicitud());
+        model.setFechaInicio(domain.getFechaInicio());
+        model.setFechaFin(domain.getFechaFin());
+        model.setCostoEstimado(domain.getCostoEstimado());
+        model.setCostoFinal(domain.getCostoFinal());
+        model.setTiempoEstimadoHoras(domain.getTiempoEstimadoHoras());
+        model.setTiempoRealHoras(domain.getTiempoRealHoras());
+        model.setTarifa(PersistenceMapper.toModel(domain.getTarifa()));
+        model.setEstado(domain.getEstado());
+        model.setSeguimientos(PersistenceMapper.toSeguimientoEnvioModelList(domain.getSeguimientos()));
+        model.setIdContenedor(domain.getIdContenedor());
+        model.setIdCliente(domain.getIdCliente());
+        model.setIdOrigen(domain.getIdOrigen());
+        model.setIdDestino(domain.getIdDestino());
+        
+        return model;
+    }
+
+    public static List<SolicitudTraslado> toSolicitudTrasladoDomainList(List<SolicitudTrasladoModel> models) {
+        return models.stream()
+                .map(PersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    public static List<SolicitudTrasladoModel> toSolicitudTrasladoModelList(List<SolicitudTraslado> domains) {
+        return domains.stream()
+                .map(PersistenceMapper::toModel)
+                .collect(Collectors.toList());
+    }
+
+    public static SeguimientoEnvio toDomain(SeguimientoEnvioModel model) {
+        if (model == null) {
+            return null;
+        }
+        return new SeguimientoEnvio(
+                model.getIdSeguimiento(),
+                model.getFechaHoraInicio(),
+                model.getFechaHoraFin(),
+                model.getEstado(),
+                model.getDescripcion()
+        );
+    }
+
+    public static SeguimientoEnvioModel toModel(SeguimientoEnvio domain) {
+        if (domain == null) {
+            return null;
+        }
+        SeguimientoEnvioModel model = new SeguimientoEnvioModel();
+        model.setIdSeguimiento(domain.getIdSeguimiento());
+        model.setFechaHoraInicio(domain.getFechaHoraInicio());
+        model.setFechaHoraFin(domain.getFechaHoraFin());
+        model.setEstado(domain.getEstado());
+        model.setDescripcion(domain.getDescripcion());
+        return model;
+    }
+
+    public static List<SeguimientoEnvio> toSeguimientoEnvioDomainList(List<SeguimientoEnvioModel> models) {
+        if (models == null) {
+            return null;
+        }
+        return models.stream()
+                .map(PersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    public static List<SeguimientoEnvioModel> toSeguimientoEnvioModelList(List<SeguimientoEnvio> domains) {
+        if (domains == null) {
+            return null;
+        }
+        return domains.stream()
+                .map(PersistenceMapper::toModel)
+                .collect(Collectors.toList());
+    }
+    
+    public static Tarifa toDomain(TarifaModel model) {
+        if (model == null) {
+            return null;
+        }
+        return new Tarifa(
+                model.getIdTarifa(),
+                model.getPesoMax(),
+                model.getVolumenMax(),
+                model.getCostoBase(),
+                model.getValorLitro(),
+                model.getConsumoAprox(),
+                model.getCostoEstadia()
+        );
+    }
+
+    public static TarifaModel toModel(Tarifa domain) {
+        if (domain == null) {
+            return null;
+        }
+        TarifaModel model = new TarifaModel();
+        model.setIdTarifa(domain.getIdTarifa());
+        model.setPesoMax(domain.getPesoMax());
+        model.setVolumenMax(domain.getVolumenMax());
+        model.setCostoBase(domain.getCostoBase());
+        model.setValorLitro(domain.getValorLitro());
+        model.setConsumoAprox(domain.getConsumoAprox());
+        model.setCostoEstadia(domain.getCostoEstadia());
+        return model;
+    }
+}

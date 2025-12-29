@@ -41,4 +41,5 @@ public class SolicitudGetByIdResponse {
     private final BigDecimal tiempoEstimadoHoras;
 
     private final BigDecimal tiempoRealHoras;
+
 }

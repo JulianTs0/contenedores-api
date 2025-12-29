@@ -3,8 +3,8 @@ package backend.grupo130.envios.service;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import backend.grupo130.envios.config.exceptions.ServiceError;
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
-import backend.grupo130.envios.data.models.SolicitudTraslado;
+import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.data.entity.SolicitudTraslado;
 import backend.grupo130.envios.dto.seguimiento.SeguimientoMapperDto;
 import backend.grupo130.envios.dto.seguimiento.request.SeguimientoGetByIdRequest;
 import backend.grupo130.envios.dto.seguimiento.request.SeguimientoRegisterRequest;
@@ -41,7 +41,7 @@ public class SeguimientoService {
 
         log.info("Seguimiento encontrado exitosamente. ID: {}", request.getIdSeguimiento());
 
-        SeguimientoGetByIdResponse response = SeguimientoMapperDto.toResponseGet(seguimiento);
+        SeguimientoGetByIdResponse response = SeguimientoMapperDto.toSeguimientoGetByIdResponse(seguimiento);
         return response;
     }
 
@@ -51,7 +51,7 @@ public class SeguimientoService {
         List<SeguimientoEnvio> seguimientos = this.seguimientoRepository.getAll();
         log.info("Se encontraron {} seguimientos.", seguimientos.size());
 
-        SeguimientoGetAllResponse response = SeguimientoMapperDto.toResponseGet(seguimientos);
+        SeguimientoGetAllResponse response = SeguimientoMapperDto.toSeguimientoGetAllResponse(seguimientos);
         return response;
     }
 

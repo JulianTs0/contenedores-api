@@ -14,10 +14,13 @@ import java.math.BigDecimal;
 public class Tarifa {
 
     private static final BigDecimal RANGO_PESO_BAJO = PreciosNegocio.RANGO_PESO_BAJO.getValor();
+
     private static final BigDecimal RANGO_PESO_MEDIO = PreciosNegocio.RANGO_PESO_MEDIO.getValor();
 
     private static final BigDecimal MULTIPLICADOR_BAJO = PreciosNegocio.MULTIPLICADOR_BAJO.getValor();
+
     private static final BigDecimal MULTIPLICADOR_MEDIO = PreciosNegocio.MULTIPLICADOR_MEDIO.getValor();
+
     private static final BigDecimal MULTIPLICADOR_ALTO = PreciosNegocio.MULTIPLICADOR_ALTO.getValor();
 
     private Long idTarifa;

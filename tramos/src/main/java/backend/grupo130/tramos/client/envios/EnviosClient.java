@@ -16,11 +16,11 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 public class EnviosClient {
 
-    private final EnvioGateway envioGateway;
+    private final EnviosGateway enviosGateway;
 
     public SolicitudTraslado getSolicitudTrasladoById(Long solicitudTrasladoId) {
 
-        SolicitudGetByIdResponse response = this.envioGateway.getSolicitudTrasladoById(solicitudTrasladoId);
+        SolicitudGetByIdResponse response = this.enviosGateway.getSolicitudTrasladoById(solicitudTrasladoId);
 
         log.warn(response.getEstado());
 
@@ -43,14 +43,13 @@ public class EnviosClient {
 
     }
 
-    public SolicitudEditResponse editSolicitud(SolicitudEditRequest request) {
+    public SolicitudEditResponse editSolicitud(Long id, SolicitudEditRequest request) {
 
-        return this.envioGateway.editSolicitud(request);
+        return this.enviosGateway.editSolicitud(id, request);
     }
 
 
-    public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(SolicitudCambioDeEstadoRequest request) {
-
-        return this.envioGateway.cambioDeEstadoSolicitud(request);
+    public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(Long id, SolicitudCambioDeEstadoRequest request) {
+        return this.enviosGateway.cambioDeEstadoSolicitud(id, request);
     }
 }

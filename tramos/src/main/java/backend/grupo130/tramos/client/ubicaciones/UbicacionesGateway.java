@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "ubicaciones", url = "${spring.clients.ubicaciones.url}")
-public interface UbicacionGateway {
+public interface UbicacionesGateway {
 
     @GetMapping("/depositos/{id}")
     DepositoGetByIdResponse getDepositoById(

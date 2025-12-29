@@ -1,5 +1,6 @@
 package backend.grupo130.envios.controller;
 
+import backend.grupo130.envios.dto.solicitud.SolicitudMapperDto;
 import backend.grupo130.envios.dto.solicitud.request.*;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudEditResponse;
@@ -18,11 +19,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/envios/solicitud")
@@ -35,119 +35,230 @@ public class SolicitudController {
     private final SolicitudService solicitudService;
 
     @Operation(
-        summary = "Obtener solicitud por ID",
-        description = "Busca y devuelve el detalle completo de una solicitud de envío específica."
+            summary = "Obtener solicitud por ID",
+            description = "Busca y devuelve el detalle completo de una solicitud de envío específica."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Solicitud encontrada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudGetByIdResponse.class))),
-        @ApiResponse(responseCode = "400", description = "ID inválido (debe ser positivo)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Solicitud encontrada exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudGetByIdResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "ID inválido (debe ser positivo)",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitud no encontrada",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
     })
-    @GetMapping("/getById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SolicitudGetByIdResponse> getById(
-        @Parameter(description = "ID único de la solicitud a consultar", required = true, example = "100")
-        @NotNull(message = "{error.idSolicitud.notNull}")
-        @Positive(message = "{error.idSolicitud.positive}")
-        @PathVariable Long id
+            @Parameter(description = "ID único de la solicitud a consultar", required = true, example = "1")
+            @NotNull(message = "{error.idSolicitud.notNull}")
+            @Positive(message = "{error.idSolicitud.positive}")
+            @PathVariable Long id
     ) {
-        log.info("Recibida solicitud GET en /getById/{}", id);
+        log.info("Recibida solicitud GET en /api/solicitudes/{}", id);
         SolicitudGetByIdRequest request = new SolicitudGetByIdRequest(id);
         return ResponseEntity.ok(this.solicitudService.getById(request));
     }
 
     @Operation(
-        summary = "Obtener todas las solicitudes",
-        description = "Devuelve un listado completo de todas las solicitudes de envío registradas en el sistema."
+            summary = "Obtener todas las solicitudes",
+            description = "Devuelve un listado completo de todas las solicitudes de envío registradas en el sistema."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Listado recuperado exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudGetAllResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Listado recuperado exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudGetAllResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
     })
-    @GetMapping("/getAll")
+    @GetMapping("/")
     public ResponseEntity<SolicitudGetAllResponse> getAll() {
-        log.info("Recibida solicitud GET en /getAll");
+        log.info("Recibida solicitud GET en /api/solicitudes/");
         return ResponseEntity.ok(this.solicitudService.getAll());
     }
 
     @Operation(
-        summary = "Registrar una nueva solicitud",
-        description = "Crea una nueva solicitud de envío inicial asociada a un cliente. Se validan peso, volumen y existencia del cliente."
+            summary = "Registrar una nueva solicitud",
+            description = "Crea una nueva solicitud de envío inicial asociada a un cliente."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Solicitud creada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudGetByIdResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos (ej: valores negativos) o Cliente no apto", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Cliente no encontrado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Solicitud creada exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudGetByIdResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Datos inválidos (ej: valores negativos)",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Cliente no encontrado",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
     })
-    @PostMapping("/register")
+    @PostMapping("/")
     public ResponseEntity<SolicitudGetByIdResponse> register(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos iniciales de la solicitud", required = true)
-        @RequestBody @Valid SolicitudRegisterRequest request
-    ) {
-        log.info("Recibida solicitud POST en /register para cliente ID: {}", request.getIdCliente());
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos iniciales de la solicitud", required = true)
+            @RequestBody @Valid SolicitudRegisterRequest request) {
+        log.info("Recibida solicitud POST en /api/solicitudes/ para cliente ID: {}", request.getIdCliente());
         return ResponseEntity.status(HttpStatus.CREATED).body(this.solicitudService.register(request));
     }
 
     @Operation(
-        summary = "Cambiar estado de solicitud",
-        description = "Permite actualizar manualmente el estado de una solicitud (ej: CANCELADO, PENDIENTE). Requiere descripción del motivo."
+            summary = "Editar detalles de solicitud",
+            description = "Actualiza información logística de la solicitud (fechas, costos, tiempos, tarifas)."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudCambioDeEstadoResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Estado inválido o transición no permitida", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Solicitud editada exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudEditResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Datos inválidos",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitud no encontrada",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
     })
-    @PutMapping("/cambioDeEstado")
+    @PutMapping("/{id}")
+    public ResponseEntity<SolicitudEditResponse> edit(
+            @Parameter(description = "ID único de la solicitud a editar", required = true, example = "1")
+            @NotNull(message = "{error.idSolicitud.notNull}")
+            @Positive(message = "{error.idSolicitud.positive}")
+            @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos logísticos a actualizar", required = true)
+            @RequestBody @Valid SolicitudEditRequest body) {
+        log.info("Recibida solicitud PUT en /api/solicitudes/{}. Solicitud ID: {}", id, id);
+        SolicitudEditRequest request = SolicitudMapperDto.toSolicitudEditRequest(id, body);
+        return ResponseEntity.ok(this.solicitudService.edit(request));
+    }
+
+    @Operation(
+            summary = "Cambiar estado de solicitud",
+            description = "Permite actualizar el estado de una solicitud siguiendo el flujo de negocio."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado actualizado correctamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudCambioDeEstadoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Estado inválido o transición no permitida",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitud no encontrada",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
+    })
+    @PutMapping("/{id}/estado")
     public ResponseEntity<SolicitudCambioDeEstadoResponse> cambioDeEstado(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID, nuevo estado y motivo del cambio", required = true)
-        @RequestBody @Valid SolicitudCambioDeEstadoRequest request
-    ) {
-        log.info("Recibida solicitud POST en /cambioDeEstado. Solicitud ID: {}, Nuevo Estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
+            @Parameter(description = "ID único de la solicitud a modificar", required = true, example = "1")
+            @NotNull(message = "{error.idSolicitud.notNull}")
+            @Positive(message = "{error.idSolicitud.positive}")
+            @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nuevo estado y motivo del cambio", required = true)
+            @RequestBody @Valid SolicitudCambioDeEstadoRequest body) {
+        log.info("Recibida solicitud PUT en /{id}/estado. Solicitud ID: {}, Nuevo Estado: {}", id, body.getNuevoEstado());
+        SolicitudCambioDeEstadoRequest request = SolicitudMapperDto.toSolicitudCambioDeEstadoRequest(id, body);
         return ResponseEntity.ok(this.solicitudService.cambioDeEstado(request));
     }
 
     @Operation(
-        summary = "Confirmar ruta de envío",
-        description = "Confirma la ruta asignada a una solicitud, cambiando su estado a 'EN_CURSO' o equivalente según la lógica de negocio."
+            summary = "Confirmar ruta de envío",
+            description = "Confirma la ruta asignada a una solicitud."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Ruta confirmada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudCambioDeEstadoResponse.class))),
-        @ApiResponse(responseCode = "400", description = "La solicitud no está en un estado válido para ser confirmada", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ruta confirmada exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SolicitudCambioDeEstadoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "La solicitud no está en un estado válido para ser confirmada",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Solicitud no encontrada",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content
+            )
     })
-    @PatchMapping("/confirmarSolicitud")
+    @PatchMapping("/{id}/confirmar")
     public ResponseEntity<SolicitudCambioDeEstadoResponse> confirmarSolicitud(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ID de la solicitud a confirmar", required = true)
-        @RequestBody @Valid SolicitudConfirmarRuta request
+            @Parameter(description = "ID de la solicitud a confirmar", required = true, example = "1")
+            @NotNull(message = "{error.idSolicitud.notNull}")
+            @Positive(message = "{error.idSolicitud.positive}")
+            @PathVariable Long id
     ) {
+        log.info("Recibida solicitud PATCH en /{id}/confirmar. Solicitud ID: {}", id);
+        SolicitudConfirmarRuta request = new SolicitudConfirmarRuta(id);
         return ResponseEntity.ok(this.solicitudService.confirmarSolicitud(request));
-    }
-
-    @Operation(
-        summary = "Editar detalles de solicitud",
-        description = "Actualiza información logística de la solicitud (fechas, costos, tiempos, tarifas). El ID es obligatorio."
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Solicitud editada exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolicitudEditResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos (fechas pasadas, costos negativos)", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-    })
-    @PutMapping("/edit")
-    public ResponseEntity<SolicitudEditResponse> edit(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos logísticos a actualizar", required = true)
-        @RequestBody @Valid SolicitudEditRequest request
-    ) {
-        log.info("Recibida solicitud POST en /edit. Solicitud ID: {}", request.getIdSolicitud());
-        return ResponseEntity.ok(this.solicitudService.edit(request));
     }
 }

@@ -1,19 +1,19 @@
 package backend.grupo130.envios.service;
 
+import backend.grupo130.envios.client.contenedores.ContenedorClient;
 import backend.grupo130.envios.client.contenedores.entity.Contenedor;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import backend.grupo130.envios.config.exceptions.ServiceError;
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
-import backend.grupo130.envios.data.models.SolicitudTraslado;
-import backend.grupo130.envios.data.models.Tarifa;
+import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.data.entity.SolicitudTraslado;
+import backend.grupo130.envios.data.entity.Tarifa;
 import backend.grupo130.envios.dto.solicitud.SolicitudMapperDto;
 import backend.grupo130.envios.dto.solicitud.request.*;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudEditResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudGetAllResponse;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudGetByIdResponse;
-import backend.grupo130.envios.repository.ContenedorRepository;
 import backend.grupo130.envios.repository.SolicitudTrasladoRepository;
 import backend.grupo130.envios.repository.TarifaRepository;
 import jakarta.transaction.Transactional;
@@ -31,7 +31,9 @@ import java.util.List;
 public class SolicitudService {
 
     private final SolicitudTrasladoRepository solicitudRepository;
-    private final ContenedorRepository contenedorRepository;
+
+    private final ContenedorClient contenedorClient;
+
     private final TarifaRepository tarifaRepository;
 
     public SolicitudGetByIdResponse getById(SolicitudGetByIdRequest request) throws ServiceError {
@@ -45,7 +47,7 @@ public class SolicitudService {
 
         log.info("Solicitud encontrada exitosamente. ID: {}", request.getIdSolicitud());
 
-        return SolicitudMapperDto.toResponseGet(solicitud);
+        return SolicitudMapperDto.toSolicitudGetByIdResponse(solicitud);
     }
 
     public SolicitudGetAllResponse getAll() throws ServiceError {
@@ -54,7 +56,7 @@ public class SolicitudService {
         List<SolicitudTraslado> solicitudes = this.solicitudRepository.getAll();
         log.info("Se encontraron {} solicitudes.", solicitudes.size());
 
-        return SolicitudMapperDto.toResponseGet(solicitudes);
+        return SolicitudMapperDto.toSolicitudGetAllResponse(solicitudes);
     }
 
     public SolicitudGetByIdResponse register(SolicitudRegisterRequest request) throws ServiceError {
@@ -64,19 +66,19 @@ public class SolicitudService {
 
         try {
             log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
-            contenedor = this.contenedorRepository.getByPesoVolumen(
+            contenedor = this.contenedorClient.getByPesoVolumen(
                 request.getPeso(),
                 request.getVolumen()
             );
 
-            this.contenedorRepository.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
+            this.contenedorClient.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
             log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
         } catch (ServiceError ex) {
 
             if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
                 log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
 
-                Long nuevoId = this.contenedorRepository.register(
+                Long nuevoId = this.contenedorClient.register(
                     request.getPeso(),
                     request.getVolumen(),
                     request.getIdCliente()
@@ -84,7 +86,7 @@ public class SolicitudService {
 
                 log.info("Volviendo a buscar el contenedor recién creado...");
 
-                contenedor = this.contenedorRepository.getById(nuevoId);
+                contenedor = this.contenedorClient.getById(nuevoId);
 
                 log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
             } else {
@@ -110,7 +112,7 @@ public class SolicitudService {
         SolicitudTraslado solicitudGuardada = this.solicitudRepository.save(solicitud);
 
         log.info("Solicitud registrada exitosamente. Nueva ID: {}", solicitudGuardada.getIdSolicitud());
-        return SolicitudMapperDto.toResponseGet(solicitudGuardada);
+        return SolicitudMapperDto.toSolicitudGetByIdResponse(solicitudGuardada);
     }
 
     public SolicitudEditResponse edit(SolicitudEditRequest request) throws ServiceError {
@@ -176,7 +178,7 @@ public class SolicitudService {
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
 
         log.info("Solicitud editada exitosamente. ID: {}", solicitudActualizada.getIdSolicitud());
-        return SolicitudMapperDto.toResponsePatch(solicitudActualizada);
+        return SolicitudMapperDto.toSolicitudEditResponse(solicitudActualizada);
     }
 
     public SolicitudCambioDeEstadoResponse cambioDeEstado(SolicitudCambioDeEstadoRequest request) throws ServiceError {
@@ -249,7 +251,7 @@ public class SolicitudService {
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
         SeguimientoEnvio seguimientoSolicitudActualizada = solicitudActualizada.getSeguimientos().getLast();
 
-        return SolicitudMapperDto.toResponsePatch(solicitudActualizada, seguimientoSolicitudActualizada);
+        return SolicitudMapperDto.toSolicitudCambioDeEstadoResponse(solicitudActualizada, seguimientoSolicitudActualizada);
     }
 
     public SolicitudCambioDeEstadoResponse confirmarSolicitud(SolicitudConfirmarRuta request) throws ServiceError {
@@ -283,7 +285,7 @@ public class SolicitudService {
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
         SeguimientoEnvio seguimientoSolicitudActualizada = solicitudActualizada.getSeguimientos().getLast();
 
-        return SolicitudMapperDto.toResponsePatch(solicitudActualizada, seguimientoSolicitudActualizada);
+        return SolicitudMapperDto.toSolicitudCambioDeEstadoResponse(solicitudActualizada, seguimientoSolicitudActualizada);
     }
 
 }

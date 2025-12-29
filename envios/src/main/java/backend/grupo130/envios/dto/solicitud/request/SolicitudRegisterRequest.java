@@ -1,18 +1,12 @@
 package backend.grupo130.envios.dto.solicitud.request;
 
-import backend.grupo130.envios.data.models.SeguimientoEnvio;
-import backend.grupo130.envios.data.models.Tarifa;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor

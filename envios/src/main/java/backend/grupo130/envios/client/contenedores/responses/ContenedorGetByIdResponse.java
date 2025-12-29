@@ -9,19 +9,17 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class ContenedorGetByIdResponse {
 
-    private Long idContenedor;
+    private final Long idContenedor;
 
-    private BigDecimal peso;
+    private final BigDecimal peso;
 
-    private BigDecimal volumen;
+    private final BigDecimal volumen;
 
-    private Usuario cliente;
+    private final Usuario cliente;
 
-    private String estado;
+    private final String estado;
 
 }
