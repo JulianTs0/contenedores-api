@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.client.usuarios.entity;
 
+import backend.grupo130.contenedores.config.enums.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

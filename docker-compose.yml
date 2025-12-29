@@ -172,7 +172,7 @@ services:
             - CLIENTS_ENVIOS_URL=http://envios:8095/api/envios
             - CLIENTS_UBICACIONES_URL=http://ubicaciones:8094/api/ubicaciones
             - CLIENTS_CONTENEDORES_URL=http://contenedores:8091/api/contenedores
-            - CLIENTS_OSRM_URI-TEMPLATE=/route/v1/driving/{origen};{destino}?overview=false # Asumiendo que OSRM está en otra parte
+            - CLIENTS_OSRM_URI-TEMPLATE=/route/v1/driving/{origen};{destino}?overview=false 
         ports:
             - "8092:8092"
         networks:

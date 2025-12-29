@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "usuarios", url = "${spring.clients.usuarios.url}")
 public interface UsuarioGateway {
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/{id}")
     UsuarioGetByIdResponse getById(@PathVariable("id") Long id);
 
 }

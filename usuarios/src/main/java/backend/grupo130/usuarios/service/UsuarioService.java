@@ -121,4 +121,8 @@ public class UsuarioService {
 
     }
 
+    // TODO: Endpoint para eliminar usuario
+    // TODO: Hacer que los roles de los usuarios sean una Set
+    // TODO: Implementar las funcionalidades de keylock en el codigo
+
 }

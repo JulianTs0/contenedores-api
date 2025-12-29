@@ -33,7 +33,7 @@ public interface PostgresCamionRepositoryI extends JpaRepository<CamionModel, St
 
     @Query("""
         SELECT AVG(c.consumoCombustible) 
-        FROM Camion c
+        FROM CamionModel c
     """)
     BigDecimal findAverageConsumoCombustible();
 

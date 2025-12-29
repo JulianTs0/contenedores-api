@@ -203,15 +203,15 @@ public class CamionController {
         @Parameter(description = "Peso total de la carga en kg", required = true, example = "1500.0")
         @NotNull(message = "{error.capacidadPeso.notNull}")
         @Positive(message = "{error.capacidadPeso.positive}")
-        @RequestParam(value = "capacidadPeso") BigDecimal capacidadPeso,
+        @RequestParam(value = "peso") BigDecimal peso,
 
         @Parameter(description = "Volumen total de la carga en m3", required = true, example = "20.5")
         @NotNull(message = "{error.capacidadVolumen.notNull}")
         @Positive(message = "{error.capacidadVolumen.positive}")
-        @RequestParam(value = "capacidadVolumen") BigDecimal capacidadVolumen
+        @RequestParam(value = "volumen") BigDecimal volumen
     ) {
 
-        GetCostoPromedio request = new GetCostoPromedio(capacidadPeso, capacidadVolumen);
+        GetCostoPromedio request = new GetCostoPromedio(peso, volumen);
         return ResponseEntity.ok(this.camionService.getCostoAprox(request));
     }
 

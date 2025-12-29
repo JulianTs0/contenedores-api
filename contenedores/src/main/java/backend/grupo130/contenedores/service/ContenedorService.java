@@ -125,6 +125,8 @@ public class ContenedorService {
         contenedor.setVolumen(request.getVolumen());
         contenedor.setEstado(EstadoContenedor.BORRADOR);
 
+        //  TODO: Mejorar logica de try catch
+
         if (request.getIdCliente() != null){
             log.debug("Registrando con cliente ID: {}. Estado inicial: BORRADOR.", request.getIdCliente());
 
@@ -211,6 +213,8 @@ public class ContenedorService {
 
         return ContenedorMapperDto.toResponsePatchCliente(contenedor, usuario);
     }
+
+    // TODO: Pasar la maquina de estados a un metodo de clase
 
     public CambioDeEstadoResponse cambioDeEstado(CambioDeEstadoRequest request) throws ServiceError {
         log.info("Iniciando cambio de estado para contenedor ID: {} al nuevo estado: {}", request.getId(), request.getEstado());

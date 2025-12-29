@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.client.usuarios.responses;
 
+import backend.grupo130.contenedores.config.enums.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,5 @@ public class UsuarioGetByIdResponse {
     private final String email;
 
     private final String rol;
-
 
 }

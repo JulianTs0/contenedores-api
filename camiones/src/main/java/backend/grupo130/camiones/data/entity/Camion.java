@@ -16,7 +16,6 @@ public class Camion {
 
     private String dominio;
 
-
     private BigDecimal capacidadPeso;
 
     private BigDecimal capacidadVolumen;
