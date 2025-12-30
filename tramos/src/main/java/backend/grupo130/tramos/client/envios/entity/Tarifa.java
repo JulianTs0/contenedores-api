@@ -8,6 +8,10 @@ import java.math.RoundingMode;
 
 import java.math.BigDecimal;
 
+// TODO: Revisar los datos inutiles con respecto a la solicitud
+// TODO: Cambiar el umbral por una combinacion de peso volumen
+// TODO: Cambiar las constantes por llamdas a la bdd
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

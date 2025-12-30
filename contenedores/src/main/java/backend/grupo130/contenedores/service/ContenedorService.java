@@ -79,7 +79,7 @@ public class ContenedorService {
 
         GetByPesoVolumenResponse response = ContenedorMapperDto.toResponseGetByPesoVolumen(contenedor);
 
-        log.info("Búsqueda por peso/volumen exitosa. Contenedor encontrado: {}", response.getId());
+        log.info("Búsqueda por peso/volumen exitosa. Contenedor encontrado: {}", response.getIdContenedor());
         return response;
     }
 
@@ -125,25 +125,12 @@ public class ContenedorService {
         contenedor.setVolumen(request.getVolumen());
         contenedor.setEstado(EstadoContenedor.BORRADOR);
 
-        //  TODO: Mejorar logica de try catch
-
         if (request.getIdCliente() != null){
             log.debug("Registrando con cliente ID: {}. Estado inicial: BORRADOR.", request.getIdCliente());
 
-            try {
-                Usuario usuario = this.usuarioClient.getById(request.getIdCliente());
+            Usuario usuario = this.usuarioClient.getById(request.getIdCliente());
 
-                contenedor.setCliente(usuario);
-
-            } catch (ServiceError ex) {
-
-                if (ex.getMessage() != null && ex.getMessage().contains("[404]")){
-                    throw new ServiceError(ex.getMessage(), Errores.USUARIO_NO_ENCONTRADO, 404);
-                } else {
-                    throw ex;
-                }
-
-            }
+            contenedor.setCliente(usuario);
         }
 
         Contenedor saved = this.contenedorRepository.save(contenedor);
@@ -200,7 +187,7 @@ public class ContenedorService {
 
         Usuario usuario = this.usuarioClient.getById(request.getIdCliente());
 
-        if(!(usuario.getRol().equals(Rol.CLIENTE.name()))){
+        if(!usuario.getRoles().contains(Rol.CLIENTE)){
             throw new ServiceError("", Errores.USUARIO_NO_CLIENTE, 400);
         }
 
@@ -213,8 +200,6 @@ public class ContenedorService {
 
         return ContenedorMapperDto.toResponsePatchCliente(contenedor, usuario);
     }
-
-    // TODO: Pasar la maquina de estados a un metodo de clase
 
     public CambioDeEstadoResponse cambioDeEstado(CambioDeEstadoRequest request) throws ServiceError {
         log.info("Iniciando cambio de estado para contenedor ID: {} al nuevo estado: {}", request.getId(), request.getEstado());
@@ -235,49 +220,9 @@ public class ContenedorService {
         }
 
         log.debug("Validando transición de estado: {} -> {}", contenedor.getEstado(), estadoContenedor);
-        switch (contenedor.getEstado()){
 
-            case BORRADOR -> {
+        contenedor.transicionarEstado(estadoContenedor);
 
-                if(estadoContenedor != EstadoContenedor.PROGRAMADO){
-                    log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                }
-
-            }
-            case PROGRAMADO -> {
-
-                if(estadoContenedor != EstadoContenedor.EN_TRANSITO){
-                    log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                }
-
-            }
-            case EN_TRANSITO -> {
-
-                if(estadoContenedor !=EstadoContenedor.EN_DEPOSITO && estadoContenedor != EstadoContenedor.ENTREGADO){
-                    log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                }
-
-            }
-            case EN_DEPOSITO -> {
-
-                if(estadoContenedor != EstadoContenedor.EN_TRANSITO && estadoContenedor != EstadoContenedor.ENTREGADO){
-                    log.warn("Transición de estado inválida de {} a {} para contenedor ID: {}", contenedor.getEstado(), estadoContenedor, request.getId());
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-                }
-
-            }
-            case ENTREGADO -> {
-
-                log.warn("Intento de cambiar estado en contenedor ID: {}, que ya fue ENTREGADO.", request.getId());
-                throw new ServiceError("", Errores.CONTENEDOR_YA_ENTREGADO, 400);
-
-            }
-        }
-
-        contenedor.setEstado(estadoContenedor);
         this.contenedorRepository.update(contenedor);
 
         CambioDeEstadoResponse response = ContenedorMapperDto.toResponsePatchEstado(contenedor);
@@ -285,7 +230,6 @@ public class ContenedorService {
         log.info("Contenedor ID: {} actualizado al estado: {}.", request.getId(), estadoContenedor);
         return response;
     }
-
 
     // DELETE
 

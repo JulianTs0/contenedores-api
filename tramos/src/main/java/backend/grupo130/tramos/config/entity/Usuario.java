@@ -1,10 +1,15 @@
-package backend.grupo130.tramos.client.usuarios.entity;
+package backend.grupo130.tramos.config.entity;
 
+import backend.grupo130.tramos.config.enums.Rol;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
@@ -19,6 +24,6 @@ public class Usuario {
 
     private String email;
 
-    private String rol;
-
+    private Set<Rol> roles;
+    
 }

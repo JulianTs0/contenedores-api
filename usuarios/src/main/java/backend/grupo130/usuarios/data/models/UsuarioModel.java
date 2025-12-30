@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
+// TODO: Cambiar los roles a una lista
+
 @Entity
 @Table(name = "usuarios")
 @Data
@@ -32,6 +36,6 @@ public class UsuarioModel {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private Rol rol;
+    private Set<Rol> roles;
 
 }

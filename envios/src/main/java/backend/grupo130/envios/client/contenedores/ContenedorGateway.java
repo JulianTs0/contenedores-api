@@ -6,7 +6,6 @@ import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByIdRe
 import backend.grupo130.envios.client.contenedores.responses.ContenedorGetByPesoVolumenResponse;
 import backend.grupo130.envios.client.contenedores.responses.ContenedorRegisterResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public interface ContenedorGateway {
     );
 
     @PatchMapping("/cliente/{id}")
-    ResponseEntity<Void> asignarCliente(
+    void asignarCliente(
         @PathVariable("id") Long id,
         @RequestBody ContenedorAsignarClienteRequest request
     );

@@ -3,6 +3,8 @@ package backend.grupo130.usuarios.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Set;
+
 @Getter
 @AllArgsConstructor
 public class GetByIdResponse {
@@ -17,6 +19,6 @@ public class GetByIdResponse {
 
     private final String email;
 
-    private final String rol;
+    private final Set<String> roles;
 
 }

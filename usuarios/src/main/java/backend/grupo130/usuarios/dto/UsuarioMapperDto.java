@@ -8,6 +8,7 @@ import backend.grupo130.usuarios.dto.response.GetByIdResponse;
 import backend.grupo130.usuarios.dto.response.RegisterResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UsuarioMapperDto {
 
@@ -18,7 +19,7 @@ public class UsuarioMapperDto {
             usuario.getApellido(),
             usuario.getTelefono(),
             usuario.getEmail(),
-            usuario.getRol().name()
+            usuario.getRoles().stream().map(Enum::name).collect(Collectors.toSet())
         );
     }
 

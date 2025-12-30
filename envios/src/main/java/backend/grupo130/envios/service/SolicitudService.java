@@ -2,6 +2,7 @@ package backend.grupo130.envios.service;
 
 import backend.grupo130.envios.client.contenedores.ContenedorClient;
 import backend.grupo130.envios.client.contenedores.entity.Contenedor;
+import backend.grupo130.envios.config.enums.Descripcciones;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import backend.grupo130.envios.config.exceptions.ServiceError;
@@ -62,52 +63,47 @@ public class SolicitudService {
     public SolicitudGetByIdResponse register(SolicitudRegisterRequest request) throws ServiceError {
         log.info("Inicio register. Registrando nueva solicitud para cliente ID: {}", request.getIdCliente());
 
-        Contenedor contenedor;
+        log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
 
-        try {
-            log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
-            contenedor = this.contenedorClient.getByPesoVolumen(
-                request.getPeso(),
-                request.getVolumen()
-            );
+        Contenedor contenedor = this.contenedorClient.getByPesoVolumen(
+            request.getPeso(),
+            request.getVolumen()
+        );
+
+        if (contenedor != null) {
+            log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
 
             this.contenedorClient.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
-            log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
-        } catch (ServiceError ex) {
+        } else {
+            log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
 
-            if (ex.getMessage() != null && ex.getMessage().contains("[404]")) {
-                log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
+            Long nuevoId = this.contenedorClient.register(
+                request.getPeso(),
+                request.getVolumen(),
+                request.getIdCliente()
+            );
 
-                Long nuevoId = this.contenedorClient.register(
-                    request.getPeso(),
-                    request.getVolumen(),
-                    request.getIdCliente()
-                );
+            log.info("Volviendo a buscar el contenedor recién creado...");
 
-                log.info("Volviendo a buscar el contenedor recién creado...");
+            contenedor = this.contenedorClient.getById(nuevoId);
 
-                contenedor = this.contenedorClient.getById(nuevoId);
-
-                log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
-            } else {
-                throw ex;
-            }
+            log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
         }
 
         SolicitudTraslado solicitud = new SolicitudTraslado();
+
         solicitud.setIdContenedor(contenedor.getIdContenedor());
         solicitud.setIdCliente(request.getIdCliente());
         solicitud.setEstado(EstadoSolicitud.BORRADOR);
 
-        SeguimientoEnvio primerSeguimiento = new SeguimientoEnvio(
-            null,
-            LocalDateTime.now(),
-            null,
-            EstadoSolicitud.BORRADOR,
-            "Solicitud creada."
-        );
+        SeguimientoEnvio primerSeguimiento = new SeguimientoEnvio();
+
+        primerSeguimiento.setFechaHoraInicio(LocalDateTime.now());
+        primerSeguimiento.setEstado(EstadoSolicitud.BORRADOR);
+        primerSeguimiento.setDescripcion(Descripcciones.CREADA.getDescripccion());
 
         List<SeguimientoEnvio> inicio = List.of(primerSeguimiento);
+
         solicitud.setSeguimientos(inicio);
         SolicitudTraslado solicitudGuardada = this.solicitudRepository.save(solicitud);
 
@@ -195,58 +191,7 @@ public class SolicitudService {
             throw new ServiceError("", Errores.ESTADO_INVALIDO, 400);
         }
 
-        switch (solicitud.getEstado()) {
-
-            case BORRADOR:
-
-                if (nuevoEstado != EstadoSolicitud.CONFIRMADA)
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-
-                break;
-            case CONFIRMADA:
-
-                if (nuevoEstado != EstadoSolicitud.PROGRAMADO)
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-
-                break;
-            case PROGRAMADO:
-
-                if (nuevoEstado != EstadoSolicitud.EN_TRANSITO)
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-
-                break;
-            case EN_TRANSITO:
-
-                if (nuevoEstado != EstadoSolicitud.ENTREGADO)
-                    throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-
-                break;
-            case ENTREGADO:
-
-                log.warn("Intento de cambiar estado en solicitud ya finalizada. ID: {}", request.getIdSolicitud());
-                throw new ServiceError("", Errores.SOLICITUD_YA_FINALIZADA, 400);
-        }
-
-        if(nuevoEstado.equals(EstadoSolicitud.EN_TRANSITO)) {
-            solicitud.setFechaInicio(LocalDateTime.now());
-        }
-
-        if(nuevoEstado.equals(EstadoSolicitud.ENTREGADO)) {
-            solicitud.setFechaFin(LocalDateTime.now());
-        }
-
-        solicitud.setEstado(nuevoEstado);
-
-        SeguimientoEnvio nuevoSeguimiento = new SeguimientoEnvio(
-            null,
-            LocalDateTime.now(),
-            (nuevoEstado == EstadoSolicitud.ENTREGADO) ? LocalDateTime.now() : null,
-            nuevoEstado,
-            request.getDescripcion()
-        );
-
-        solicitud.getSeguimientos().getLast().setFechaHoraFin(LocalDateTime.now());
-        solicitud.getSeguimientos().add(nuevoSeguimiento);
+        solicitud.transicionarEstado(nuevoEstado, request.getDescripcion());
 
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
         SeguimientoEnvio seguimientoSolicitudActualizada = solicitudActualizada.getSeguimientos().getLast();
@@ -263,24 +208,7 @@ public class SolicitudService {
             throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
         }
 
-        if(solicitud.getEstado() != EstadoSolicitud.BORRADOR){
-            throw new ServiceError("", Errores.TRANSICION_ESTADO_INVALIDA, 400);
-        }
-
-        EstadoSolicitud nuevoEstado = EstadoSolicitud.CONFIRMADA;
-
-        solicitud.setEstado(nuevoEstado);
-
-        SeguimientoEnvio nuevoSeguimiento = new SeguimientoEnvio(
-            null,
-            LocalDateTime.now(),
-            null,
-            nuevoEstado,
-            "La solicitud a sido confirmada"
-        );
-
-        solicitud.getSeguimientos().getLast().setFechaHoraFin(LocalDateTime.now());
-        solicitud.getSeguimientos().add(nuevoSeguimiento);
+        solicitud.transicionarEstado(EstadoSolicitud.CONFIRMADA, Descripcciones.CONFIRMADA.getDescripccion());
 
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
         SeguimientoEnvio seguimientoSolicitudActualizada = solicitudActualizada.getSeguimientos().getLast();

@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.dto.response;
 
+import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class GetByPesoVolumenResponse {
 
-    private final Long id;
+    private final Long idContenedor;
+
+    private final BigDecimal peso;
+
+    private final BigDecimal volumen;
+
+    private final Usuario cliente;
+
+    private final String estado;
 
 }

@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public class RegisterRequest {
@@ -26,7 +28,6 @@ public class RegisterRequest {
     @Size(max = 60, message = "{error.email.max}")
     private String email;
 
-    @NotBlank(message = "{error.rol.notBlank}")
-    private String rol;
+    private List<String> roles;
 
 }

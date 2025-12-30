@@ -19,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,14 +73,14 @@ public class UsuarioService {
         usuario.setTelefono(request.getTelefono());
         usuario.setEmail(request.getEmail());
 
-        Rol rol = Rol.fromString(request.getRol());
+        Set<Rol> roles = Rol.fromString(request.getRoles());
 
-        if (rol == null){
-            log.warn("Intento de registro con rol inválido: {}", request.getRol());
+        if (roles.isEmpty()){
+            log.warn("Intento de registro con rol inválido: {}", request.getRoles());
             throw new ServiceError("", Errores.ROL_INVALIDO, 400);
         }
 
-        usuario.setRol(rol);
+        usuario.setRoles(roles);
 
         Usuario saved = this.usuarioRepository.save(usuario);
         log.info("UsuarioModel registrado exitosamente con email: {}", saved.getEmail());

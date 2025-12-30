@@ -26,6 +26,11 @@ public class UbicacionRepository {
         return PersistenceMapper.toDomain(models);
     }
 
+    public List<Ubicacion> getByListIds(List<Long> ids) {
+        List<UbicacionModel> models = this.ubicacionRepository.findByListIds(ids);
+        return PersistenceMapper.toDomain(models);
+    }
+
     public Ubicacion save(Ubicacion ubicacion) {
         UbicacionModel model = PersistenceMapper.toModel(ubicacion);
         UbicacionModel saved = this.ubicacionRepository.save(model);

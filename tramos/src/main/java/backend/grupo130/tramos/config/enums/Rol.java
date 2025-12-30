@@ -1,4 +1,4 @@
-package backend.grupo130.usuarios.config.enums;
+package backend.grupo130.tramos.config.enums;
 
 import lombok.ToString;
 

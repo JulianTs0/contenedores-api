@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// TODO: Revisar los datos inutiles con respecto a la solicitud
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

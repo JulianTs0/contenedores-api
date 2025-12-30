@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,6 +25,6 @@ public class Usuario {
 
     private String email;
 
-    private String rol;
+    private Set<Rol> roles;
 
 }

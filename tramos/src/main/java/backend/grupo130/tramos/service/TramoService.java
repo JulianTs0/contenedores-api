@@ -260,6 +260,8 @@ public class TramoService {
         log.info("Registro de INICIO de TramoModel ID {} completado.", request.getIdTramo());
     }
 
+    // TODO: Revisar el calculo de la tarifa final
+
     public void registrarFinTramo(TramoFinTramoRequest request) throws ServiceError {
         log.info("Iniciando registro de FIN de TramoModel ID {} por Camion {}.", request.getIdTramo(), request.getDominioCamion());
 

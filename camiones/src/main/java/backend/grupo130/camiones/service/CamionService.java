@@ -196,7 +196,7 @@ public class CamionService {
             throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
         }
 
-        if(!(usuario.getRol().equals(Rol.TRANSPORTISTA.name()))){
+        if(!usuario.getRoles().contains(Rol.TRANSPORTISTA)){
             throw new ServiceError("", Errores.USUARIO_NO_TRANSPORTISTA, 400);
         }
 

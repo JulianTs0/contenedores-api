@@ -1,6 +1,6 @@
 package backend.grupo130.tramos.client.camiones.responses;
 
-import backend.grupo130.tramos.client.usuarios.entity.Usuario;
+import backend.grupo130.tramos.config.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

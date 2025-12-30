@@ -18,7 +18,7 @@ public class PersistanceMapper {
             usuarioModel.getApellido(),
             usuarioModel.getTelefono(),
             usuarioModel.getEmail(),
-            usuarioModel.getRol()
+            usuarioModel.getRoles()
         );
     }
 
@@ -31,7 +31,7 @@ public class PersistanceMapper {
             usuario.getApellido(),
             usuario.getTelefono(),
             usuario.getEmail(),
-            usuario.getRol()
+            usuario.getRoles()
         );
     }
 

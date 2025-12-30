@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+// TODO: Permitir rutas alternativas
+
 @Component
 @RequiredArgsConstructor
 public class OsrmApiClient {

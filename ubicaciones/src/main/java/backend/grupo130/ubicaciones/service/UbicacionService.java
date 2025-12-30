@@ -1,6 +1,8 @@
 package backend.grupo130.ubicaciones.service;
 
 import backend.grupo130.ubicaciones.data.entity.Ubicacion;
+import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetListByIdRequest;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.*;
 import backend.grupo130.ubicaciones.repository.UbicacionRepository;
 import backend.grupo130.ubicaciones.config.enums.Errores;
 import backend.grupo130.ubicaciones.config.exceptions.ServiceError;
@@ -8,10 +10,6 @@ import backend.grupo130.ubicaciones.dto.ubicaciones.UbicacionesMapperDto;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionEditRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetByIdRequest;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionRegisterRequest;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionRegisterResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +48,18 @@ public class UbicacionService {
         log.debug("Se encontraron {} ubicaciones", ubicaciones.size());
 
         UbicacionGetAllResponse response = UbicacionesMapperDto.toResponseGetAll(ubicaciones);
+
+        log.info("Finalizado getAll para Ubicaciones. Total: {}", ubicaciones.size());
+        return response;
+    }
+
+    public UbicacionGetListByIdResponse getByListIds(UbicacionGetListByIdRequest request) throws ServiceError {
+        log.info("Iniciando busqueda para Ubicaciones");
+
+        List<Ubicacion> ubicaciones = this.ubicacionRepository.getByListIds(request.getIds());
+        log.debug("Se encontraron {} ubicaciones", ubicaciones.size());
+
+        UbicacionGetListByIdResponse response = UbicacionesMapperDto.toResponseGetList(ubicaciones);
 
         log.info("Finalizado getAll para Ubicaciones. Total: {}", ubicaciones.size());
         return response;

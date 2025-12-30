@@ -3,10 +3,8 @@ package backend.grupo130.ubicaciones.dto.ubicaciones;
 
 import backend.grupo130.ubicaciones.data.entity.Ubicacion;
 import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionEditRequest;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionRegisterResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionEditResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetAllResponse;
-import backend.grupo130.ubicaciones.dto.ubicaciones.response.UbicacionGetByIdResponse;
+import backend.grupo130.ubicaciones.dto.ubicaciones.request.UbicacionGetListByIdRequest;
+import backend.grupo130.ubicaciones.dto.ubicaciones.response.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +26,20 @@ public class UbicacionesMapperDto {
             ubicaciones.stream()
                 .map(UbicacionesMapperDto::toResponseGetById)
                 .collect(Collectors.toList())
+        );
+    }
+
+    public static UbicacionGetListByIdResponse toResponseGetList(List<Ubicacion> ubicaciones) {
+        return new UbicacionGetListByIdResponse(
+            ubicaciones.stream()
+                .map(UbicacionesMapperDto::toResponseGetById)
+                .collect(Collectors.toList())
+        );
+    }
+
+    public static UbicacionGetListByIdRequest toRequestGetList(List<Long> ids) {
+        return new UbicacionGetListByIdRequest(
+            ids
         );
     }
 

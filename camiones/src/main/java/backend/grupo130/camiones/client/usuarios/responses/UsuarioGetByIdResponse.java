@@ -3,6 +3,8 @@ package backend.grupo130.camiones.client.usuarios.responses;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Set;
+
 @Getter
 @AllArgsConstructor
 public class UsuarioGetByIdResponse {
@@ -17,6 +19,6 @@ public class UsuarioGetByIdResponse {
 
     private final String email;
 
-    private final String rol;
+    private Set<String> roles;
 
 }

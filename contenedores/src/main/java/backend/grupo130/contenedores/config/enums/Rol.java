@@ -1,5 +1,10 @@
 package backend.grupo130.contenedores.config.enums;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public enum Rol {
     CLIENTE,
     ADMINISTRADOR,
@@ -12,6 +17,13 @@ public enum Rol {
             }
         }
         return null;
+    }
+
+    public static Set<Rol> fromString(List<String> roles){
+        return roles.stream()
+            .map(Rol::fromString)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
     }
 
 }

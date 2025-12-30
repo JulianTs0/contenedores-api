@@ -2,6 +2,11 @@ package backend.grupo130.camiones.config.enums;
 
 import lombok.ToString;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @ToString
 public enum Rol {
     CLIENTE,
@@ -15,6 +20,13 @@ public enum Rol {
             }
         }
         return null;
+    }
+
+    public static Set<Rol> fromString(List<String> roles){
+        return roles.stream()
+            .map(Rol::fromString)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
     }
 
 }

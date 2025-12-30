@@ -25,7 +25,11 @@ public class ContenedorMapperDto {
 
     public static GetByPesoVolumenResponse toResponseGetByPesoVolumen(Contenedor contenedor) {
         return new GetByPesoVolumenResponse(
-            contenedor.getIdContenedor()
+            contenedor.getIdContenedor(),
+            contenedor.getPeso(),
+            contenedor.getVolumen(),
+            contenedor.getCliente(),
+            contenedor.getEstado().name()
         );
     }
 

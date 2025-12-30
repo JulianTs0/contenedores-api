@@ -93,6 +93,8 @@ public class RutaService {
         return response;
     }
 
+    // TODO: Revisar el calculo de la tarifa estimada
+    // TODO: Permitir varias rutas alternativas entre nodos
 
     public RutaGetOpcionesResponse getRutaTentativa(RutaCrearTentativaRequest request) throws ServiceError {
         log.info("Iniciando calculo de Ruta Tentativa para Solicitud ID: {}", request.getIdSolicitud());
@@ -140,22 +142,22 @@ public class RutaService {
         log.info("Nueva Ruta (tentativa) creada con ID: {}", ruta.getIdRuta());
 
         List<Tramo> tramos = new ArrayList<>();
-        Set<Long> depositos = new HashSet<>();
+        List<Ubicacion> ubicaciones = this.ubicacionesClient.getByListIds(request.getUbicaciones());
+
         BigDecimal costoEstadiaTotal = BigDecimal.ZERO;
+        int depositos = 0;
         double distanciaTotal = 0;
         double tiempoTotal = 0;
 
         log.debug("Iniciando procesamiento de {} ubicaciones para crear tramoModels.", request.getUbicaciones().size());
-        for (int orden = 0; orden < request.getUbicaciones().size() - 1; orden++){
+        for (int orden = 0; orden < ubicaciones.size() - 1; orden++){
 
-            Long idOrigen = request.getUbicaciones().get(orden);
-            Ubicacion origen = this.ubicacionesClient.getUbicacionById(idOrigen);
+            Ubicacion origen = ubicaciones.get(orden);
             if (origen == null){
                 throw new ServiceError("", Errores.TRAMOS_UBICACION_INVALIDA, 404);
             }
 
-            Long idDestino = request.getUbicaciones().get(orden + 1);
-            Ubicacion destino = this.ubicacionesClient.getUbicacionById(idDestino);
+            Ubicacion destino = ubicaciones.get(orden + 1);
             if (destino == null){
                 throw new ServiceError("", Errores.TRAMOS_UBICACION_INVALIDA, 404);
             }
@@ -168,12 +170,12 @@ public class RutaService {
                 tramo.setFechaHoraInicioEstimado(tramos.getLast().getFechaHoraFinEstimado());
             }
 
-            log.debug("Calculando ruta OSRM entre {} ({}) y {} ({}).", origen.getIdUbicacion(), idOrigen, destino.getIdUbicacion(), idDestino);
-            RouteResponse routeResponse = this.osrmApiClient.calcularDistancia(origen, destino).getRoutes().get(0);
+            log.debug("Calculando ruta OSRM entre {} ({}) y {} ({}).", origen.getIdUbicacion(), origen.getIdUbicacion(), destino.getIdUbicacion(), destino.getIdUbicacion());
+            RouteResponse routeResponse = this.osrmApiClient.calcularDistancia(origen, destino).getRoutes().getFirst();
 
 
             double distancia = Math.round(routeResponse.getDistance() / 1000);
-            Long segundos = Math.round(routeResponse.getDuration());
+            long segundos = Math.round(routeResponse.getDuration());
 
             distanciaTotal += distancia;
             tiempoTotal += routeResponse.getDuration();
@@ -189,17 +191,15 @@ public class RutaService {
             }
             else if (origen.getDeposito() == null){
                 tramo.setTipoTramo(TipoTramo.ORIGEN_DEPOSITO);
-                depositos.add(destino.getDeposito().getIdDeposito());
+                depositos++;
                 costoEstadiaTotal = costoEstadiaTotal.add(destino.getDeposito().getCostoEstadiaDiario());
             }
             else if (destino.getDeposito() == null){
                 tramo.setTipoTramo(TipoTramo.DEPOSITO_DESTINO);
-                depositos.add(origen.getDeposito().getIdDeposito());
             }
             else {
                 tramo.setTipoTramo(TipoTramo.DEPOSITO_DEPOSITO);
-                depositos.add(destino.getDeposito().getIdDeposito());
-                depositos.add(destino.getDeposito().getIdDeposito());
+                depositos++;
                 costoEstadiaTotal = costoEstadiaTotal.add(destino.getDeposito().getCostoEstadiaDiario());
             }
 
@@ -217,7 +217,7 @@ public class RutaService {
         }
 
         ruta.setCantidadTramos(tramos.size());
-        ruta.setCantidadDepositos(depositos.size());
+        ruta.setCantidadDepositos(depositos);
         ruta.setIdSolicitud(solicitud.getIdSolicitud());
 
         Tarifa tarifa = solicitud.getTarifa();
