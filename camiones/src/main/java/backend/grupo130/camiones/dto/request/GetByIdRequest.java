@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetByIdRequest {
 
-    private String dominio;
+    private final String dominio;
 
 }

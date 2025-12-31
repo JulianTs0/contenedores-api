@@ -13,13 +13,13 @@ import java.math.BigDecimal;
 public class GetCostoPromedio {
 
     @NotNull(message = "{error.capacidadPeso.notNull}")
-    @Positive(message = "{error.capacidadPeso.positve}")
+    @Positive(message = "{error.capacidadPeso.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadPeso.digits}")
-    private BigDecimal capacidadPeso;
+    private final BigDecimal capacidadPeso;
 
     @NotNull(message = "{error.capacidadVolumen.notNull}")
-    @Positive(message = "{error.capacidadVolumen.positve}")
+    @Positive(message = "{error.capacidadVolumen.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadVolumen.digits}")
-    private BigDecimal capacidadVolumen;
+    private final BigDecimal capacidadVolumen;
 
 }

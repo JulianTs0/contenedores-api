@@ -13,26 +13,26 @@ public class RegisterRequest {
 
     @NotBlank(message = "{error.dominio.notBlank}")
     @Size(max = 80, message = "{error.dominio.max}")
-    private String dominio;
+    private final String dominio;
 
     @NotNull(message = "{error.capacidadPeso.notNull}")
-    @Positive(message = "{error.capacidadPeso.positve}")
+    @Positive(message = "{error.capacidadPeso.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadPeso.digits}")
-    private BigDecimal capacidadPeso;
+    private final BigDecimal capacidadPeso;
 
     @NotNull(message = "{error.capacidadVolumen.notNull}")
-    @Positive(message = "{error.capacidadVolumen.positve}")
+    @Positive(message = "{error.capacidadVolumen.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadVolumen.digits}")
-    private BigDecimal capacidadVolumen;
+    private final BigDecimal capacidadVolumen;
 
     @NotNull(message = "{error.consumoCombustible.notNull}")
-    @Positive(message = "{error.consumoCombustible.positve}")
+    @Positive(message = "{error.consumoCombustible.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.consumoCombustible.digits}")
-    private BigDecimal consumoCombustible;
+    private final BigDecimal consumoCombustible;
 
     @NotNull(message = "{error.costoTrasladoBase.notNull}")
     @PositiveOrZero(message = "{error.costoTrasladoBase.positiveOrZero}")
     @Digits(integer = 10, fraction = 2, message = "{error.costoTrasladoBase.digits}")
-    private BigDecimal costoTrasladoBase;
+    private final BigDecimal costoTrasladoBase;
 
 }

@@ -1,5 +1,6 @@
 package backend.grupo130.contenedores.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ public class CambioDeEstadoRequest {
     private final Long id;
 
     @NotNull(message = "{error.estado.notNull}")
+    @NotBlank(message = "{error.estado.notBlank}")
     private final String estado;
 
 }

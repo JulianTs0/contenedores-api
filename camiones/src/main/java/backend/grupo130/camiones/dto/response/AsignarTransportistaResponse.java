@@ -10,18 +10,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AsignarTransportistaResponse {
 
-    private String dominio;
+    private final String dominio;
 
-    private BigDecimal capacidadPeso;
+    private final BigDecimal capacidadPeso;
 
-    private BigDecimal capacidadVolumen;
+    private final BigDecimal capacidadVolumen;
 
-    private BigDecimal consumoCombustible;
+    private final BigDecimal consumoCombustible;
 
-    private BigDecimal costoTrasladoBase;
+    private final BigDecimal costoTrasladoBase;
 
-    private Usuario transportista;
+    private final Usuario transportista;
 
-    private Boolean estado;
+    private final Boolean estado;
 
 }

@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -120,12 +121,13 @@ public class ContenedorController {
     @GetMapping("/capacidad")
     public ResponseEntity<GetByPesoVolumenResponse> getByPesoVolumen(
         @Parameter(description = "Capacidad de peso requerida", required = true, example = "1000.0")
+        @NotNull(message = "{error.peso.notNull}")
         @Positive(message = "{error.peso.positive}")
         @Digits(integer = 8, fraction = 2, message = "{error.peso.digits}")
-        @RequestParam(value = "peso")
-        BigDecimal peso,
+        @RequestParam(value = "peso") BigDecimal peso,
 
         @Parameter(description = "Capacidad de volumen requerida", required = true, example = "15.5")
+        @NotNull(message = "{error.volumen.notNull}")
         @Positive(message = "{error.volumen.positive}")
         @Digits(integer = 8, fraction = 2, message = "{error.volumen.digits}")
         @RequestParam(value = "volumen") BigDecimal volumen
@@ -162,6 +164,7 @@ public class ContenedorController {
         @Parameter(description = "Estado por el cual filtrar. Valores permitidos: BORRADOR, PROGRAMADO, EN_TRANSITO, EN_DEPOSITO, ENTREGADO",
             required = true, example = "PROGRAMADO")
         @NotNull(message = "{error.estado.notNull}")
+        @NotBlank(message = "{error.estado.notBlank}")
         @PathVariable String estado
     ) {
         return ResponseEntity.ok(this.contenedorService.getByEstado(estado));
@@ -361,4 +364,3 @@ public class ContenedorController {
         return ResponseEntity.ok().build();
     }
 }
-

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -62,7 +63,7 @@ public class CamionController {
     @GetMapping("/{dominio}")
     public ResponseEntity<GetByIdResponse> getById(
         @Parameter(description = "Dominio (patente) del camión. Ejemplo: AA123BB", required = true, example = "AA123BB")
-        @NotBlank(message = "{error.dominio.notBlank}")
+        @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")
         @PathVariable String dominio
     ) {
@@ -203,11 +204,13 @@ public class CamionController {
         @Parameter(description = "Peso total de la carga en kg", required = true, example = "1500.0")
         @NotNull(message = "{error.capacidadPeso.notNull}")
         @Positive(message = "{error.capacidadPeso.positive}")
+        @Digits(integer = 10, fraction = 2, message = "{error.capacidadPeso.digits}")
         @RequestParam(value = "peso") BigDecimal peso,
 
         @Parameter(description = "Volumen total de la carga en m3", required = true, example = "20.5")
         @NotNull(message = "{error.capacidadVolumen.notNull}")
         @Positive(message = "{error.capacidadVolumen.positive}")
+        @Digits(integer = 10, fraction = 2, message = "{error.capacidadVolumen.digits}")
         @RequestParam(value = "volumen") BigDecimal volumen
     ) {
 
@@ -246,7 +249,7 @@ public class CamionController {
     })
     @PatchMapping("/{dominio}")
     public ResponseEntity<EditResponse> edit(
-        @NotBlank(message = "{error.dominio.notBlank}")
+        @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")
         @PathVariable String dominio,
         @RequestBody @Valid EditRequest body
@@ -282,7 +285,7 @@ public class CamionController {
     })
     @PutMapping("/disponibilidad/{dominio}")
     public ResponseEntity<CambiarDisponibilidadResponse> cambiarDisponibilidad(
-        @NotBlank(message = "{error.dominio.notBlank}")
+        @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")
         @PathVariable String dominio,
         @RequestBody @Valid CambiarDisponibilidadRequest body
@@ -315,7 +318,7 @@ public class CamionController {
     })
     @PatchMapping("/transportista/{dominio}")
     public ResponseEntity<AsignarTransportistaResponse> asignarTransportista(
-        @NotBlank(message = "{error.dominio.notBlank}")
+        @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")
         @PathVariable String dominio,
         @RequestBody @Valid AsignarTransportistaRequest body
@@ -349,7 +352,7 @@ public class CamionController {
     @DeleteMapping("/{dominio}")
     public ResponseEntity<Void> delete(
         @Parameter(description = "Dominio del camión a eliminar", required = true, example = "AA123BB")
-        @NotBlank(message = "{error.dominio.notBlank}")
+        @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")
         @PathVariable String dominio
     ) {

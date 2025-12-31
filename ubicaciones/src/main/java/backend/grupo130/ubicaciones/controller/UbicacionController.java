@@ -16,6 +16,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -55,7 +58,10 @@ public class UbicacionController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<UbicacionGetByIdResponse> getById(
-        @PathVariable Long id
+        @PathVariable
+        @NotNull(message = "{error.idUbicacion.notNull}")
+        @Positive(message = "{error.idUbicacion.positive}")
+        Long id
     ) {
         UbicacionGetByIdRequest request = new UbicacionGetByIdRequest(id);
         return ResponseEntity.ok(this.ubicacionService.getById(request));
@@ -85,6 +91,7 @@ public class UbicacionController {
     @GetMapping("/lista")
     public ResponseEntity<UbicacionGetListByIdResponse> getByListIds(
         @RequestParam(value = "ids")
+        @NotEmpty(message = "{error.listaIds.notEmpty}")
         List<Long> ids
     ) {
         UbicacionGetListByIdRequest request = UbicacionesMapperDto.toRequestGetList(ids);
@@ -160,7 +167,10 @@ public class UbicacionController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<UbicacionEditResponse> edit(
-        @PathVariable Long id,
+        @PathVariable
+        @NotNull(message = "{error.idUbicacion.notNull}")
+        @Positive(message = "{error.idUbicacion.positive}")
+        Long id,
         @RequestBody @Valid UbicacionEditRequest body
     ) {
         UbicacionEditRequest request = UbicacionesMapperDto.toRequestPatchEdit(id, body);
@@ -183,7 +193,10 @@ public class UbicacionController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-        @PathVariable Long id
+        @PathVariable
+        @NotNull(message = "{error.idUbicacion.notNull}")
+        @Positive(message = "{error.idUbicacion.positive}")
+        Long id
     ) {
         this.ubicacionService.delete(id);
         return ResponseEntity.noContent().build();

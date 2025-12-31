@@ -13,22 +13,22 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class EditRequest {
 
-    private String dominio;
+    private final String dominio;
 
-    @Positive(message = "{error.capacidadPeso.positve}")
+    @Positive(message = "{error.capacidadPeso.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadPeso.digits}")
-    private BigDecimal capacidadPeso;
+    private final BigDecimal capacidadPeso;
 
-    @Positive(message = "{error.capacidadVolumen.positve}")
+    @Positive(message = "{error.capacidadVolumen.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.capacidadVolumen.digits}")
-    private BigDecimal capacidadVolumen;
+    private final BigDecimal capacidadVolumen;
 
-    @Positive(message = "{error.consumoCombustible.positve}")
+    @Positive(message = "{error.consumoCombustible.positive}")
     @Digits(integer = 10, fraction = 2, message = "{error.consumoCombustible.digits}")
-    private BigDecimal consumoCombustible;
+    private final BigDecimal consumoCombustible;
 
     @PositiveOrZero(message = "{error.costoTrasladoBase.positiveOrZero}")
     @Digits(integer = 10, fraction = 2, message = "{error.costoTrasladoBase.digits}")
-    private BigDecimal costoTrasladoBase;
+    private final BigDecimal costoTrasladoBase;
 
 }

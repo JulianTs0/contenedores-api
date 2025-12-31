@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,7 +56,12 @@ public class DepositoController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<DepositoGetByIdResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<DepositoGetByIdResponse> getById(
+            @PathVariable
+            @NotNull(message = "{error.idDeposito.notNull}")
+            @Positive(message = "{error.idDeposito.positive}")
+            Long id
+    ) {
         DepositoGetByIdRequest request = new DepositoGetByIdRequest(id);
         DepositoGetByIdResponse response = this.depositoService.getById(request);
         return ResponseEntity.ok(response);
@@ -146,7 +153,13 @@ public class DepositoController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<DepositoEditResponse> edit(@PathVariable Long id, @RequestBody @Valid DepositoEditRequest request) {
+    public ResponseEntity<DepositoEditResponse> edit(
+            @PathVariable
+            @NotNull(message = "{error.idDeposito.notNull}")
+            @Positive(message = "{error.idDeposito.positive}")
+            Long id,
+            @RequestBody @Valid DepositoEditRequest request
+    ) {
         DepositoEditRequest requestWithId = DepositoMapperDto.toRequestPatchEdit(id, request);
         DepositoEditResponse response = this.depositoService.edit(requestWithId);
         return ResponseEntity.ok(response);
@@ -168,10 +181,14 @@ public class DepositoController {
     )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable
+            @NotNull(message = "{error.idDeposito.notNull}")
+            @Positive(message = "{error.idDeposito.positive}")
+            Long id
+    ) {
         this.depositoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
 }
-
