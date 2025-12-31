@@ -1,13 +1,14 @@
 package backend.grupo130.usuarios.controller;
 
-import backend.grupo130.usuarios.dto.UsuarioMapperDto;
-import backend.grupo130.usuarios.dto.request.EditRequest;
-import backend.grupo130.usuarios.dto.request.GetByIdRequest;
-import backend.grupo130.usuarios.dto.request.RegisterRequest;
-import backend.grupo130.usuarios.dto.response.EditResponse;
-import backend.grupo130.usuarios.dto.response.GetAllResponse;
-import backend.grupo130.usuarios.dto.response.GetByIdResponse;
-import backend.grupo130.usuarios.dto.response.RegisterResponse;
+import backend.grupo130.usuarios.dto.usuarios.UsuarioMapperDto;
+import backend.grupo130.usuarios.dto.usuarios.request.DeleteRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.EditRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.GetByIdRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.RegisterRequest;
+import backend.grupo130.usuarios.dto.usuarios.response.EditResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetAllResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.RegisterResponse;
 import backend.grupo130.usuarios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,8 +18,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -173,6 +176,18 @@ public class UsuarioController {
         EditRequest request = UsuarioMapperDto.toRequestPatchEdit(id, body);
 
         return ResponseEntity.ok(this.usuarioService.edit(request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+        @Parameter(description = "ID del usuario a eliminar", required = true, example = "1")
+        @NotNull(message = "{error.id.notNull}")
+        @Positive(message = "{error.id.positive}")
+        @PathVariable Long id
+    ) {
+        DeleteRequest request = new DeleteRequest(id);
+        this.usuarioService.delete(request);
+        return ResponseEntity.ok().build();
     }
 
 }

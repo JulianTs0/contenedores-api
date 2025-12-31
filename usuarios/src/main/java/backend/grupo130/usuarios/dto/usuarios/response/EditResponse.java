@@ -1,13 +1,11 @@
-package backend.grupo130.usuarios.dto.response;
+package backend.grupo130.usuarios.dto.usuarios.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Set;
-
 @Getter
 @AllArgsConstructor
-public class GetByIdResponse {
+public class  EditResponse {
 
     private final Long id;
 
@@ -18,7 +16,5 @@ public class GetByIdResponse {
     private final String telefono;
 
     private final String email;
-
-    private final Set<String> roles;
 
 }

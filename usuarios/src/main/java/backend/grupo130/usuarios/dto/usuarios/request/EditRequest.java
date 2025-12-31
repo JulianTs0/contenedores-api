@@ -1,10 +1,12 @@
-package backend.grupo130.usuarios.dto.request;
+package backend.grupo130.usuarios.dto.usuarios.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -15,7 +17,7 @@ public class EditRequest {
 
     @Size(max = 30, message = "{error.nombre.max}")
     @Size(min = 1, message = "{error.nombre.notBlank}")
-    private String nombre;
+    private final String nombre;
 
     @Size(max = 30, message = "{error.apellido.max}")
     @Size(min = 1, message = "{error.apellido.notBlank}")
@@ -26,8 +28,10 @@ public class EditRequest {
     private final String telefono;
 
     @Email(message = "{error.email.format}")
-    @Size(max = 30, message = "{error.email.max}")
+    @Size(max = 60, message = "{error.email.max}")
     @Size(min = 1, message = "{error.email.notBlank}")
     private final String email;
+
+    private final List<String> roles;
 
 }

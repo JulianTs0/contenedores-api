@@ -1,3 +1,9 @@
 spring:
     datasource:
         url: jdbc:postgresql://db_ubicaciones:5432/ubicaciones_db
+
+keycloak:
+    server-url: http://keycloak:8080
+    realm: TPI-Backend
+    client-id: usuarios-ms
+    client-secret: NyXpm7ghFPhmzgKGLiUcldtQgKAgfaCK

@@ -1,4 +1,4 @@
-package backend.grupo130.usuarios.dto.response;
+package backend.grupo130.usuarios.dto.usuarios.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

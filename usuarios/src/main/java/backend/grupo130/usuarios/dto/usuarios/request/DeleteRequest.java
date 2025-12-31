@@ -1,11 +1,11 @@
-package backend.grupo130.usuarios.dto.response;
+package backend.grupo130.usuarios.dto.usuarios.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterResponse {
+public class DeleteRequest {
 
     private final Long id;
 

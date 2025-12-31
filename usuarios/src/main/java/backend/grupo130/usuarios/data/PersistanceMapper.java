@@ -14,6 +14,7 @@ public class PersistanceMapper {
 
         return new Usuario(
             usuarioModel.getIdUsuario(),
+            usuarioModel.getKeycloakId(),
             usuarioModel.getNombre(),
             usuarioModel.getApellido(),
             usuarioModel.getTelefono(),
@@ -27,6 +28,7 @@ public class PersistanceMapper {
 
         return new UsuarioModel(
             usuario.getIdUsuario(),
+            usuario.getKeycloakId(),
             usuario.getNombre(),
             usuario.getApellido(),
             usuario.getTelefono(),

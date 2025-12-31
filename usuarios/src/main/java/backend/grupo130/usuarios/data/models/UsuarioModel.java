@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-// TODO: Cambiar los roles a una lista
 
 @Entity
 @Table(name = "usuarios")
@@ -21,6 +20,9 @@ public class UsuarioModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Long idUsuario;
+
+    @Column(name = "keycloak_id", unique = true, nullable = false)
+    private String keycloakId;
 
     @Column(length = 30, nullable = false)
     private String nombre;

@@ -92,7 +92,7 @@ services:
 
     # --- SERVICIOS DE AUTENTICACIÓN ---
     keycloak:
-        image: quay.io/keycloak/keycloak:21.1.1 # Usando la versión de tu archivo
+        image: quay.io/keycloak/keycloak:23.0.0
         container_name: keycloak
         command: start-dev
         hostname: localhost

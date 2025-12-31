@@ -37,4 +37,9 @@ public class UsuarioRepository {
         return PersistanceMapper.toDomain(updated);
     }
 
+    public void delete(Long id){
+        this.usuarioRepository.deleteById(id);
+    }
+
+
 }

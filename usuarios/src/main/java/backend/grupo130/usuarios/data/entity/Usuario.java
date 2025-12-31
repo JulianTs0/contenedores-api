@@ -16,6 +16,8 @@ public class Usuario {
 
     private Long idUsuario;
 
+    private String keycloakId;
+
     private String nombre;
 
     private String apellido;

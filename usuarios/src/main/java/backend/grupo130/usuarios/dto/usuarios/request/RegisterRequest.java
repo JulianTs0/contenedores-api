@@ -1,7 +1,8 @@
-package backend.grupo130.usuarios.dto.request;
+package backend.grupo130.usuarios.dto.usuarios.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,20 +15,26 @@ public class RegisterRequest {
 
     @NotBlank(message = "{error.nombre.notBlank}")
     @Size(max = 30, message = "{error.nombre.max}")
-    private String nombre;
+    private final String nombre;
 
     @NotBlank(message = "{error.apellido.notBlank}")
     @Size(max = 30, message = "{error.apellido.max}")
-    private String apellido;
+    private final String apellido;
 
     @Size(max = 30, message = "{error.telefono.max}")
-    private String telefono;
+    @Size(min = 1, message = "{error.telefono.notBlank}")
+    private final String telefono;
 
     @NotBlank(message = "{error.email.notBlank}")
     @Email(message = "{error.email.format}")
     @Size(max = 60, message = "{error.email.max}")
-    private String email;
+    private final String email;
 
-    private List<String> roles;
+    @NotBlank(message = "{error.password.notBlank}")
+    @Size(min = 6, message = "{error.password.min}")
+    private final String password;
+
+    @NotEmpty(message = "{error.rol.notBlank}")
+    private final List<String> roles;
 
 }

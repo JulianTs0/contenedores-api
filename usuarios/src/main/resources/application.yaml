@@ -15,6 +15,12 @@ spring:
       hibernate:
         format_sql: true
 
+keycloak:
+    server-url: http://localhost:8080
+    realm: TPI-Backend
+    client-id: usuarios-ms
+    client-secret: NyXpm7ghFPhmzgKGLiUcldtQgKAgfaCK
+
 server:
   port: 8090
 

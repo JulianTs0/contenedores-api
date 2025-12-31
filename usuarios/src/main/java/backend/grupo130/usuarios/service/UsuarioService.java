@@ -4,14 +4,17 @@ import backend.grupo130.usuarios.config.enums.Errores;
 import backend.grupo130.usuarios.config.enums.Rol;
 import backend.grupo130.usuarios.config.exceptions.ServiceError;
 import backend.grupo130.usuarios.data.entity.Usuario;
-import backend.grupo130.usuarios.dto.UsuarioMapperDto;
-import backend.grupo130.usuarios.dto.request.EditRequest;
-import backend.grupo130.usuarios.dto.request.GetByIdRequest;
-import backend.grupo130.usuarios.dto.request.RegisterRequest;
-import backend.grupo130.usuarios.dto.response.EditResponse;
-import backend.grupo130.usuarios.dto.response.GetAllResponse;
-import backend.grupo130.usuarios.dto.response.GetByIdResponse;
-import backend.grupo130.usuarios.dto.response.RegisterResponse;
+import backend.grupo130.usuarios.dto.keylock.KeylockMapperDto;
+import backend.grupo130.usuarios.dto.usuarios.UsuarioMapperDto;
+import backend.grupo130.usuarios.dto.usuarios.request.DeleteRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.EditRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.GetByIdRequest;
+import backend.grupo130.usuarios.dto.usuarios.request.RegisterRequest;
+import backend.grupo130.usuarios.dto.usuarios.response.EditResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetAllResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.RegisterResponse;
+import backend.grupo130.usuarios.external.KeylockClient;
 import backend.grupo130.usuarios.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UsuarioService {
 
+    // TODO: Implementar el rollback de keylock
+
     private final UsuarioRepository usuarioRepository;
+
+    private final KeylockClient keylockClient;
 
     // GET
 
@@ -66,8 +72,22 @@ public class UsuarioService {
     public RegisterResponse register(RegisterRequest request) throws ServiceError {
         log.info("Iniciando registro de nuevo usuarioModel con email: {}", request.getEmail());
 
+        String keyclockId = this.keylockClient.crearUsuarioKeylock(
+            KeylockMapperDto.toRequestCrearUsuario(
+                request.getEmail(),
+                request.getNombre(),
+                request.getApellido(),
+                request.getPassword()
+            )
+        ).getUserId();
+
+        this.keylockClient.asignarRoles(
+            KeylockMapperDto.toRequestAsignarRol(keyclockId, request.getRoles())
+        );
+
         Usuario usuario = new Usuario();
 
+        usuario.setKeycloakId(keyclockId);
         usuario.setNombre(request.getNombre());
         usuario.setApellido(request.getApellido());
         usuario.setTelefono(request.getTelefono());
@@ -77,6 +97,9 @@ public class UsuarioService {
 
         if (roles.isEmpty()){
             log.warn("Intento de registro con rol inválido: {}", request.getRoles());
+            this.keylockClient.eliminarKeycloakUser(
+                KeylockMapperDto.toRequestEliminarUsuario(keyclockId)
+            );
             throw new ServiceError("", Errores.ROL_INVALIDO, 400);
         }
 
@@ -100,8 +123,31 @@ public class UsuarioService {
             throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
         }
 
+        this.keylockClient.actualizarUsuarioKeylock(
+            KeylockMapperDto.toRequestActualizarUsuario(
+                usuario.getKeycloakId(),
+                request.getNombre(),
+                request.getApellido(),
+                request.getEmail()
+            )
+        );
+
         log.debug("UsuarioModel ID: {} encontrado. Aplicando actualizaciones...", usuario.getIdUsuario());
 
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+
+            Set<Rol> nuevosRolesEnum = Rol.fromString(request.getRoles());
+
+            List<String> nuevosRolesString = nuevosRolesEnum.stream()
+                .map(Rol::name)
+                .collect(Collectors.toList());
+
+            this.keylockClient.actualizarRoles(
+                KeylockMapperDto.toRequestAsignarRol(usuario.getKeycloakId(), nuevosRolesString)
+            );
+
+            usuario.setRoles(nuevosRolesEnum);
+        }
         if (request.getNombre() != null) {
             usuario.setNombre(request.getNombre());
         }
@@ -124,8 +170,22 @@ public class UsuarioService {
 
     }
 
-    // TODO: Endpoint para eliminar usuario
-    // TODO: Hacer que los roles de los usuarios sean una Set
-    // TODO: Implementar las funcionalidades de keylock en el codigo
+    public void delete(DeleteRequest request) throws ServiceError {
+        log.info("Iniciando eliminación de camión: {}", request.getId());
+
+        Usuario usuario = this.usuarioRepository.getById(request.getId());
+
+        if (usuario == null) {
+            throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
+        }
+
+        this.keylockClient.eliminarKeycloakUser(
+            KeylockMapperDto.toRequestEliminarUsuario(usuario.getKeycloakId())
+        );
+        log.info("Camión eliminado exitosamente: {}", request.getId());
+
+        this.usuarioRepository.delete(usuario.getIdUsuario());
+
+    }
 
 }

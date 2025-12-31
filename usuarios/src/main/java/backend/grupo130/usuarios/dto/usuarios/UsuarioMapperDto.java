@@ -1,11 +1,11 @@
-package backend.grupo130.usuarios.dto;
+package backend.grupo130.usuarios.dto.usuarios;
 
 import backend.grupo130.usuarios.data.entity.Usuario;
-import backend.grupo130.usuarios.dto.request.EditRequest;
-import backend.grupo130.usuarios.dto.response.EditResponse;
-import backend.grupo130.usuarios.dto.response.GetAllResponse;
-import backend.grupo130.usuarios.dto.response.GetByIdResponse;
-import backend.grupo130.usuarios.dto.response.RegisterResponse;
+import backend.grupo130.usuarios.dto.usuarios.request.EditRequest;
+import backend.grupo130.usuarios.dto.usuarios.response.EditResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetAllResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.GetByIdResponse;
+import backend.grupo130.usuarios.dto.usuarios.response.RegisterResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
