@@ -1,6 +1,7 @@
 package backend.grupo130.envios.dto.solicitud.request;
 
 import backend.grupo130.envios.data.entity.Tarifa;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -26,21 +27,28 @@ public class SolicitudEditRequest {
     private final LocalDateTime fechaFin;
 
     @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
+    @Positive(message = "{error.costo.positive}")
     private final BigDecimal costoEstimado;
 
     @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
+    @Positive(message = "{error.costo.positive}")
     private final BigDecimal costoFinal;
 
     @Digits(integer = 10, fraction = 2, message = "{error.tiempo.digits}")
+    @Positive(message = "{error.tiempo.positive}")
     private final BigDecimal tiempoEstimadoHoras;
 
     @Digits(integer = 10, fraction = 2, message = "{error.tiempo.digits}")
+    @Positive(message = "{error.tiempo.positive}")
     private final BigDecimal tiempoRealHoras;
 
+    @Valid
     private final Tarifa tarifa;
 
+    @Positive(message = "{error.idOrigen.positive}")
     private Long idOrigen;
 
+    @Positive(message = "{error.idDestino.positive}")
     private Long idDestino;
 
 }

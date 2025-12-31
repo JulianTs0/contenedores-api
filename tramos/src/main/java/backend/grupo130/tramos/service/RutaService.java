@@ -4,6 +4,7 @@ import backend.grupo130.tramos.client.camiones.CamionClient;
 import backend.grupo130.tramos.client.contenedores.ContenedorClient;
 import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
 import backend.grupo130.tramos.client.envios.EnviosClient;
+import backend.grupo130.tramos.client.envios.entity.PreciosNegocio;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
@@ -11,19 +12,19 @@ import backend.grupo130.tramos.client.ubicaciones.UbicacionesClient;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.enums.EstadoTramo;
-import backend.grupo130.tramos.config.enums.PreciosNegocio;
 import backend.grupo130.tramos.config.enums.TipoTramo;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
 import backend.grupo130.tramos.data.entity.RutaTraslado;
 import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.dto.osrm.response.RouteResponse;
 import backend.grupo130.tramos.dto.ruta.RutaMapperDto;
 import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
 import backend.grupo130.tramos.dto.ruta.request.RutaGetByIdRequest;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;
-import backend.grupo130.tramos.external.OSRM.OsrmApiClient;
-import backend.grupo130.tramos.external.OSRM.response.RouteResponse;
+import backend.grupo130.tramos.external.OsrmApiClient;
+import backend.grupo130.tramos.dto.osrm.OsrmMapperDto;
 import backend.grupo130.tramos.repository.RutaRepository;
 import backend.grupo130.tramos.repository.TramoRepository;
 import jakarta.transaction.Transactional;
@@ -35,9 +36,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -118,6 +117,9 @@ public class RutaService {
             throw new ServiceError("", Errores.CAMIONES_NO_ENCONTRADOS, 404);
         }
 
+        log.debug(costoBasePromedio.toString());
+
+
         log.debug("Calculando consumo promedio de combustible.");
         BigDecimal consumoAprox = this.camionClient.getConsumoPromedio();
 
@@ -126,13 +128,14 @@ public class RutaService {
         }
 
         RutaTraslado ruta = this.rutaRepository.getBySolicitud(request.getIdSolicitud());
+        PreciosNegocio actual = this.enviosClient.getUltimosPrecios();
 
         if(ruta == null){
             ruta = new RutaTraslado();
 
             ruta.setCantidadTramos(0);
             ruta.setCantidadDepositos(0);
-            ruta.setCargosGestionFijo(PreciosNegocio.CARGO_GESTION.getValor());
+            ruta.setCargosGestionFijo(actual.getCargoGestion());
 
             ruta = this.rutaRepository.save(ruta);
         } else {
@@ -171,8 +174,9 @@ public class RutaService {
             }
 
             log.debug("Calculando ruta OSRM entre {} ({}) y {} ({}).", origen.getIdUbicacion(), origen.getIdUbicacion(), destino.getIdUbicacion(), destino.getIdUbicacion());
-            RouteResponse routeResponse = this.osrmApiClient.calcularDistancia(origen, destino).getRoutes().getFirst();
-
+            RouteResponse routeResponse = this.osrmApiClient.calcularDistancia(
+                OsrmMapperDto.toRequest(origen, destino, request.getAlternativa())
+            ).getRuta();
 
             double distancia = Math.round(routeResponse.getDistance() / 1000);
             long segundos = Math.round(routeResponse.getDuration());
@@ -212,7 +216,7 @@ public class RutaService {
         }
 
         if (!tramos.isEmpty()) {
-            this.tramoRepository.saveAll(tramos);
+            tramos = this.tramoRepository.saveAll(tramos);
             log.info("Guardados {} tramoModels para la Ruta ID: {}", tramos.size(), ruta.getIdRuta());
         }
 
@@ -225,6 +229,7 @@ public class RutaService {
             tarifa = new Tarifa();
         }
 
+        tarifa.setValorLitro(actual.getValorLitro());
         tarifa.setPesoMax(contenedor.getPeso());
         tarifa.setVolumenMax(contenedor.getVolumen());
         tarifa.setCostoBase(costoBasePromedio.setScale(2,RoundingMode.HALF_UP));
@@ -233,7 +238,7 @@ public class RutaService {
 
         BigDecimal distanciaEnKm = BigDecimal.valueOf(distanciaTotal);
 
-        BigDecimal costoEstiamdo = tarifa.calcularCostoEstimado(distanciaEnKm, ruta.getCargosGestionFijo(), tramos.size(), 1);
+        BigDecimal costoEstiamdo = tarifa.calcularCostoEstimado(distanciaEnKm, ruta.getCargosGestionFijo(), tramos.size(), 1, actual);
         log.debug("Costo estimado calculado: {}", costoEstiamdo);
 
         SolicitudEditRequest requestEdit = new SolicitudEditRequest();

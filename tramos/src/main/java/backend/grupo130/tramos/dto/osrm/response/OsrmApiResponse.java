@@ -1,4 +1,4 @@
-package backend.grupo130.tramos.external.OSRM.response;
+package backend.grupo130.tramos.dto.osrm.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class OsrmRouteResponse {
+public class OsrmApiResponse {
 
     @JsonProperty("code")
-    private String code;
+    private final String code;
 
     @JsonProperty("routes")
-    private List<RouteResponse> routes;
+    private final List<RouteResponse> routes;
 
 }

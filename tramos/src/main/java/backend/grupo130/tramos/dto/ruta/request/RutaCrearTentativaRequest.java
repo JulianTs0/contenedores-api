@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +23,8 @@ public class RutaCrearTentativaRequest {
     private final List<Long> ubicaciones;
 
     @NotNull(message = "{error.fechaHoraInicio.notNull}")
-    private LocalDateTime fechaHoraInicioEstimado;
+    private final LocalDateTime fechaHoraInicioEstimado;
+
+    private final Integer alternativa;
 
 }

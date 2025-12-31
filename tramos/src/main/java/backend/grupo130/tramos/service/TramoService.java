@@ -5,6 +5,7 @@ import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.contenedores.ContenedorClient;
 import backend.grupo130.tramos.client.contenedores.entity.Contenedor;
 import backend.grupo130.tramos.client.envios.EnviosClient;
+import backend.grupo130.tramos.client.envios.entity.PreciosNegocio;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
@@ -312,6 +313,7 @@ public class TramoService {
             log.info("Detectado fin del ultimo tramoModel (Orden {} de {}). Finalizando Solicitud {} y Contenedor {}.", tramo.getOrden(), ruta.getCantidadTramos(), solicitudTraslado.getIdSolicitud(), solicitudTraslado.getIdContenedor());
 
             Contenedor contenedor = this.contenedorClient.getById(solicitudTraslado.getIdContenedor());
+            PreciosNegocio preciosNegocio = this.enviosClient.getUltimosPrecios();
 
             this.contenedorClient.cambioDeEstado(contenedor.getIdContenedor(), EstadoContenedor.ENTREGADO.name());
             log.debug("Contenedor {} actualizado a ENTREGADO.", contenedor.getIdContenedor());
@@ -369,7 +371,8 @@ public class TramoService {
             BigDecimal costoFinalCalculado = tarifa.calcularCostoFinal(
                 distanciaTotal,
                 cargosFijosTotales,
-                costoTotalEstadiasReales
+                costoTotalEstadiasReales,
+                preciosNegocio
             );
 
             log.info("Costo final calculado para Solicitud {}: ${}", solicitudTraslado.getIdSolicitud(), costoFinalCalculado);

@@ -1,4 +1,4 @@
-package backend.grupo130.tramos.external.OSRM.response;
+package backend.grupo130.tramos.dto.osrm.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,12 +9,12 @@ import lombok.Getter;
 public class RouteResponse {
 
     @JsonProperty("geometry")
-    private String geometry;
+    private final String geometry;
 
     @JsonProperty("distance")
-    private double distance;
+    private final double distance;
 
     @JsonProperty("duration")
-    private double duration;
+    private final double duration;
 
 }

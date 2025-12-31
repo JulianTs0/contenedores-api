@@ -8,6 +8,8 @@ public enum Errores {
     ERROR_INTERNO("Error interno"),
     ACCION_NO_AUTORIZADA("No esta autorizado a registrar esta accion"),
 
+    ERROR_API("La API OSRM no respone"),
+
     RUTA_NO_ENCONTRADA("Ruta no encontrada"),
     RUTA_SIN_TRAMOS("La ruta no se le han asignado los tramos todavia"),
     RUTA_SIN_CONDUCTORES("La ruta todavia no tiene conductores designados"),

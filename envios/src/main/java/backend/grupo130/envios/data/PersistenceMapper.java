@@ -1,8 +1,10 @@
 package backend.grupo130.envios.data;
 
+import backend.grupo130.envios.data.entity.PreciosNegocio;
 import backend.grupo130.envios.data.entity.SeguimientoEnvio;
 import backend.grupo130.envios.data.entity.SolicitudTraslado;
 import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.data.models.PreciosNegocioModel;
 import backend.grupo130.envios.data.models.SeguimientoEnvioModel;
 import backend.grupo130.envios.data.models.SolicitudTrasladoModel;
 import backend.grupo130.envios.data.models.TarifaModel;
@@ -145,5 +147,50 @@ public class PersistenceMapper {
         model.setConsumoAprox(domain.getConsumoAprox());
         model.setCostoEstadia(domain.getCostoEstadia());
         return model;
+    }
+
+    public static PreciosNegocio toDomain(PreciosNegocioModel model) {
+        if (model == null) {
+            return null;
+        }
+        return new PreciosNegocio(
+                model.getIdPreciosNegocio(),
+                model.getRangoPesoBajo(),
+                model.getRangoPesoMedio(),
+                model.getMultiplicadorBajo(),
+                model.getMultiplicadorMedio(),
+                model.getMultiplicadorAlto(),
+                model.getValorLitro(),
+                model.getCargoGestion(),
+                model.getFechaCreacion(),
+                model.getFechaActualizacion()
+        );
+    }
+
+    public static PreciosNegocioModel toModel(PreciosNegocio domain) {
+        if (domain == null) {
+            return null;
+        }
+        PreciosNegocioModel model = new PreciosNegocioModel();
+        model.setIdPreciosNegocio(domain.getIdPreciosNegocio());
+        model.setRangoPesoBajo(domain.getRangoPesoBajo());
+        model.setRangoPesoMedio(domain.getRangoPesoMedio());
+        model.setMultiplicadorBajo(domain.getMultiplicadorBajo());
+        model.setMultiplicadorMedio(domain.getMultiplicadorMedio());
+        model.setMultiplicadorAlto(domain.getMultiplicadorAlto());
+        model.setValorLitro(domain.getValorLitro());
+        model.setCargoGestion(domain.getCargoGestion());
+        model.setFechaCreacion(domain.getFechaCreacion());
+        model.setFechaActualizacion(domain.getFechaActualizacion());
+        return model;
+    }
+
+    public static List<PreciosNegocio> toPreciosNegocioDomainList(List<PreciosNegocioModel> models) {
+        if (models == null) {
+            return null;
+        }
+        return models.stream()
+                .map(PersistenceMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

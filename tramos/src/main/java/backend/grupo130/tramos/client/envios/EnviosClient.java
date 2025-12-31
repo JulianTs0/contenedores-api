@@ -1,8 +1,10 @@
 package backend.grupo130.tramos.client.envios;
 
+import backend.grupo130.tramos.client.envios.entity.PreciosNegocio;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
+import backend.grupo130.tramos.client.envios.responses.PreciosNegocioGetLatestResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudCambioDeEstadoResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudEditResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudGetByIdResponse;
@@ -51,5 +53,19 @@ public class EnviosClient {
 
     public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(Long id, SolicitudCambioDeEstadoRequest request) {
         return this.enviosGateway.cambioDeEstadoSolicitud(id, request);
+    }
+
+    public PreciosNegocio getUltimosPrecios() {
+        PreciosNegocioGetLatestResponse response = this.enviosGateway.getUltimo();
+        return new PreciosNegocio(
+            response.getIdPreciosNegocio(),
+            response.getRangoPesoBajo(),
+            response.getRangoPesoMedio(),
+            response.getMultiplicadorBajo(),
+            response.getMultiplicadorMedio(),
+            response.getMultiplicadorAlto(),
+            response.getValorLitro(),
+            response.getCargoGestion()
+        );
     }
 }

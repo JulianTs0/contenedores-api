@@ -23,22 +23,22 @@ public class TramoGetByIdResponse {
 
     private final BigDecimal costoReal;
 
-    private LocalDateTime fechaHoraInicioEstimado;
+    private final LocalDateTime fechaHoraInicioEstimado;
 
-    private LocalDateTime fechaHoraFinEstimado;
+    private final LocalDateTime fechaHoraFinEstimado;
 
-    private LocalDateTime fechaHoraInicioReal;
+    private final LocalDateTime fechaHoraInicioReal;
 
-    private LocalDateTime fechaHoraFinReal;
+    private final LocalDateTime fechaHoraFinReal;
 
-    private Integer orden;
+    private final Integer orden;
 
-    private Camion dominioCamion;
+    private final Camion dominioCamion;
 
-    private RutaTraslado rutaTraslado;
+    private final RutaTraslado rutaTraslado;
 
-    private Ubicacion idOrigen;
+    private final Ubicacion idOrigen;
 
-    private Ubicacion idDestino;
+    private final Ubicacion idDestino;
 
 }

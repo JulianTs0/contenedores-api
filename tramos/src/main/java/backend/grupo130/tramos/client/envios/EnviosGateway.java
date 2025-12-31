@@ -2,6 +2,7 @@ package backend.grupo130.tramos.client.envios;
 
 import backend.grupo130.tramos.client.envios.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.tramos.client.envios.request.SolicitudEditRequest;
+import backend.grupo130.tramos.client.envios.responses.PreciosNegocioGetLatestResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudCambioDeEstadoResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudEditResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudGetByIdResponse;
@@ -30,5 +31,8 @@ public interface EnviosGateway {
         @PathVariable("id") Long id,
         @RequestBody SolicitudCambioDeEstadoRequest request
     );
+
+    @GetMapping("/precios/ultimo")
+    PreciosNegocioGetLatestResponse getUltimo();
 
 }

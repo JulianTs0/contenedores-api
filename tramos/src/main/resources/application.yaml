@@ -1,48 +1,47 @@
 spring:
-  application:
-    name: tramos
-  datasource:
-    url: jdbc:postgresql://localhost:6434/tramos_db
-    username: tramos
-    password: tramos
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  clients:
-    usuarios:
-        url: http://localhost:8090/api/usuarios
-    camiones:
-        url: http://localhost:8093/api/camiones
-    envios:
-        url: http://localhost:8095/api/envios
-    ubicaciones:
-        url: http://localhost:8094/api/ubicaciones
-    contenedores:
-        url: http://localhost:8091/api/contenedores
-    osrm:
-        uri-template: /route/v1/driving/{origen};{destino}?overview=false
+    application:
+        name: tramos
+    datasource:
+        url: jdbc:postgresql://localhost:6434/tramos_db
+        username: tramos
+        password: tramos
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    clients:
+        usuarios:
+            url: http://localhost:8090/api/usuarios
+        camiones:
+            url: http://localhost:8093/api/camiones
+        envios:
+            url: http://localhost:8095/api/envios
+        ubicaciones:
+            url: http://localhost:8094/api/ubicaciones
+        contenedores:
+            url: http://localhost:8091/api/contenedores
+        osrm:
+            uri-template: http://router.project-osrm.org/route/v1/driving/{0};{1}
+
 
 server:
-  port: 8092
+    port: 8092
 
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+    swagger-ui:
+        path: /swagger-ui.html
 
 logging:
-    # 1. Le dice a Spring que use el archivo XML
     config: classpath:logback-spring.xml
 
-    # 2. Define los niveles
     level:
         root: INFO
-        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        backend.grupo130: DEBUG
         org.springframework: INFO
         org.hibernate: WARN
 
