@@ -1,18 +1,25 @@
 package backend.grupo130.gateway.config;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import backend.grupo130.gateway.config.enums.Rol;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -22,105 +29,134 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
-        final String ROL_ADMIN = "ADMINISTRADOR";
-        final String ROL_CLIENTE = "CLIENTE";
-        final String ROL_TRANSP = "TRANSPORTISTA";
+        final String ROL_ADMIN = Rol.ADMINISTRADOR.name();
+        final String ROL_CLIENTE = Rol.CLIENTE.name();
+        final String ROL_TRANSP = Rol.TRANSPORTISTA.name();
 
         http
+            .cors(
+                cors -> cors.configurationSource(this.corsConfigurationSource())
+            )
             .authorizeExchange(exchanges -> exchanges
 
                 .pathMatchers( "/api/login/oauth2/code/keycloak")
                 .permitAll()
 
-                .pathMatchers("/v3/api-docs/**").permitAll()
-                .pathMatchers("/swagger-ui/**").permitAll()
-                .pathMatchers("/swagger-ui.html").permitAll()
+                .pathMatchers("/v3/api-docs/**")
+                .permitAll()
+                .pathMatchers("/swagger-ui/**")
+                .permitAll()
+                .pathMatchers("/swagger-ui.html")
+                .permitAll()
 
-                .pathMatchers("/gateway/usuarios/**")
-                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
-
-                .pathMatchers(HttpMethod.GET, "/gateway/camiones/getById/{dominio}")
+                .pathMatchers(HttpMethod.GET, "/api/camiones/{dominio}")
                 .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
-                .pathMatchers(HttpMethod.GET, "/gateway/camiones/getAll")
+                .pathMatchers(HttpMethod.GET, "/api/camiones/")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/camiones/disponibles")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/camiones/getDisponibles")
+                .pathMatchers(HttpMethod.POST, "/api/camiones/")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.POST, "/gateway/camiones/register")
+                .pathMatchers(HttpMethod.PATCH, "/api/camiones/{dominio}")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/camiones/edit")
+                .pathMatchers(HttpMethod.PUT, "/api/camiones/disponibilidad/{dominio}")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/camiones/asignarTransportista")
+                .pathMatchers(HttpMethod.PATCH, "/api/camiones/transportista/{dominio}")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.DELETE, "/gateway/camiones/delete/{dominio}")
+                .pathMatchers(HttpMethod.DELETE, "/api/camiones/{dominio}")
                 .hasAnyRole(ROL_ADMIN)
 
-                .pathMatchers(HttpMethod.GET, "/gateway/contenedores/getById/{id}")
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/{id}")
                 .hasAnyRole(ROL_ADMIN, ROL_CLIENTE)
-                .pathMatchers(HttpMethod.GET, "/gateway/contenedores/getByEstado/{estado}")
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/estado/{estado}")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/contenedores/getAll")
+                .pathMatchers(HttpMethod.GET, "/api/contenedores/")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.POST, "/gateway/contenedores/register")
+                .pathMatchers(HttpMethod.POST, "/api/contenedores/")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/contenedores/edit")
+                .pathMatchers(HttpMethod.PATCH, "/api/contenedores/{id}")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.DELETE, "/gateway/contenedores/delete/{id}")
+                .pathMatchers(HttpMethod.PUT, "/api/contenedores/estado/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PATCH, "/api/contenedores/cliente/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/contenedores/{id}")
                 .hasAnyRole(ROL_ADMIN)
 
-                .pathMatchers(HttpMethod.GET, "/gateway/envios/solicitud/getById/{id}")
+                .pathMatchers(HttpMethod.GET, "/api/envios/precios/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/envios/precios/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/envios/precios/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PUT, "/api/envios/precios/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/envios/precios/{id}")
+                .hasAnyRole(ROL_ADMIN)
+
+                .pathMatchers(HttpMethod.GET, "/api/envios/solicitud/{id}")
                 .hasAnyRole(ROL_ADMIN, ROL_CLIENTE)
-                .pathMatchers(HttpMethod.GET, "/gateway/envios/solicitud/getAll")
+                .pathMatchers(HttpMethod.GET, "/api/envios/solicitud/")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.POST, "/gateway/envios/solicitud/register")
-                .hasAnyRole(ROL_CLIENTE)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/envios/solicitud/confirmarSolicitud")
-                .hasAnyRole(ROL_CLIENTE)
+                .pathMatchers(HttpMethod.POST, "/api/envios/solicitud/")
+                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE)
+                .pathMatchers(HttpMethod.PATCH, "/api/envios/solicitud/{id}/confirmar")
+                .hasAnyRole(ROL_ADMIN)
 
+                .pathMatchers(HttpMethod.GET, "/api/tramos/rutas/{id}")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/rutas/")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.POST, "/api/tramos/rutas/")
+                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE)
 
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/rutas/getById/{idRuta}")
+                .pathMatchers(HttpMethod.GET, "/api/tramos/tramos/{id}")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/tramos/")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/tramos/camion/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/tramos/transportista/{dominio}")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.GET, "/api/tramos/tramos/ruta/{id}")
+                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/tramos/iniciar/{id}")
+                .hasAnyRole(ROL_TRANSP)
+                .pathMatchers(HttpMethod.PATCH, "/api/tramos/tramos/finalizar/{id}")
+                .hasAnyRole(ROL_TRANSP)
+
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/depositos/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/depositos/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/ubicaciones/depositos/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PUT, "/api/ubicaciones/depositos/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/ubicaciones/depositos/{id}")
+                .hasAnyRole(ROL_ADMIN)
+
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/ubicaciones/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/api/ubicaciones/ubicaciones/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/ubicaciones/ubicaciones/")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.PUT, "/api/ubicaciones/ubicaciones/{id}")
+                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, "/api/ubicaciones/ubicaciones/{id}")
+                .hasAnyRole(ROL_ADMIN)
+
+                .pathMatchers(HttpMethod.GET, "/api/usuarios/{id}")
                 .hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/rutas/getAll")
-                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
-                .pathMatchers(HttpMethod.POST, "/gateway/tramos/rutas/crearRutaTentativa")
-                .hasAnyRole(ROL_CLIENTE)
-
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/tramos/getById/{idTramo}")
-                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/tramos/getAll")
-                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/tramos/tramos/asignarCamion")
+                .pathMatchers(HttpMethod.GET, "/api/usuarios/")
                 .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/tramos/getByTransportista/{dominio}")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/tramos/tramos/getByRuta/{idRuta}")
-                .hasAnyRole(ROL_ADMIN, ROL_TRANSP)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/tramos/tramos/registrarInicio")
-                .hasAnyRole(ROL_TRANSP)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/tramos/tramos/registrarFin")
-                .hasAnyRole(ROL_TRANSP)
-
-
-                .pathMatchers(HttpMethod.GET, "/gateway/ubicaciones/ubicaciones/getById/{id}")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/ubicaciones/ubicaciones/getAll")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.POST, "/gateway/ubicaciones/ubicaciones/register")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/ubicaciones/ubicaciones/edit")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.DELETE, "/gateway/ubicaciones/ubicaciones/delete/{id}")
-                .hasAnyRole(ROL_ADMIN)
-
-                .pathMatchers(HttpMethod.GET, "/gateway/ubicaciones/depositos/getById/{idDeposito}")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.GET, "/gateway/ubicaciones/depositos/getAll")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.POST, "/gateway/ubicaciones/depositos/register")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.PATCH, "/gateway/ubicaciones/depositos/edit")
-                .hasAnyRole(ROL_ADMIN)
-                .pathMatchers(HttpMethod.DELETE, "/gateway/ubicaciones/depositos/delete/{id}")
-                .hasAnyRole(ROL_ADMIN)
+                .pathMatchers(HttpMethod.POST, "/api/usuarios/")
+                .permitAll()
+                .pathMatchers(HttpMethod.PATCH, "/api/usuarios/{id}")
+                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
+                .pathMatchers(HttpMethod.DELETE, "/api/usuarios/{id}")
+                .hasAnyRole(ROL_ADMIN, ROL_CLIENTE, ROL_TRANSP)
 
                 .anyExchange().authenticated()
             )
@@ -134,9 +170,28 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+
+        configuration.setAllowedMethods(
+            Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+        );
+        configuration.setAllowedHeaders(
+            Arrays.asList("Authorization", "Content-Type", "Cache-Control")
+        );
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     private ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-
 
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
 

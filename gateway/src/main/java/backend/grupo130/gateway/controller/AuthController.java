@@ -62,9 +62,9 @@ public class AuthController {
                                 response.statusCode().value()))))
 
                 .bodyToMono(String.class)
-                .doOnNext(token -> logger.info("🔐 Token recibido desde Keycloak", token))
-                .map(token -> ResponseEntity.ok("✅ Autenticación exitosa."));
+                .map(jsonResponse -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonResponse));
     }
 
 }
-
