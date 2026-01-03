@@ -1,9 +1,52 @@
 spring:
     datasource:
         url: jdbc:postgresql://db_ubicaciones:5432/ubicaciones_db
+        hikari:
+            maximum-pool-size: 10
+            minimum-idle: 2
+            idle-timeout: 30000
+            connection-timeout: 20000
+
+    jpa:
+        open-in-view: false
+        show-sql: false
+        generate-ddl: false
+        properties:
+            hibernate:
+                format_sql: false
+
+    lifecycle:
+        timeout-per-shutdown-phase: 20s
+
+server:
+    shutdown: graceful
+    tomcat:
+        threads:
+            max: 200
+            min-spare: 10
 
 keycloak:
     server-url: http://keycloak:8080
     realm: TPI-Backend
     client-id: usuarios-ms
     client-secret: z7wA4QiRm1vteC2uPFXIVjVfnLbi7BDG
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "health,info,prometheus"
+    tracing:
+        sampling:
+            probability: 0.1
+    metrics:
+        tags:
+            application: ${spring.application.name}
+
+logging:
+    level:
+        root: INFO
+        backend.grupo130: INFO
+        org.springframework: WARN
+        org.hibernate: ERROR
+        com.zaxxer.hikari: ERROR

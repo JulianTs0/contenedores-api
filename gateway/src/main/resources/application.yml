@@ -20,7 +20,6 @@ spring:
 
     cloud:
         gateway:
-            # Propiedades actualizadas para eliminar el WARN
             server:
                 webflux:
                     routes:
@@ -72,13 +71,12 @@ server:
         envios: http://localhost:8095
 
 logging:
-    # 1. Le dice a Spring que use el archivo XML
+
     config: classpath:logback-spring.xml
 
-    # 2. Define los niveles
     level:
         root: INFO
-        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        backend.grupo130: DEBUG
         org.springframework: INFO
         org.hibernate: WARN
 

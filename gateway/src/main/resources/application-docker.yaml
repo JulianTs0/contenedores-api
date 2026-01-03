@@ -1,9 +1,12 @@
 spring:
+    main:
+        web-application-type: reactive
+
     security:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8080/realms/TPI-Backend
+                    issuer-uri: http://localhost:8081/realms/TPI-Backend
             client:
                 provider:
                     keycloak:
@@ -11,23 +14,58 @@ spring:
 
     cloud:
         gateway:
-            server:
-                webflux:
-                    routes:
-                        - id: ms-usuarios
-                          uri: http://usuarios:8090
-                        - id: ms-contenedores
-                          uri: http://contenedores:8091
-                        - id: ms-tramos
-                          uri: http://tramos:8092
-                        - id: ms-camiones
-                          uri: http://camiones:8093
-                        - id: ms-ubicaciones
-                          uri: http://ubicaciones:8094
-                        - id: ms-envios
-                          uri: http://envios:8095
+            httpclient:
+                connect-timeout: 10000
+                response-timeout: 30s
+            default-filters:
+                - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+
+            routes:
+                - id: ms-usuarios
+                  uri: http://usuarios:8090
+                  predicates:
+                      - Path=/gateway/usuarios/**
+                  filters:
+                      - RewritePath=/gateway/usuarios/(?<segment>.*), /api/usuarios/${segment}
+
+                - id: ms-contenedores
+                  uri: http://contenedores:8091
+                  predicates:
+                      - Path=/gateway/contenedores/**
+                  filters:
+                      - RewritePath=/gateway/contenedores/(?<segment>.*), /api/contenedores/${segment}
+
+                - id: ms-tramos
+                  uri: http://tramos:8092
+                  predicates:
+                      - Path=/gateway/tramos/**
+                  filters:
+                      - RewritePath=/gateway/tramos/(?<segment>.*), /api/tramos/${segment}
+
+                - id: ms-camiones
+                  uri: http://camiones:8093
+                  predicates:
+                      - Path=/gateway/camiones/**
+                  filters:
+                      - RewritePath=/gateway/camiones/(?<segment>.*), /api/camiones/${segment}
+
+                - id: ms-ubicaciones
+                  uri: http://ubicaciones:8094
+                  predicates:
+                      - Path=/gateway/ubicaciones/**
+                  filters:
+                      - RewritePath=/gateway/ubicaciones/(?<segment>.*), /api/ubicaciones/${segment}
+
+                - id: ms-envios
+                  uri: http://envios:8095
+                  predicates:
+                      - Path=/gateway/envios/**
+                  filters:
+                      - RewritePath=/gateway/envios/(?<segment>.*), /api/envios/${segment}
 
 server:
+    port: 8082
+    shutdown: graceful
     uri:
         usuarios: http://usuarios:8090
         contenedores: http://contenedores:8091
@@ -35,3 +73,20 @@ server:
         camiones: http://camiones:8093
         ubicaciones: http://ubicaciones:8094
         envios: http://envios:8095
+
+logging:
+    level:
+        root: INFO
+        backend.grupo130: INFO
+        org.springframework.cloud.gateway: INFO
+        org.springframework.security: WARN
+        io.netty: ERROR
+
+management:
+    tracing:
+        sampling:
+            probability: 0.1
+    endpoints:
+        web:
+            exposure:
+                include: "health,info,prometheus"
