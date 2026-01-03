@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -35,7 +37,9 @@ public class KeylockClient {
     private String realm;
 
     public KeylockCrearUsuarioResponse crearUsuarioKeylock(KeylockCrearUsuarioRequest request) {
-        log.info("Iniciando creación de usuario en Keycloak para email: {}", request.getEmail());
+        log.info("Iniciando creación de usuario en Keycloak", 
+            kv("evento", "crear_usuario_keycloak"), 
+            kv("email", request.getEmail()));
 
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
@@ -56,24 +60,35 @@ public class KeylockClient {
 
         String errorBody = response.readEntity(String.class); // <--- ESTO ES CLAVE
 
-        log.error("Error creando usuario en Keycloak. Status: {}. Mensaje: {}", response.getStatus(), errorBody);
+        if (response.getStatus() != 201) {
+            log.error("Error creando usuario en Keycloak", 
+                kv("evento", "error_crear_usuario_keycloak"), 
+                kv("status", response.getStatus()), 
+                kv("mensaje", errorBody));
+        }
 
         if (response.getStatus() == 201) {
             String path = response.getLocation().getPath();
             String userId = path.substring(path.lastIndexOf("/") + 1);
 
             response.close();
-            log.info("Usuario creado exitosamente en Keycloak con ID: {}", userId);
+            log.info("Usuario creado exitosamente en Keycloak", 
+                kv("evento", "usuario_creado_keycloak"), 
+                kv("keycloak_id", userId));
             return KeylockMapperDto.toResponseCrearUsuario(userId);
         } else {
-            log.error("Error al crear usuario en Keycloak. Status: {}", response.getStatus());
+            log.error("Error al crear usuario en Keycloak", 
+                kv("evento", "error_crear_usuario_keycloak"), 
+                kv("status", response.getStatus()));
             response.close();
             throw new ServiceError("", Errores.ERROR_INTERNO, 500);
         }
     }
 
     public void actualizarUsuarioKeylock(KeylockActualizarUsuarioRequest request) {
-        log.info("Iniciando actualización de usuario en Keycloak con ID: {}", request.getKeycloakId());
+        log.info("Iniciando actualización de usuario en Keycloak", 
+            kv("evento", "actualizar_usuario_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
         UserResource userResource = this.keycloak.realm(realm).users().get(request.getKeycloakId());
 
         UserRepresentation user = userResource.toRepresentation();
@@ -88,22 +103,33 @@ public class KeylockClient {
         }
 
         userResource.update(user);
-        log.info("Usuario actualizado exitosamente en Keycloak con ID: {}", request.getKeycloakId());
+        log.info("Usuario actualizado exitosamente en Keycloak", 
+            kv("evento", "usuario_actualizado_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
     }
 
     public void eliminarKeycloakUser(KeylockEliminarUsuarioRequest request) {
-        log.info("Iniciando eliminación de usuario en Keycloak con ID: {}", request.getKeycloakId());
+        log.info("Iniciando eliminación de usuario en Keycloak", 
+            kv("evento", "eliminar_usuario_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
         this.keycloak.realm(realm).users().get(request.getKeycloakId()).remove();
-        log.info("Usuario eliminado exitosamente en Keycloak con ID: {}", request.getKeycloakId());
+        log.info("Usuario eliminado exitosamente en Keycloak", 
+            kv("evento", "usuario_eliminado_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
     }
 
     public void asignarRoles(KeylockAsignarRolRequest request) {
         if (request.getRoles() == null || request.getRoles().isEmpty()) {
-            log.warn("Intento de asignar roles vacío para usuario ID: {}", request.getKeycloakId());
+            log.warn("Intento de asignar roles vacío", 
+                kv("evento", "asignar_roles_vacio"), 
+                kv("keycloak_id", request.getKeycloakId()));
             return;
         }
 
-        log.info("Asignando roles {} al usuario Keycloak ID: {}", request.getRoles(), request.getKeycloakId());
+        log.info("Asignando roles al usuario Keycloak", 
+            kv("evento", "asignar_roles_keycloak"), 
+            kv("roles", request.getRoles()), 
+            kv("keycloak_id", request.getKeycloakId()));
         UserResource userResource = keycloak.realm(realm).users().get(request.getKeycloakId());
         List<RoleRepresentation> rolesToAdd = new ArrayList<>();
 
@@ -112,31 +138,44 @@ public class KeylockClient {
                 RoleRepresentation role = keycloak.realm(realm).roles().get(rolName).toRepresentation();
                 rolesToAdd.add(role);
             } catch (Exception e) {
-                log.error("Error al obtener rol '{}' de Keycloak: {}", rolName, e.getMessage());
+                log.error("Error al obtener rol de Keycloak", 
+                    kv("evento", "error_obtener_rol_keycloak"), 
+                    kv("rol", rolName), 
+                    kv("error", e.getMessage()));
             }
         }
 
         if (!rolesToAdd.isEmpty()) {
             userResource.roles().realmLevel().add(rolesToAdd);
-            log.info("Roles asignados exitosamente al usuario ID: {}", request.getKeycloakId());
+            log.info("Roles asignados exitosamente al usuario", 
+                kv("evento", "roles_asignados_keycloak"), 
+                kv("keycloak_id", request.getKeycloakId()));
         } else {
-            log.warn("No se pudieron asignar roles al usuario ID: {} (posiblemente roles no encontrados)", request.getKeycloakId());
+            log.warn("No se pudieron asignar roles al usuario (posiblemente roles no encontrados)", 
+                kv("evento", "error_asignar_roles_keycloak"), 
+                kv("keycloak_id", request.getKeycloakId()));
         }
     }
 
     public void actualizarRoles(KeylockAsignarRolRequest request) {
-        log.info("Actualizando roles para usuario Keycloak ID: {}", request.getKeycloakId());
+        log.info("Actualizando roles para usuario Keycloak", 
+            kv("evento", "actualizar_roles_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
         UserResource userResource = keycloak.realm(realm).users().get(request.getKeycloakId());
 
         List<RoleRepresentation> currentRoles = userResource.roles().realmLevel().listAll();
 
         if (!currentRoles.isEmpty()) {
-            log.debug("Eliminando roles actuales para usuario ID: {}", request.getKeycloakId());
+            log.debug("Eliminando roles actuales para usuario", 
+                kv("evento", "eliminar_roles_actuales_keycloak"), 
+                kv("keycloak_id", request.getKeycloakId()));
             userResource.roles().realmLevel().remove(currentRoles);
         }
 
         this.asignarRoles(request);
-        log.info("Roles actualizados exitosamente para usuario ID: {}", request.getKeycloakId());
+        log.info("Roles actualizados exitosamente para usuario", 
+            kv("evento", "roles_actualizados_keycloak"), 
+            kv("keycloak_id", request.getKeycloakId()));
     }
 
 }

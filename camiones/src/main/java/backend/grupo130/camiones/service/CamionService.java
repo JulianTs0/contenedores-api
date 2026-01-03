@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 
 @Service
 @AllArgsConstructor
@@ -34,7 +36,10 @@ public class CamionService {
 
     public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
 
-        log.info("Iniciando búsqueda de camión por dominio: {}", request.getDominio());
+        log.info("Iniciando búsqueda de camión por dominio", 
+            kv("evento", "busqueda_camion"), 
+            kv("dominio", request.getDominio())
+        );
 
         Camion camion = this.camionRepository.getById(request.getDominio());
 
@@ -45,7 +50,10 @@ public class CamionService {
         Usuario usuario = null;
 
         if(camion.getTransportista() != null && camion.getTransportista().getIdUsuario() != null){
-            log.debug("Camion encontrado. Buscando datos del transportista ID: {}", camion.getTransportista().getIdUsuario());
+            log.debug("Camion encontrado. Buscando datos del transportista", 
+                kv("evento", "busqueda_transportista"), 
+                kv("transportista_id", camion.getTransportista().getIdUsuario())
+            );
             usuario = this.usuarioClient.getById(camion.getTransportista().getIdUsuario());
         }
 
@@ -53,59 +61,87 @@ public class CamionService {
 
         GetByIdResponse response = CamionesMapperDto.toResponseGetId(camion);
 
-        log.info("Búsqueda exitosa para camión con dominio: {}", request.getDominio());
+        log.info("Búsqueda exitosa para camión", 
+            kv("evento", "busqueda_camion_exitosa"), 
+            kv("dominio", request.getDominio())
+        );
         return response;
     }
 
     public GetAllResponse getAll() throws ServiceError {
-        log.info("Iniciando obtención de todos los camiones");
+        log.info("Iniciando obtención de todos los camiones", 
+            kv("evento", "obtener_todos_camiones")
+        );
 
         List<Camion> camiones = this.camionRepository.getAll();
 
         GetAllResponse response = CamionesMapperDto.toResponseGetAll(camiones);
 
-        log.info("Se encontraron {} camiones en total", camiones.size());
+        log.info("Se encontraron camiones en total", 
+            kv("evento", "obtener_todos_camiones_exitoso"), 
+            kv("cantidad", camiones.size())
+        );
         return response;
     }
 
     public GetAllResponse getDisponibles() throws ServiceError {
-        log.info("Iniciando obtención de camiones disponibles");
+        log.info("Iniciando obtención de camiones disponibles", 
+            kv("evento", "obtener_camiones_disponibles")
+        );
 
         List<Camion> camiones = this.camionRepository.findDisponibilidad();
 
         GetAllResponse response = CamionesMapperDto.toResponseGetAll(camiones);
 
-        log.info("Se encontraron {} camiones disponibles", camiones.size());
+        log.info("Se encontraron camiones disponibles", 
+            kv("evento", "obtener_camiones_disponibles_exitoso"), 
+            kv("cantidad", camiones.size())
+        );
         return response;
     }
 
     public GetPromedioCostoBaseResponse getCostoAprox(GetCostoPromedio request) throws ServiceError {
-        log.info("Iniciando cálculo de costo aproximado para peso {} y volumen {}", request.getCapacidadPeso(), request.getCapacidadVolumen());
+        log.info("Iniciando cálculo de costo aproximado", 
+            kv("evento", "calculo_costo_aprox"), 
+            kv("peso", request.getCapacidadPeso()), 
+            kv("volumen", request.getCapacidadVolumen())
+        );
 
         BigDecimal promedio = this.camionRepository.getPromedioCostoTraslado(request.getCapacidadPeso(), request.getCapacidadVolumen());
 
         GetPromedioCostoBaseResponse response = CamionesMapperDto.toResponsePromedioCostoBase(promedio.setScale(2, RoundingMode.HALF_UP));
 
-        log.info("Costo aproximado calculado: {}", promedio);
+        log.info("Costo aproximado calculado", 
+            kv("evento", "calculo_costo_aprox_exitoso"), 
+            kv("promedio", promedio)
+        );
         return response;
     }
 
     public GetPromedioCombustibleActualResponse getConsumoPromedio() throws ServiceError {
 
-        log.info("Iniciando cálculo de consumo promedio de combustible total");
+        log.info("Iniciando cálculo de consumo promedio de combustible total", 
+            kv("evento", "calculo_consumo_promedio")
+        );
 
         BigDecimal promedio = this.camionRepository.getPromedioConsumoTotal();
 
         GetPromedioCombustibleActualResponse response = CamionesMapperDto.toResponsePromedioCombustible(promedio.setScale(2, RoundingMode.HALF_UP));
 
-        log.info("Consumo promedio total calculado: {}", promedio);
+        log.info("Consumo promedio total calculado", 
+            kv("evento", "calculo_consumo_promedio_exitoso"), 
+            kv("promedio", promedio)
+        );
         return response;
     }
 
     // POST
 
     public RegisterResponse register(RegisterRequest request) throws ServiceError {
-        log.info("Iniciando registro de nuevo camión con dominio: {}", request.getDominio());
+        log.info("Iniciando registro de nuevo camión", 
+            kv("evento", "registro_camion"), 
+            kv("dominio", request.getDominio())
+        );
 
         Camion camion = new Camion();
 
@@ -118,7 +154,10 @@ public class CamionService {
         camion.setTransportista(null);
 
         Camion savedCamion = this.camionRepository.save(camion);
-        log.info("Camión registrado exitosamente con dominio: {}", savedCamion.getDominio());
+        log.info("Camión registrado exitosamente", 
+            kv("evento", "registro_camion_exitoso"), 
+            kv("dominio", savedCamion.getDominio())
+        );
         
         return CamionesMapperDto.toResponsePostRegister(savedCamion);
     }
@@ -126,7 +165,11 @@ public class CamionService {
     // PATCH
 
     public CambiarDisponibilidadResponse cambiarDisponibilidad(CambiarDisponibilidadRequest request) throws ServiceError {
-        log.info("Iniciando cambio de disponibilidad para camión: {}. Nuevo estado: {}", request.getDominio(), request.getEstado());
+        log.info("Iniciando cambio de disponibilidad para camión", 
+            kv("evento", "cambio_disponibilidad"), 
+            kv("dominio", request.getDominio()), 
+            kv("nuevo_estado", request.getEstado())
+        );
 
         Camion camion = this.camionRepository.getById(request.getDominio());
 
@@ -140,13 +183,20 @@ public class CamionService {
 
         CambiarDisponibilidadResponse response = CamionesMapperDto.toResponsePatchDispo(camion);
 
-        log.info("Disponibilidad cambiada exitosamente para camión: {}. Nuevo estado: {}", camion.getDominio(), camion.getEstado());
+        log.info("Disponibilidad cambiada exitosamente para camión", 
+            kv("evento", "cambio_disponibilidad_exitoso"), 
+            kv("dominio", camion.getDominio()), 
+            kv("nuevo_estado", camion.getEstado())
+        );
         return response;
 
     }
 
     public EditResponse edit(EditRequest request) throws ServiceError {
-        log.info("Iniciando edición de datos para camión: {}", request.getDominio());
+        log.info("Iniciando edición de datos para camión", 
+            kv("evento", "edicion_camion"), 
+            kv("dominio", request.getDominio())
+        );
 
         Camion camion = this.camionRepository.getById(request.getDominio());
 
@@ -174,12 +224,19 @@ public class CamionService {
 
         EditResponse response = CamionesMapperDto.toResponsePatchEdit(camion);
 
-        log.info("Camión editado exitosamente: {}", camion.getDominio());
+        log.info("Camión editado exitosamente", 
+            kv("evento", "edicion_camion_exitosa"), 
+            kv("dominio", camion.getDominio())
+        );
         return response;
     }
 
     public AsignarTransportistaResponse asignarTransportista(AsignarTransportistaRequest request) throws ServiceError {
-        log.info("Iniciando asignación de transportista ID {} a camión {}", request.getIdTransportista(), request.getDominio());
+        log.info("Iniciando asignación de transportista a camión", 
+            kv("evento", "asignacion_transportista"), 
+            kv("transportista_id", request.getIdTransportista()), 
+            kv("dominio", request.getDominio())
+        );
 
         Camion camion = this.camionRepository.getById(request.getDominio());
 
@@ -203,14 +260,21 @@ public class CamionService {
         camion.setTransportista(usuario);
 
         Camion updated = this.camionRepository.update(camion);
-        log.info("Transportista {} asignado exitosamente a camión {}", request.getIdTransportista(), request.getDominio());
+        log.info("Transportista asignado exitosamente a camión", 
+            kv("evento", "asignacion_transportista_exitosa"), 
+            kv("transportista_id", request.getIdTransportista()), 
+            kv("dominio", request.getDominio())
+        );
         return CamionesMapperDto.toResponsePatchTrans(updated, usuario);
     }
 
     // DELETE
 
     public void delete(DeleteRequest request) throws ServiceError {
-        log.info("Iniciando eliminación de camión: {}", request.getDominio());
+        log.info("Iniciando eliminación de camión", 
+            kv("evento", "eliminacion_camion"), 
+            kv("dominio", request.getDominio())
+        );
 
         Camion camion = this.camionRepository.getById(request.getDominio());
 
@@ -222,6 +286,9 @@ public class CamionService {
         }
 
         this.camionRepository.delete(camion.getDominio());
-        log.info("Camión eliminado exitosamente: {}", request.getDominio());
+        log.info("Camión eliminado exitosamente", 
+            kv("evento", "eliminacion_camion_exitosa"), 
+            kv("dominio", request.getDominio())
+        );
     }
 }

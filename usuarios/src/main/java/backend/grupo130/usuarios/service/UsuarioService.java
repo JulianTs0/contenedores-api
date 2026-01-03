@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -40,16 +42,22 @@ public class UsuarioService {
     // GET
 
     public GetByIdResponse getById(GetByIdRequest request) throws ServiceError {
-        log.info("Iniciando búsqueda de usuarioModel por ID: {}", request.getUsuarioId());
+        log.info("Iniciando búsqueda de usuarioModel", 
+            kv("evento", "obtener_usuario_por_id"), 
+            kv("usuario_id", request.getUsuarioId()));
 
         Usuario usuario = this.usuarioRepository.getById(request.getUsuarioId());
 
         if (usuario == null) {
-            log.warn("No se encontró usuarioModel con ID: {}", request.getUsuarioId());
+            log.warn("No se encontró usuarioModel", 
+                kv("evento", "usuario_no_encontrado"), 
+                kv("usuario_id", request.getUsuarioId()));
             throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
         }
 
-        log.info("UsuarioModel encontrado exitosamente con ID: {}", request.getUsuarioId());
+        log.info("UsuarioModel encontrado exitosamente", 
+            kv("evento", "usuario_encontrado"), 
+            kv("usuario_id", request.getUsuarioId()));
         GetByIdResponse response = UsuarioMapperDto.toResponseGetId(usuario);
 
         return response;
@@ -57,11 +65,14 @@ public class UsuarioService {
     }
 
     public GetAllResponse getAll() throws ServiceError {
-        log.info("Iniciando obtención de todos los usuarioModels");
+        log.info("Iniciando obtención de todos los usuarioModels", 
+            kv("evento", "obtener_todos_usuarios"));
 
         List<Usuario> usuarios = this.usuarioRepository.getAll();
 
-        log.info("Se obtuvieron {} usuarioModels exitosamente", usuarios.size());
+        log.info("Se obtuvieron usuarioModels exitosamente", 
+            kv("evento", "usuarios_obtenidos"), 
+            kv("cantidad", usuarios.size()));
         GetAllResponse response = UsuarioMapperDto.toResponseGetAll(usuarios);
 
         return response;
@@ -70,7 +81,9 @@ public class UsuarioService {
     // POST
 
     public RegisterResponse register(RegisterRequest request) throws ServiceError {
-        log.info("Iniciando registro de nuevo usuarioModel con email: {}", request.getEmail());
+        log.info("Iniciando registro de nuevo usuarioModel", 
+            kv("evento", "registrar_usuario"), 
+            kv("email", request.getEmail()));
 
         String keyclockId = this.keylockClient.crearUsuarioKeylock(
             KeylockMapperDto.toRequestCrearUsuario(
@@ -96,7 +109,9 @@ public class UsuarioService {
         Set<Rol> roles = Rol.fromString(request.getRoles());
 
         if (roles.isEmpty()){
-            log.warn("Intento de registro con rol inválido: {}", request.getRoles());
+            log.warn("Intento de registro con rol inválido", 
+                kv("evento", "rol_invalido"), 
+                kv("roles", request.getRoles()));
             this.keylockClient.eliminarKeycloakUser(
                 KeylockMapperDto.toRequestEliminarUsuario(keyclockId)
             );
@@ -106,7 +121,9 @@ public class UsuarioService {
         usuario.setRoles(roles);
 
         Usuario saved = this.usuarioRepository.save(usuario);
-        log.info("UsuarioModel registrado exitosamente con email: {}", saved.getEmail());
+        log.info("UsuarioModel registrado exitosamente", 
+            kv("evento", "usuario_registrado"), 
+            kv("email", saved.getEmail()));
 
         return UsuarioMapperDto.toResponsePostRegister(saved);
     }
@@ -114,12 +131,16 @@ public class UsuarioService {
     // PATCH
 
     public EditResponse edit(EditRequest request) throws ServiceError {
-        log.info("Iniciando edición de usuarioModel con ID: {}", request.getId());
+        log.info("Iniciando edición de usuarioModel", 
+            kv("evento", "editar_usuario"), 
+            kv("usuario_id", request.getId()));
 
         Usuario usuario = this.usuarioRepository.getById(request.getId());
 
         if (usuario == null) {
-            log.warn("Intento de edición fallido. No se encontró usuarioModel con ID: {}", request.getId());
+            log.warn("Intento de edición fallido. No se encontró usuarioModel", 
+                kv("evento", "edicion_fallida_usuario_no_encontrado"), 
+                kv("usuario_id", request.getId()));
             throw new ServiceError("", Errores.USUARIO_NO_ENCONTRADO, 404);
         }
 
@@ -132,7 +153,9 @@ public class UsuarioService {
             )
         );
 
-        log.debug("UsuarioModel ID: {} encontrado. Aplicando actualizaciones...", usuario.getIdUsuario());
+        log.debug("UsuarioModel encontrado. Aplicando actualizaciones...", 
+            kv("evento", "aplicando_actualizaciones"), 
+            kv("usuario_id", usuario.getIdUsuario()));
 
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
 
@@ -162,7 +185,9 @@ public class UsuarioService {
         }
 
         Usuario updated = this.usuarioRepository.update(usuario);
-        log.info("UsuarioModel con ID: {} editado exitosamente", updated.getIdUsuario());
+        log.info("UsuarioModel editado exitosamente", 
+            kv("evento", "usuario_editado"), 
+            kv("usuario_id", updated.getIdUsuario()));
 
         EditResponse response = UsuarioMapperDto.toResponsePatchEdit(updated);
 
@@ -171,7 +196,9 @@ public class UsuarioService {
     }
 
     public void delete(DeleteRequest request) throws ServiceError {
-        log.info("Iniciando eliminación de camión: {}", request.getId());
+        log.info("Iniciando eliminación de usuario", 
+            kv("evento", "eliminar_usuario"), 
+            kv("usuario_id", request.getId()));
 
         Usuario usuario = this.usuarioRepository.getById(request.getId());
 
@@ -182,7 +209,9 @@ public class UsuarioService {
         this.keylockClient.eliminarKeycloakUser(
             KeylockMapperDto.toRequestEliminarUsuario(usuario.getKeycloakId())
         );
-        log.info("Camión eliminado exitosamente: {}", request.getId());
+        log.info("Usuario eliminado exitosamente", 
+            kv("evento", "usuario_eliminado"), 
+            kv("usuario_id", request.getId()));
 
         this.usuarioRepository.delete(usuario.getIdUsuario());
 

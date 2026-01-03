@@ -6,4 +6,4 @@ keycloak:
     server-url: http://keycloak:8080
     realm: TPI-Backend
     client-id: usuarios-ms
-    client-secret: NyXpm7ghFPhmzgKGLiUcldtQgKAgfaCK
+    client-secret: z7wA4QiRm1vteC2uPFXIVjVfnLbi7BDG

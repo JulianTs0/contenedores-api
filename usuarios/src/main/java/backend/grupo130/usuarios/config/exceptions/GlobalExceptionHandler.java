@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -19,7 +21,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServiceError.class)
     public ResponseEntity<Map<String, Object>> handleServiceError(ServiceError ex) {
 
-        log.warn("Error Controlado: {} - Detalle: {}", ex.getMensajeExterno(), ex.getMessage());
+        log.warn("Error Controlado", 
+            kv("evento", "error_controlado"), 
+            kv("mensaje_externo", ex.getMensajeExterno()), 
+            kv("detalle", ex.getMessage()));
 
         HttpStatus status = HttpStatus.valueOf(ex.getHttpCode());
 
@@ -34,7 +39,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
-        log.error("ERROR INTERNO NO CONTROLADO: ", ex);
+        log.error("ERROR INTERNO NO CONTROLADO", 
+            kv("evento", "error_interno_no_controlado"), 
+            kv("error", ex.getMessage()), 
+            ex);
 
         Map<String, Object> errorDetails = new HashMap<>();
 
@@ -48,7 +56,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
-        log.warn("Error de Validación de Argumentos: {}", ex.getMessage());
+        log.warn("Error de Validación de Argumentos", 
+            kv("evento", "error_validacion_argumentos"), 
+            kv("error", ex.getMessage()));
 
         Map<String, Object> errorDetails = new HashMap<>();
 
@@ -68,7 +78,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
 
-        log.warn("Error de Validación de Constraints: {}", ex.getMessage()); // Opcional
+        log.warn("Error de Validación de Constraints", 
+            kv("evento", "error_validacion_constraints"), 
+            kv("error", ex.getMessage())); // Opcional
 
         Map<String, Object> errorDetails = new HashMap<>();
 
