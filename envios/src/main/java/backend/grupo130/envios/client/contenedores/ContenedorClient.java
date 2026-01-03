@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -65,13 +67,21 @@ public class ContenedorClient {
     }
 
     public void asignarCliente(Long idContenedor, Long idCliente) throws ServiceError {
-            log.info("Asignando cliente {} al contenedor {}...", idCliente, idContenedor);
+            log.info("Asignando cliente al contenedor",
+                    kv("evento", "asignar_cliente_contenedor"),
+                    kv("id_cliente", idCliente),
+                    kv("id_contenedor", idContenedor)
+            );
 
             ContenedorAsignarClienteRequest request = new ContenedorAsignarClienteRequest(idContenedor, idCliente);
 
             this.contenedorGateway.asignarCliente(idContenedor, request);
 
-            log.info("Cliente asignado correctamente.");
+            log.info("Cliente asignado correctamente",
+                    kv("evento", "cliente_asignado_contenedor"),
+                    kv("id_cliente", idCliente),
+                    kv("id_contenedor", idContenedor)
+            );
     }
 
 }

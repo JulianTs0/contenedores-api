@@ -1,5 +1,6 @@
 package backend.grupo130.tramos.data.entity;
 
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,6 @@ public class RutaTraslado {
 
     private BigDecimal cargosGestionFijo;
 
-    private Long idSolicitud;
+    private SolicitudTraslado solicitud;
 
 }

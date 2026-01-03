@@ -15,7 +15,7 @@ import java.util.Map;
 public interface ContenedorGateway {
 
     @GetMapping("/{id}")
-    ContenedorGetByIdResponse getBYId(
+    ContenedorGetByIdResponse getById(
         @PathVariable("id") Long id
     );
 

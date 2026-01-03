@@ -1,9 +1,9 @@
 package backend.grupo130.tramos.data.entity;
 
+import backend.grupo130.tramos.client.camiones.entity.Camion;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.EstadoTramo;
 import backend.grupo130.tramos.config.enums.TipoTramo;
-import backend.grupo130.tramos.data.models.RutaTrasladoModel;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,13 +36,13 @@ public class Tramo {
 
     private Integer orden;
 
-    private String dominioCamion;
+    private Camion camion;
 
     private RutaTraslado rutaTraslado;
 
-    private Long idOrigen;
+    private Ubicacion origen;
 
-    private Long idDestino;
+    private Ubicacion destino;
 
     private Double distancia;
 
@@ -59,7 +59,36 @@ public class Tramo {
     }
 
     public boolean esFinalizado(){
-        return  estado.equals(EstadoTramo.FINALIZADO);
+        return estado.equals(EstadoTramo.FINALIZADO);
     }
 
+    public boolean esOrigenDeposito(){
+        return this.tipoTramo.equals(TipoTramo.ORIGEN_DEPOSITO);
+    }
+    public boolean esDepositoDeposito(){
+        return this.tipoTramo.equals(TipoTramo.DEPOSITO_DEPOSITO);
+    }
+    public boolean esDepositoDestino() {
+        return this.tipoTramo.equals(TipoTramo.DEPOSITO_DESTINO);
+    }
+    public boolean esOrigenDestino(){
+        return this.tipoTramo.equals(TipoTramo.ORIGEN_DESTINO);
+    }
+
+    public void resolverTipo(){
+
+        if(this.origen.getDeposito() == null && this.destino.getDeposito() == null){
+            this.setTipoTramo(TipoTramo.ORIGEN_DESTINO);
+        }
+        else if (this.origen.getDeposito() == null){
+            this.setTipoTramo(TipoTramo.ORIGEN_DEPOSITO);
+        }
+        else if (this.destino.getDeposito() == null){
+            this.setTipoTramo(TipoTramo.DEPOSITO_DESTINO);
+        }
+        else {
+            this.setTipoTramo(TipoTramo.DEPOSITO_DEPOSITO);
+        }
+
+    }
 }

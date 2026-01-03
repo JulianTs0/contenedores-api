@@ -1,12 +1,12 @@
 package backend.grupo130.envios.data.models;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tarifa")
@@ -38,5 +38,11 @@ public class TarifaModel {
 
     @Column(name = "costo_estadia", nullable = false, precision = 15, scale = 2)
     private BigDecimal costoEstadia;
+
+    @Column(name = "costo_estimado", precision = 15, scale = 2)
+    private BigDecimal costoEstimado;
+
+    @Column(name = "costo_final", precision = 15, scale = 2)
+    private BigDecimal costoFinal;
 
 }

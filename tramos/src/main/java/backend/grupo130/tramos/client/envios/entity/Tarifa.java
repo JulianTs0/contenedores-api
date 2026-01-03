@@ -1,13 +1,15 @@
 package backend.grupo130.tramos.client.envios.entity;
 
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.RoundingMode;
 
 import java.math.BigDecimal;
 
-// TODO: Revisar los datos inutiles con respecto a la solicitud
 
 @Data
 @NoArgsConstructor
@@ -28,7 +30,11 @@ public class Tarifa {
 
     private BigDecimal costoEstadia;
 
-    public BigDecimal calcularCostoEstimado(BigDecimal distanciaKm, BigDecimal cargosFijosUnitario, int cantidadTramos, long diasEstadia, PreciosNegocio preciosNegocio) {
+    private BigDecimal costoEstimado;
+
+    private BigDecimal costoFinal;
+
+    public void calcularCostoEstimado(BigDecimal distanciaKm, BigDecimal cargosFijosUnitario, int cantidadTramos, long diasEstadia, PreciosNegocio preciosNegocio) {
 
         BigDecimal valorFijoUnitario = (cargosFijosUnitario != null) ? cargosFijosUnitario : BigDecimal.ZERO;
         BigDecimal cargosFijosTotales = valorFijoUnitario.multiply(new BigDecimal(cantidadTramos));
@@ -44,14 +50,17 @@ public class Tarifa {
         BigDecimal precioEstadia = (this.costoEstadia != null) ? this.costoEstadia : BigDecimal.ZERO;
         BigDecimal costoTotalEstadia = precioEstadia.multiply(new BigDecimal(diasEstadia));
 
-        return baseAjustada
+        BigDecimal costoEstimado = baseAjustada
             .add(costoCombustible)
             .add(costoTotalEstadia)
             .add(cargosFijosTotales)
             .setScale(2, RoundingMode.HALF_UP);
+
+        this.setCostoEstimado(costoEstimado);
+
     }
 
-    public BigDecimal calcularCostoFinal(BigDecimal distanciaTotalKm, BigDecimal cargosFijosTotales, BigDecimal costoTotalEstadiasReales, PreciosNegocio preciosNegocio) {
+    public void calcularCostoFinal(BigDecimal distanciaTotalKm, BigDecimal cargosFijosTotales, BigDecimal costoTotalEstadiasReales, PreciosNegocio preciosNegocio) {
 
         BigDecimal baseAjustada = calcularCostoBaseAjustado(preciosNegocio);
 
@@ -64,31 +73,37 @@ public class Tarifa {
         BigDecimal costoEstadiaFinal = (costoTotalEstadiasReales != null) ? costoTotalEstadiasReales : BigDecimal.ZERO;
         BigDecimal cargosFijosFinal = (cargosFijosTotales != null) ? cargosFijosTotales : BigDecimal.ZERO;
 
-        return baseAjustada
+        BigDecimal costoFinal = baseAjustada
             .add(costoCombustible)
             .add(costoEstadiaFinal)
             .add(cargosFijosFinal)
             .setScale(2, RoundingMode.HALF_UP);
+
+        this.setCostoFinal(costoFinal);
+
     }
 
     private BigDecimal calcularCostoBaseAjustado(PreciosNegocio preciosNegocio) {
 
-        BigDecimal base = (this.costoBase != null) ? this.costoBase : BigDecimal.ZERO;
-        BigDecimal peso = (this.pesoMax != null) ? this.pesoMax : BigDecimal.ZERO;
+        if(this.pesoMax == null || this.volumenMax == null || this.costoBase == null){
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal comparacion = this.pesoMax.multiply(this.volumenMax);
+
         BigDecimal multiplicador;
 
-        if (peso.compareTo(preciosNegocio.getRangoPesoBajo()) <= 0) {
+        if (comparacion.compareTo(preciosNegocio.getRangoPesoBajo()) <= 0) {
             multiplicador = preciosNegocio.getMultiplicadorBajo();
-
         }
-        else if (peso.compareTo(preciosNegocio.getRangoPesoMedio()) <= 0){
+        else if (comparacion.compareTo(preciosNegocio.getRangoPesoMedio()) <= 0){
             multiplicador = preciosNegocio.getMultiplicadorMedio();
         }
         else {
             multiplicador = preciosNegocio.getMultiplicadorAlto();
         }
 
-        return base.multiply(multiplicador);
+        return this.costoBase.multiply(multiplicador);
     }
 
 }

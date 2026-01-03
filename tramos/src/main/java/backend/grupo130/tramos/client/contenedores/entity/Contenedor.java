@@ -11,19 +11,18 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Contenedor {
 
-    private Long idContenedor;
+    private final Long idContenedor;
 
-    private BigDecimal peso;
+    private final BigDecimal peso;
 
-    private BigDecimal volumen;
+    private final BigDecimal volumen;
 
-    private Usuario cliente;
+    private final Usuario cliente;
 
-    private EstadoContenedor estado;
+    private final EstadoContenedor estado;
 
     public boolean esBorrador(){
         return this.estado.equals(EstadoContenedor.BORRADOR);

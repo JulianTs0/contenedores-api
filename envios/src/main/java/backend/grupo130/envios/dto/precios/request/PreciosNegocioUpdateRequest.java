@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@NoArgsConstructor(force = true)
 @AllArgsConstructor
 public class PreciosNegocioUpdateRequest {
 

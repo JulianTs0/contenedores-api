@@ -2,13 +2,14 @@ package backend.grupo130.envios.data.models;
 
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "solicitud_traslado")
@@ -28,12 +29,6 @@ public class SolicitudTrasladoModel {
 
     @Column(name = "fecha_fin")
     private LocalDateTime fechaFin;
-
-    @Column(name = "costo_estimado", precision = 15, scale = 2)
-    private BigDecimal costoEstimado;
-
-    @Column(name = "costo_final", precision = 15, scale = 2)
-    private BigDecimal costoFinal;
 
     @Column(name = "tiempo_estimado_horas", precision = 10, scale = 2)
     private BigDecimal tiempoEstimadoHoras;

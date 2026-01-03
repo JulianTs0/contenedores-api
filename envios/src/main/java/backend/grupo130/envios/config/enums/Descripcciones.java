@@ -1,7 +1,6 @@
 package backend.grupo130.envios.config.enums;
 
 import lombok.Getter;
-import org.aspectj.weaver.NewConstructorTypeMunger;
 
 @Getter
 public enum Descripcciones {

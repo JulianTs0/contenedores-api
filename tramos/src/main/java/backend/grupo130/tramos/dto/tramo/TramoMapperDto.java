@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TramoMapperDto {
 
-    public static TramoGetByIdResponse toResponseGetById(Tramo tramo, Camion camion, Ubicacion origen, Ubicacion destino) {
+    public static TramoGetByIdResponse toResponseGetById(Tramo tramo) {
         return new TramoGetByIdResponse(
             tramo.getIdTramo(),
             tramo.getTipoTramo().name(),
@@ -23,10 +23,10 @@ public class TramoMapperDto {
             tramo.getFechaHoraInicioReal(),
             tramo.getFechaHoraFinReal(),
             tramo.getOrden(),
-            camion,
+            tramo.getCamion(),
             tramo.getRutaTraslado(),
-            origen,
-            destino
+            tramo.getOrigen(),
+            tramo.getDestino()
         );
     }
 

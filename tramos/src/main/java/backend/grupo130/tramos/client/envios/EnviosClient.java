@@ -11,9 +11,12 @@ import backend.grupo130.tramos.client.envios.responses.SolicitudGetByIdResponse;
 import backend.grupo130.tramos.config.enums.EstadoSolicitud;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Component
 @AllArgsConstructor
 @Slf4j
 public class EnviosClient {
@@ -24,7 +27,9 @@ public class EnviosClient {
 
         SolicitudGetByIdResponse response = this.enviosGateway.getSolicitudTrasladoById(solicitudTrasladoId);
 
-        log.warn(response.getEstado());
+        log.warn("Estado de la solicitud", 
+            kv("estado", response.getEstado())
+        );
 
         return new SolicitudTraslado(
             response.getIdSolicitud(),
@@ -32,8 +37,6 @@ public class EnviosClient {
             response.getFechaFin(),
             response.getTiempoEstimadoHoras(),
             response.getTiempoRealHoras(),
-            response.getCostoEstimado(),
-            response.getCostoFinal(),
             EstadoSolicitud.fromString(response.getEstado()),
             response.getTarifa(),
             response.getSeguimientos(),
@@ -45,14 +48,23 @@ public class EnviosClient {
 
     }
 
-    public SolicitudEditResponse editSolicitud(Long id, SolicitudEditRequest request) {
+    public SolicitudEditResponse editSolicitud(Long id, SolicitudEditRequest body) {
 
-        return this.enviosGateway.editSolicitud(id, request);
+        return this.enviosGateway.editSolicitud(id, body);
     }
 
 
-    public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(Long id, SolicitudCambioDeEstadoRequest request) {
-        return this.enviosGateway.cambioDeEstadoSolicitud(id, request);
+    public SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(
+        Long id,
+        String nuevoEstado,
+        String descripcion
+    ) {
+        SolicitudCambioDeEstadoRequest body = SolicitudCambioDeEstadoRequest.builder()
+            .nuevoEstado(nuevoEstado)
+            .descripcion(descripcion)
+            .build();
+
+        return this.enviosGateway.cambioDeEstadoSolicitud(id, body);
     }
 
     public PreciosNegocio getUltimosPrecios() {

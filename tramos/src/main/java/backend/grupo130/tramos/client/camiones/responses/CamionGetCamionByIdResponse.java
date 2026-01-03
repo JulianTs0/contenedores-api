@@ -2,26 +2,28 @@ package backend.grupo130.tramos.client.camiones.responses;
 
 import backend.grupo130.tramos.config.entity.Usuario;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class CamionGetCamionByIdResponse {
 
-    private String dominio;
+    private final String dominio;
 
-    private BigDecimal capacidadPeso;
+    private final BigDecimal capacidadPeso;
 
-    private BigDecimal capacidadVolumen;
+    private final BigDecimal capacidadVolumen;
 
-    private BigDecimal consumoCombustible;
+    private final BigDecimal consumoCombustible;
 
-    private BigDecimal costoTrasladoBase;
+    private final BigDecimal costoTrasladoBase;
 
-    private Boolean estado;
+    private final Boolean estado;
 
-    private Usuario transportista;
+    private final Usuario transportista;
 
 }

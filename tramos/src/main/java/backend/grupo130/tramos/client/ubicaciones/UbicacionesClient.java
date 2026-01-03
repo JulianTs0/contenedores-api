@@ -8,11 +8,12 @@ import backend.grupo130.tramos.client.ubicaciones.responses.UbicacionGetByIdResp
 import backend.grupo130.tramos.client.ubicaciones.responses.UbicacionGetListByIdResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Component
 @AllArgsConstructor
 @Slf4j
 public class UbicacionesClient {
@@ -23,28 +24,24 @@ public class UbicacionesClient {
 
         DepositoGetByIdResponse response = this.ubicacionesGateway.getDepositoById(depositoId);
 
-        Deposito deposito = new Deposito(
+        return new Deposito(
             response.getIdDeposito(),
             response.getNombre(),
             response.getCostoEstadiaDiario()
         );
-
-        return deposito;
     }
 
     public Ubicacion getUbicacionById(Long ubicacionId) {
 
         UbicacionGetByIdResponse response = this.ubicacionesGateway.getUbicacionById(ubicacionId);
 
-        Ubicacion ubicacion = new Ubicacion(
+        return new Ubicacion(
             response.getIdUbicacion(),
             response.getDireccion(),
             response.getLatitud(),
             response.getLongitud(),
             response.getDeposito()
         );
-
-        return ubicacion;
     }
 
     public List<Ubicacion> getUbicacionAll() {
@@ -53,15 +50,13 @@ public class UbicacionesClient {
 
         return response.getUbicaciones().stream()
             .map(
-                dto -> {
-                    return new Ubicacion(
-                        dto.getIdUbicacion(),
-                        dto.getDireccion(),
-                        dto.getLatitud(),
-                        dto.getLongitud(),
-                        dto.getDeposito()
-                    );
-                }
+                dto -> new Ubicacion(
+                    dto.getIdUbicacion(),
+                    dto.getDireccion(),
+                    dto.getLatitud(),
+                    dto.getLongitud(),
+                    dto.getDeposito()
+                )
             )
             .toList();
     }
@@ -72,15 +67,13 @@ public class UbicacionesClient {
 
         return response.getUbicaciones().stream()
             .map(
-                dto -> {
-                    return new Ubicacion(
-                        dto.getIdUbicacion(),
-                        dto.getDireccion(),
-                        dto.getLatitud(),
-                        dto.getLongitud(),
-                        dto.getDeposito()
-                    );
-                }
+                dto -> new Ubicacion(
+                    dto.getIdUbicacion(),
+                    dto.getDireccion(),
+                    dto.getLatitud(),
+                    dto.getLongitud(),
+                    dto.getDeposito()
+                )
             )
             .toList();
     }

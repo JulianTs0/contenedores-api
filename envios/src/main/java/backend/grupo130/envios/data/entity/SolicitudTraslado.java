@@ -1,22 +1,17 @@
 package backend.grupo130.envios.data.entity;
 
-import backend.grupo130.envios.config.enums.Descripcciones;
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;
 import backend.grupo130.envios.config.exceptions.ServiceError;
-import backend.grupo130.envios.data.entity.SeguimientoEnvio;
-import backend.grupo130.envios.data.entity.Tarifa;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO: Revisar los datos inutiles con respecto a la solicitud
 
 @Getter
 @Setter
@@ -29,10 +24,6 @@ public class SolicitudTraslado {
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaFin;
-
-    private BigDecimal costoEstimado;
-
-    private BigDecimal costoFinal;
 
     private BigDecimal tiempoEstimadoHoras;
 

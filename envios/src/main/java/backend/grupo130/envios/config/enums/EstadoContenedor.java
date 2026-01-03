@@ -1,7 +1,5 @@
 package backend.grupo130.envios.config.enums;
 
-import lombok.ToString;
-
 public enum EstadoContenedor {
     BORRADOR,
     PROGRAMADO,

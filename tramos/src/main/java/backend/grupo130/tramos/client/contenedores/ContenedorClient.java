@@ -5,12 +5,13 @@ import backend.grupo130.tramos.client.contenedores.responses.ContenedorCambioDeE
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorGetByIdResponse;
 import backend.grupo130.tramos.config.enums.EstadoContenedor;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
+@Component
 @AllArgsConstructor
 public class ContenedorClient {
 
@@ -18,17 +19,15 @@ public class ContenedorClient {
 
     public Contenedor getById(Long id){
 
-        ContenedorGetByIdResponse response = this.contenedorGateway.getBYId(id);
+        ContenedorGetByIdResponse response = this.contenedorGateway.getById(id);
 
-        Contenedor contenedor = new Contenedor(
+        return new Contenedor(
             response.getIdContenedor(),
             response.getPeso(),
             response.getVolumen(),
             response.getCliente(),
             EstadoContenedor.fromString(response.getEstado())
         );
-
-        return contenedor;
 
     }
 

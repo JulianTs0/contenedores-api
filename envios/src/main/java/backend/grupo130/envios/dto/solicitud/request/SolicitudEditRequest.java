@@ -4,7 +4,6 @@ import backend.grupo130.envios.data.entity.Tarifa;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,14 +24,6 @@ public class SolicitudEditRequest {
 
     @FutureOrPresent(message = "{error.fecha.futureOrPresent}")
     private final LocalDateTime fechaFin;
-
-    @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
-    @Positive(message = "{error.costo.positive}")
-    private final BigDecimal costoEstimado;
-
-    @Digits(integer = 10, fraction = 2, message = "{error.costo.digits}")
-    @Positive(message = "{error.costo.positive}")
-    private final BigDecimal costoFinal;
 
     @Digits(integer = 10, fraction = 2, message = "{error.tiempo.digits}")
     @Positive(message = "{error.tiempo.positive}")

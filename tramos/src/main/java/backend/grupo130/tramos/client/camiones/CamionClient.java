@@ -6,13 +6,14 @@ import backend.grupo130.tramos.client.camiones.responses.CamionGetCamionByIdResp
 import backend.grupo130.tramos.client.camiones.responses.CamionGetPromedioCombustibleActualResponse;
 import backend.grupo130.tramos.client.camiones.responses.CamionGetPromedioCostoBaseResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
+@Component
 @AllArgsConstructor
 public class CamionClient {
 
@@ -22,7 +23,7 @@ public class CamionClient {
 
         CamionGetCamionByIdResponse response = this.camionGateway.getById(camionId);
 
-        Camion camion = new Camion(
+        return new Camion(
             response.getDominio(),
             response.getCapacidadPeso(),
             response.getCapacidadVolumen(),
@@ -31,8 +32,6 @@ public class CamionClient {
             response.getEstado(),
             response.getTransportista()
         );
-
-        return camion;
     }
 
     public CamionEditResponse cambiarDisponibilidad(String dominio, Boolean estado) {
@@ -41,9 +40,7 @@ public class CamionClient {
 
         request.put("estado", estado);
 
-        CamionEditResponse response = this.camionGateway.cambiarDisponibilidad(dominio, request);
-
-        return response;
+        return this.camionGateway.cambiarDisponibilidad(dominio, request);
     }
 
     public BigDecimal getPromedioCostoBase(BigDecimal peso, BigDecimal volumen){

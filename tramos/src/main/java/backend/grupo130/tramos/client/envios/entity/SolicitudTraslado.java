@@ -2,6 +2,7 @@ package backend.grupo130.tramos.client.envios.entity;
 
 import backend.grupo130.tramos.config.enums.EstadoSolicitud;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +10,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO: Revisar los datos inutiles con respecto a la solicitud
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class SolicitudTraslado {
 
@@ -25,10 +25,6 @@ public class SolicitudTraslado {
     private BigDecimal tiempoEstimadoHoras;
 
     private BigDecimal tiempoRealHoras;
-
-    private BigDecimal costoEstimado;
-
-    private BigDecimal costoFinal;
 
     private EstadoSolicitud estado;
 

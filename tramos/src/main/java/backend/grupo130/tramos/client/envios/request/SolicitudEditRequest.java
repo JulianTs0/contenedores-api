@@ -1,10 +1,7 @@
 package backend.grupo130.tramos.client.envios.request;
 
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,27 +9,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class SolicitudEditRequest {
 
-    private Long idSolicitud;
+    private final Long idSolicitud;
 
-    private LocalDateTime fechaInicio;
+    private final LocalDateTime fechaInicio;
 
-    private LocalDateTime fechaFin;
+    private final LocalDateTime fechaFin;
 
-    private BigDecimal costoEstimado;
+    private final BigDecimal tiempoEstimadoHoras;
 
-    private BigDecimal costoFinal;
+    private final BigDecimal tiempoRealHoras;
 
-    private BigDecimal tiempoEstimadoHoras;
+    private final Tarifa tarifa;
 
-    private BigDecimal tiempoRealHoras;
+    private final Long idOrigen;
 
-    private Tarifa tarifa;
-
-    private Long idOrigen;
-
-    private Long idDestino;
+    private final Long idDestino;
 
 }

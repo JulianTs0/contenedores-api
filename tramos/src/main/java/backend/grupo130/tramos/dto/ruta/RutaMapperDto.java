@@ -13,13 +13,13 @@ import java.util.List;
 
 public class RutaMapperDto {
 
-    public static RutaGetByIdResponse toResponseGetById(RutaTraslado ruta, SolicitudTraslado solicitud) {
+    public static RutaGetByIdResponse toResponseGetById(RutaTraslado ruta) {
         return new RutaGetByIdResponse(
             ruta.getIdRuta(),
             ruta.getCantidadTramos(),
             ruta.getCantidadDepositos(),
             ruta.getCargosGestionFijo(),
-            solicitud
+            ruta.getSolicitud()
         );
     }
 

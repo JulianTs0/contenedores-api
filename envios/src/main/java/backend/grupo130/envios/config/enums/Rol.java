@@ -1,7 +1,5 @@
 package backend.grupo130.envios.config.enums;
 
-import lombok.ToString;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

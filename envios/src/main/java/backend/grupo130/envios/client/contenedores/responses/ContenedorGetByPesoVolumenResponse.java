@@ -3,8 +3,6 @@ package backend.grupo130.envios.client.contenedores.responses;
 import backend.grupo130.envios.client.contenedores.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 

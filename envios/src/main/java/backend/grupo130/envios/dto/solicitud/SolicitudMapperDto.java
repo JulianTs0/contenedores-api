@@ -1,7 +1,7 @@
 package backend.grupo130.envios.dto.solicitud;
 
-import backend.grupo130.envios.data.entity.SolicitudTraslado;
 import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.data.entity.SolicitudTraslado;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudEditRequest;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;
@@ -25,8 +25,6 @@ public class SolicitudMapperDto {
             solicitud.getIdCliente(),
             solicitud.getIdOrigen(),
             solicitud.getIdDestino(),
-            solicitud.getCostoEstimado(),
-            solicitud.getCostoFinal(),
             solicitud.getTiempoEstimadoHoras(),
             solicitud.getTiempoRealHoras()
         );
@@ -48,8 +46,6 @@ public class SolicitudMapperDto {
             solicitud.getIdCliente(),
             solicitud.getIdOrigen(),
             solicitud.getIdDestino(),
-            solicitud.getCostoEstimado(),
-            solicitud.getCostoFinal(),
             solicitud.getTiempoEstimadoHoras(),
             solicitud.getTiempoRealHoras()
         );
@@ -68,8 +64,6 @@ public class SolicitudMapperDto {
             .idSolicitud(id)
             .fechaInicio(body.getFechaInicio())
             .fechaFin(body.getFechaFin())
-            .costoEstimado(body.getCostoEstimado())
-            .costoFinal(body.getCostoFinal())
             .tiempoEstimadoHoras(body.getTiempoEstimadoHoras())
             .tiempoRealHoras(body.getTiempoRealHoras())
             .tarifa(body.getTarifa())

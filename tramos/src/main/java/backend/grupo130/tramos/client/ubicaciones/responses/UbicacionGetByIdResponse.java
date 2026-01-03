@@ -2,11 +2,13 @@ package backend.grupo130.tramos.client.ubicaciones.responses;
 
 import backend.grupo130.tramos.client.ubicaciones.entity.Deposito;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class UbicacionGetByIdResponse {
 

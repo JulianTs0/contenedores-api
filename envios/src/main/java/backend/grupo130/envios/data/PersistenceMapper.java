@@ -25,8 +25,6 @@ public class PersistenceMapper {
                 model.getIdSolicitud(),
                 model.getFechaInicio(),
                 model.getFechaFin(),
-                model.getCostoEstimado(),
-                model.getCostoFinal(),
                 model.getTiempoEstimadoHoras(),
                 model.getTiempoRealHoras(),
                 PersistenceMapper.toDomain(model.getTarifa()),
@@ -48,8 +46,6 @@ public class PersistenceMapper {
         model.setIdSolicitud(domain.getIdSolicitud());
         model.setFechaInicio(domain.getFechaInicio());
         model.setFechaFin(domain.getFechaFin());
-        model.setCostoEstimado(domain.getCostoEstimado());
-        model.setCostoFinal(domain.getCostoFinal());
         model.setTiempoEstimadoHoras(domain.getTiempoEstimadoHoras());
         model.setTiempoRealHoras(domain.getTiempoRealHoras());
         model.setTarifa(PersistenceMapper.toModel(domain.getTarifa()));
@@ -123,15 +119,17 @@ public class PersistenceMapper {
         if (model == null) {
             return null;
         }
-        return new Tarifa(
-                model.getIdTarifa(),
-                model.getPesoMax(),
-                model.getVolumenMax(),
-                model.getCostoBase(),
-                model.getValorLitro(),
-                model.getConsumoAprox(),
-                model.getCostoEstadia()
-        );
+        Tarifa entity = new Tarifa();
+        entity.setIdTarifa(model.getIdTarifa());
+        entity.setPesoMax(model.getPesoMax());
+        entity.setVolumenMax(model.getVolumenMax());
+        entity.setCostoBase(model.getCostoBase());
+        entity.setValorLitro(model.getValorLitro());
+        entity.setConsumoAprox(model.getConsumoAprox());
+        entity.setCostoEstadia(model.getCostoEstadia());
+        entity.setCostoEstimado(model.getCostoEstimado());
+        entity.setCostoFinal(model.getCostoFinal());
+        return entity;
     }
 
     public static TarifaModel toModel(Tarifa domain) {
@@ -146,6 +144,8 @@ public class PersistenceMapper {
         model.setValorLitro(domain.getValorLitro());
         model.setConsumoAprox(domain.getConsumoAprox());
         model.setCostoEstadia(domain.getCostoEstadia());
+        model.setCostoEstimado(domain.getCostoEstimado());
+        model.setCostoFinal(domain.getCostoFinal());
         return model;
     }
 

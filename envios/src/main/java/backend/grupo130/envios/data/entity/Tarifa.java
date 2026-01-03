@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-// TODO: Revisar los datos inutiles con respecto a la solicitud
 
 @Getter
 @Setter
@@ -46,9 +45,16 @@ public class Tarifa {
     @Digits(integer = 8, fraction = 2, message = "{error.consumoAprox.digits}")
     private BigDecimal consumoAprox;
 
-    @NotNull(message = "{error.costoEstadia.notNull}")
-    @Positive(message = "{error.costoEstadia.positive}")
+    @PositiveOrZero(message = "{error.costoEstadia.positive}")
     @Digits(integer = 8, fraction = 2, message = "{error.costoEstadia.digits}")
     private BigDecimal costoEstadia;
+
+    @Positive
+    @Digits(integer = 8, fraction = 2)
+    private BigDecimal costoEstimado;
+
+    @Positive
+    @Digits(integer = 8, fraction = 2)
+    private BigDecimal costoFinal;
 
 }

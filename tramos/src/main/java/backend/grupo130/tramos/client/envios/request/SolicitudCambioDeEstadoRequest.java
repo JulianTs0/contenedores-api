@@ -1,20 +1,17 @@
 package backend.grupo130.tramos.client.envios.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class SolicitudCambioDeEstadoRequest {
 
-    private Long idSolicitud;
+    private final Long idSolicitud;
 
-    private String nuevoEstado;
+    private final String nuevoEstado;
 
-    private String descripcion;
+    private final String descripcion;
 
 }

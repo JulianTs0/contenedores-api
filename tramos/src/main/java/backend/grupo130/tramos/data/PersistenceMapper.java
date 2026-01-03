@@ -1,6 +1,9 @@
 
 package backend.grupo130.tramos.data;
 
+import backend.grupo130.tramos.client.camiones.entity.Camion;
+import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
+import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.data.entity.RutaTraslado;
 import backend.grupo130.tramos.data.entity.Tramo;
 import backend.grupo130.tramos.data.models.RutaTrasladoModel;
@@ -27,9 +30,9 @@ public class PersistenceMapper {
             entity.setFechaHoraInicioReal(model.getFechaHoraInicioReal());
             entity.setFechaHoraFinReal(model.getFechaHoraFinReal());
             entity.setOrden(model.getOrden());
-            entity.setDominioCamion(model.getDominioCamion());
-            entity.setIdOrigen(model.getIdOrigen());
-            entity.setIdDestino(model.getIdDestino());
+            entity.setCamion(Camion.builder().dominio(model.getDominioCamion()).build());
+            entity.setOrigen(Ubicacion.builder().idUbicacion(model.getIdOrigen()).build());
+            entity.setDestino(Ubicacion.builder().idUbicacion(model.getIdDestino()).build());
             entity.setDistancia(model.getDistancia());
 
             entity.setRutaTraslado(toDomain(model.getRutaTraslado()));
@@ -53,9 +56,9 @@ public class PersistenceMapper {
             model.setFechaHoraInicioReal(entity.getFechaHoraInicioReal());
             model.setFechaHoraFinReal(entity.getFechaHoraFinReal());
             model.setOrden(entity.getOrden());
-            model.setDominioCamion(entity.getDominioCamion());
-            model.setIdOrigen(entity.getIdOrigen());
-            model.setIdDestino(entity.getIdDestino());
+            model.setDominioCamion(entity.getCamion() == null ? null : entity.getCamion().getDominio());
+            model.setIdOrigen(entity.getOrigen().getIdUbicacion());
+            model.setIdDestino(entity.getDestino().getIdUbicacion());
             model.setDistancia(entity.getDistancia());
 
             model.setRutaTraslado(toModel(entity.getRutaTraslado()));
@@ -88,7 +91,7 @@ public class PersistenceMapper {
             entity.setCantidadTramos(model.getCantidadTramos());
             entity.setCantidadDepositos(model.getCantidadDepositos());
             entity.setCargosGestionFijo(model.getCargosGestionFijo());
-            entity.setIdSolicitud(model.getIdSolicitud());
+            entity.setSolicitud(SolicitudTraslado.builder().idSolicitud(model.getIdSolicitud()).build());
 
             return entity;
         }
@@ -103,7 +106,7 @@ public class PersistenceMapper {
             model.setCantidadTramos(entity.getCantidadTramos());
             model.setCantidadDepositos(entity.getCantidadDepositos());
             model.setCargosGestionFijo(entity.getCargosGestionFijo());
-            model.setIdSolicitud(entity.getIdSolicitud());
+            model.setIdSolicitud(entity.getSolicitud().getIdSolicitud());
 
             return model;
         }

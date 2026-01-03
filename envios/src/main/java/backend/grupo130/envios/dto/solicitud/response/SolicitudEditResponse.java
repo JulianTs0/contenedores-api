@@ -33,10 +33,6 @@ public class SolicitudEditResponse {
 
     private final Long idDestino;
 
-    private final BigDecimal costoEstimado;
-
-    private final BigDecimal costoFinal;
-
     private final BigDecimal tiempoEstimadoHoras;
 
     private final BigDecimal tiempoRealHoras;

@@ -10,24 +10,23 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class PreciosNegocioGetLatestResponse {
 
-    private Long idPreciosNegocio;
+    private final Long idPreciosNegocio;
 
-    private BigDecimal rangoPesoBajo;
+    private final BigDecimal rangoPesoBajo;
 
-    private BigDecimal rangoPesoMedio;
+    private final BigDecimal rangoPesoMedio;
 
-    private BigDecimal multiplicadorBajo;
+    private final BigDecimal multiplicadorBajo;
 
-    private BigDecimal multiplicadorMedio;
+    private final BigDecimal multiplicadorMedio;
 
-    private BigDecimal multiplicadorAlto;
+    private final BigDecimal multiplicadorAlto;
 
-    private BigDecimal valorLitro;
+    private final BigDecimal valorLitro;
 
-    private BigDecimal cargoGestion;
+    private final BigDecimal cargoGestion;
 
 }

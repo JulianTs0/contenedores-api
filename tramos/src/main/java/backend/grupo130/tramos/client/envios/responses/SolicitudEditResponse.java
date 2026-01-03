@@ -3,6 +3,7 @@ package backend.grupo130.tramos.client.envios.responses;
 import backend.grupo130.tramos.client.envios.entity.SeguimientoEnvio;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class SolicitudEditResponse {
 
@@ -32,10 +34,6 @@ public class SolicitudEditResponse {
     private final Long idOrigen;
 
     private final Long idDestino;
-
-    private final BigDecimal costoEstimado;
-
-    private final BigDecimal costoFinal;
 
     private final BigDecimal tiempoEstimadoHoras;
 

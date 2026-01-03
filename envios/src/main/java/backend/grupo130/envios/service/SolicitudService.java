@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -38,7 +40,10 @@ public class SolicitudService {
     private final TarifaRepository tarifaRepository;
 
     public SolicitudGetByIdResponse getById(SolicitudGetByIdRequest request) throws ServiceError {
-        log.info("Inicio getById. Buscando solicitud con ID: {}", request.getIdSolicitud());
+        log.info("Inicio getById. Buscando solicitud",
+                kv("evento", "buscar_solicitud"),
+                kv("id_solicitud", request.getIdSolicitud())
+        );
 
         SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
@@ -46,24 +51,38 @@ public class SolicitudService {
             throw new ServiceError("", Errores.SOLICITUD_NO_ENCONTRADA, 404);
         }
 
-        log.info("Solicitud encontrada exitosamente. ID: {}", request.getIdSolicitud());
+        log.info("Solicitud encontrada exitosamente",
+                kv("evento", "solicitud_encontrada"),
+                kv("id_solicitud", request.getIdSolicitud())
+        );
 
         return SolicitudMapperDto.toSolicitudGetByIdResponse(solicitud);
     }
 
     public SolicitudGetAllResponse getAll() throws ServiceError {
-        log.info("Inicio getAll. Buscando todas las solicitudes.");
+        log.info("Inicio getAll. Buscando todas las solicitudes",
+                kv("evento", "buscar_todas_solicitudes")
+        );
 
         List<SolicitudTraslado> solicitudes = this.solicitudRepository.getAll();
-        log.info("Se encontraron {} solicitudes.", solicitudes.size());
+        log.info("Se encontraron solicitudes",
+                kv("evento", "solicitudes_encontradas"),
+                kv("cantidad", solicitudes.size())
+        );
 
         return SolicitudMapperDto.toSolicitudGetAllResponse(solicitudes);
     }
 
     public SolicitudGetByIdResponse register(SolicitudRegisterRequest request) throws ServiceError {
-        log.info("Inicio register. Registrando nueva solicitud para cliente ID: {}", request.getIdCliente());
+        log.info("Inicio register. Registrando nueva solicitud",
+                kv("evento", "registrar_solicitud"),
+                kv("id_cliente", request.getIdCliente())
+        );
 
-        log.info("Buscando contenedor existente para cliente {}...", request.getIdCliente());
+        log.info("Buscando contenedor existente",
+                kv("evento", "buscar_contenedor"),
+                kv("id_cliente", request.getIdCliente())
+        );
 
         Contenedor contenedor = this.contenedorClient.getByPesoVolumen(
             request.getPeso(),
@@ -71,11 +90,16 @@ public class SolicitudService {
         );
 
         if (contenedor != null) {
-            log.info("Contenedor encontrado. ID: {}", contenedor.getIdContenedor());
+            log.info("Contenedor encontrado",
+                    kv("evento", "contenedor_encontrado"),
+                    kv("id_contenedor", contenedor.getIdContenedor())
+            );
 
             this.contenedorClient.asignarCliente(contenedor.getIdContenedor(), request.getIdCliente());
         } else {
-            log.warn("Contenedor no encontrado (404). Creando uno nuevo...");
+            log.warn("Contenedor no encontrado (404). Creando uno nuevo",
+                    kv("evento", "contenedor_no_encontrado")
+            );
 
             Long nuevoId = this.contenedorClient.register(
                 request.getPeso(),
@@ -83,11 +107,16 @@ public class SolicitudService {
                 request.getIdCliente()
             );
 
-            log.info("Volviendo a buscar el contenedor recién creado...");
+            log.info("Volviendo a buscar el contenedor recién creado",
+                    kv("evento", "buscar_contenedor_creado")
+            );
 
             contenedor = this.contenedorClient.getById(nuevoId);
 
-            log.info("Contenedor creado y recuperado. ID: {}", contenedor.getIdContenedor());
+            log.info("Contenedor creado y recuperado",
+                    kv("evento", "contenedor_creado"),
+                    kv("id_contenedor", contenedor.getIdContenedor())
+            );
         }
 
         SolicitudTraslado solicitud = new SolicitudTraslado();
@@ -107,12 +136,18 @@ public class SolicitudService {
         solicitud.setSeguimientos(inicio);
         SolicitudTraslado solicitudGuardada = this.solicitudRepository.save(solicitud);
 
-        log.info("Solicitud registrada exitosamente. Nueva ID: {}", solicitudGuardada.getIdSolicitud());
+        log.info("Solicitud registrada exitosamente",
+                kv("evento", "solicitud_registrada"),
+                kv("id_solicitud", solicitudGuardada.getIdSolicitud())
+        );
         return SolicitudMapperDto.toSolicitudGetByIdResponse(solicitudGuardada);
     }
 
     public SolicitudEditResponse edit(SolicitudEditRequest request) throws ServiceError {
-        log.info("Inicio edit. Editando solicitud ID: {}", request.getIdSolicitud());
+        log.info("Inicio edit. Editando solicitud",
+                kv("evento", "editar_solicitud"),
+                kv("id_solicitud", request.getIdSolicitud())
+        );
 
         SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
@@ -138,22 +173,22 @@ public class SolicitudService {
         if (request.getIdDestino() != null) {
             solicitud.setIdDestino(request.getIdDestino());
         }
-        if (request.getCostoEstimado() != null) {
-            solicitud.setCostoEstimado(request.getCostoEstimado());
-        }
-        if (request.getCostoFinal() != null) {
-            solicitud.setCostoFinal(request.getCostoFinal());
-        }
 
         if (request.getTarifa() != null) {
-            log.info("Procesando tarifa para solicitud {}", solicitud.getIdSolicitud());
+            log.info("Procesando tarifa para solicitud",
+                    kv("evento", "procesar_tarifa"),
+                    kv("id_solicitud", solicitud.getIdSolicitud())
+            );
 
             Tarifa tarifaRequest = request.getTarifa();
 
             Tarifa tarifaExistente = solicitud.getTarifa();
             if (tarifaExistente != null) {
 
-                log.info("Actualizando tarifa existente ID: {}", tarifaExistente.getIdTarifa());
+                log.info("Actualizando tarifa existente",
+                        kv("evento", "actualizar_tarifa"),
+                        kv("id_tarifa", tarifaExistente.getIdTarifa())
+                );
 
                 tarifaExistente.setPesoMax(tarifaRequest.getPesoMax());
                 tarifaExistente.setVolumenMax(tarifaRequest.getVolumenMax());
@@ -161,10 +196,14 @@ public class SolicitudService {
                 tarifaExistente.setConsumoAprox(tarifaRequest.getConsumoAprox());
                 tarifaExistente.setValorLitro(tarifaRequest.getValorLitro());
                 tarifaExistente.setCostoEstadia(tarifaRequest.getCostoEstadia());
+                tarifaExistente.setCostoEstimado(tarifaRequest.getCostoEstimado());
+                tarifaExistente.setCostoFinal(tarifaRequest.getCostoFinal());
 
                 this.tarifaRepository.update(tarifaExistente);
             } else {
-                log.info("Guardando nueva tarifa para la solicitud");
+                log.info("Guardando nueva tarifa para la solicitud",
+                        kv("evento", "guardar_nueva_tarifa")
+                );
 
                 Tarifa tarifaGuardada = this.tarifaRepository.save(tarifaRequest);
                 solicitud.setTarifa(tarifaGuardada);
@@ -173,12 +212,19 @@ public class SolicitudService {
 
         SolicitudTraslado solicitudActualizada = this.solicitudRepository.update(solicitud);
 
-        log.info("Solicitud editada exitosamente. ID: {}", solicitudActualizada.getIdSolicitud());
+        log.info("Solicitud editada exitosamente",
+                kv("evento", "solicitud_editada"),
+                kv("id_solicitud", solicitudActualizada.getIdSolicitud())
+        );
         return SolicitudMapperDto.toSolicitudEditResponse(solicitudActualizada);
     }
 
     public SolicitudCambioDeEstadoResponse cambioDeEstado(SolicitudCambioDeEstadoRequest request) throws ServiceError {
-        log.info("Inicio cambioDeEstado. Solicitud ID: {}. Nuevo estado: {}", request.getIdSolicitud(), request.getNuevoEstado());
+        log.info("Inicio cambioDeEstado",
+                kv("evento", "cambio_estado_solicitud"),
+                kv("id_solicitud", request.getIdSolicitud()),
+                kv("nuevo_estado", request.getNuevoEstado())
+        );
 
         SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
@@ -200,7 +246,10 @@ public class SolicitudService {
     }
 
     public SolicitudCambioDeEstadoResponse confirmarSolicitud(SolicitudConfirmarRuta request) throws ServiceError {
-        log.info("Confirmando solicitud . Solicitud ID: {}", request.getIdSolicitud());
+        log.info("Confirmando solicitud",
+                kv("evento", "confirmar_solicitud"),
+                kv("id_solicitud", request.getIdSolicitud())
+        );
 
         SolicitudTraslado solicitud = this.solicitudRepository.getById(request.getIdSolicitud());
 
