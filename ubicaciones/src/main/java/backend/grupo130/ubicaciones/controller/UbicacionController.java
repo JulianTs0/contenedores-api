@@ -165,7 +165,7 @@ public class UbicacionController {
             )
         }
     )
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UbicacionEditResponse> edit(
         @PathVariable
         @NotNull(message = "{error.idUbicacion.notNull}")

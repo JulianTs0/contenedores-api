@@ -290,7 +290,7 @@ public class ContenedorController {
             content = @Content
         )
     })
-    @PutMapping("/estado/{id}")
+    @PatchMapping("/estado/{id}")
     public ResponseEntity<CambioDeEstadoResponse> cambioDeEstado(
         @Parameter(description = "ID del contenedor a cambiar de estado", required = true, example = "1")
         @NotNull(message = "{error.idContenedor.notNull}")

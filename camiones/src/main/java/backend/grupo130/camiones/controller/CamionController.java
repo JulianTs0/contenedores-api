@@ -283,7 +283,7 @@ public class CamionController {
             content = @Content
         )
     })
-    @PutMapping("/disponibilidad/{dominio}")
+    @PatchMapping("/disponibilidad/{dominio}")
     public ResponseEntity<CambiarDisponibilidadResponse> cambiarDisponibilidad(
         @NotBlank(message = "{error.dominio.path.notBlank}")
         @Size(max = 80, message = "{error.dominio.max}")

@@ -1,29 +1,34 @@
 spring:
-  application:
-    name: camiones
-  datasource:
-    url: jdbc:postgresql://localhost:6435/camiones_db
-    username: camiones
-    password: camiones
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  clients:
-      usuarios:
-          url: http://localhost:8090/api/usuarios
+    application:
+        name: camiones
+    datasource:
+        url: jdbc:postgresql://localhost:6435/camiones_db
+        username: camiones
+        password: camiones
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    clients:
+        usuarios:
+            url: http://localhost:8090/api/usuarios
+    cloud:
+        openfeign:
+            httpclient:
+                hc5:
+                    enabled: true
 
 server:
-  port: 8093
+    port: 8093
 
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+    swagger-ui:
+        path: /swagger-ui.html
 
 logging:
     config: classpath:logback-spring.xml

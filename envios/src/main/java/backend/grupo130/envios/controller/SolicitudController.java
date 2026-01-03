@@ -166,7 +166,7 @@ public class SolicitudController {
                     content = @Content
             )
     })
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<SolicitudEditResponse> edit(
             @Parameter(description = "ID único de la solicitud a editar", required = true, example = "1")
             @NotNull(message = "{error.idSolicitud.notNull}")
@@ -208,7 +208,7 @@ public class SolicitudController {
                     content = @Content
             )
     })
-    @PutMapping("/{id}/estado")
+    @PatchMapping("/{id}/estado")
     public ResponseEntity<SolicitudCambioDeEstadoResponse> cambioDeEstado(
             @Parameter(description = "ID único de la solicitud a modificar", required = true, example = "1")
             @NotNull(message = "{error.idSolicitud.notNull}")

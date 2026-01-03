@@ -7,10 +7,7 @@ import backend.grupo130.tramos.client.envios.responses.SolicitudCambioDeEstadoRe
 import backend.grupo130.tramos.client.envios.responses.SolicitudEditResponse;
 import backend.grupo130.tramos.client.envios.responses.SolicitudGetByIdResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "envios", url = "${spring.clients.envios.url}")
 public interface EnviosGateway {
@@ -20,13 +17,13 @@ public interface EnviosGateway {
         @PathVariable("id") Long id
     );
 
-    @PutMapping("/solicitud/{id}")
+    @PatchMapping("/solicitud/{id}")
     SolicitudEditResponse editSolicitud(
         @PathVariable("id") Long id,
         @RequestBody SolicitudEditRequest request
     );
 
-    @PutMapping("/solicitud/{id}/estado")
+    @PatchMapping("/solicitud/{id}/estado")
     SolicitudCambioDeEstadoResponse cambioDeEstadoSolicitud(
         @PathVariable("id") Long id,
         @RequestBody SolicitudCambioDeEstadoRequest request

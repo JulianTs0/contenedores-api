@@ -186,7 +186,7 @@ public class PreciosNegocioController {
                     content = @Content
             )
     })
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<PreciosNegocioUpdateResponse> update(
             @Parameter(description = "ID único de los precios a actualizar", required = true, example = "1")
             @NotNull(message = "{error.idPreciosNegocio.notNull}")

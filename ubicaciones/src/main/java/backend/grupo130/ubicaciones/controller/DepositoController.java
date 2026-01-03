@@ -152,7 +152,7 @@ public class DepositoController {
                     )
             }
     )
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<DepositoEditResponse> edit(
             @PathVariable
             @NotNull(message = "{error.idDeposito.notNull}")

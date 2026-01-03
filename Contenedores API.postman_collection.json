@@ -1,0 +1,1835 @@
+{
+	"info": {
+		"_postman_id": "93dc2ff6-aa6f-41d0-a166-7ea40c7162ab",
+		"name": "Contenedores API",
+		"description": "Colección completa y definitiva con todos los microservicios integrados (Usuarios, Camiones, Contenedores, Envíos, Tramos y Ubicaciones).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48688953",
+		"_collection_link": "https://www.postman.com/anadruettaherther/workspace/seminario-integrador/collection/48688953-93dc2ff6-aa6f-41d0-a166-7ea40c7162ab?action=share&source=collection_link&creator=48688953"
+	},
+	"item": [
+		{
+			"name": "Gestión de Usuarios",
+			"item": [
+				{
+					"name": "Get Usuario By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Pepe\",\n  \"apellido\": \"POPO\",\n  \"email\": \"popo.pepe@hotmail.com\",\n  \"telefono\": \"1122334455\",\n  \"roles\": [\"TRANSPORTISTA\", \"CLIENTE\", \"ADMINISTRADOR\"],\n  \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Usuario",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Pri\",\n  \"apellido\": \"Pipi\",\n  \"telefono\": \"555-1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Camiones",
+			"item": [
+				{
+					"name": "Get Camión By Dominio",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "TEST-FLOTA-02"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Camiones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Camiones Disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/disponibles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								"disponibles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Consumo Promedio",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/consumo/promedio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								"consumo",
+								"promedio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Costo Promedio",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/costo/promedio?peso=1500.0&volumen=20.5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								"costo",
+								"promedio"
+							],
+							"query": [
+								{
+									"key": "peso",
+									"value": "1500.0",
+									"description": "Peso total de la carga en kg"
+								},
+								{
+									"key": "volumen",
+									"value": "20.5",
+									"description": "Volumen total de la carga en m3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Camión",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dominio\": \"NUEVO-01\",\n  \"capacidadPeso\": 12000.00,\n  \"capacidadVolumen\": 350.00,\n  \"consumoCombustible\": 0.95,\n  \"costoTrasladoBase\": 2100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Camión",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"capacidadPeso\": 21000.00,\n  \"capacidadVolumen\": 350.00,\n  \"consumoCombustible\": 0.95,\n  \"costoTrasladoBase\": 2200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "NUEVO-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar Disponibilidad",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"estado\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/disponibilidad/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								"disponibilidad",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "NUEVO-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asignar Transportista",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idTransportista\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/transportista/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								"transportista",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "NUEVO-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Camión",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/camiones/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"camiones",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "NUEVO-01"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Contenedores",
+			"item": [
+				{
+					"name": "Get Contenedor By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Contenedores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contenedor By Capacidad (Query Params)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/capacidad?peso=1000.0&volumen=15.5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								"capacidad"
+							],
+							"query": [
+								{
+									"key": "peso",
+									"value": "1000.0",
+									"description": "Peso requerido"
+								},
+								{
+									"key": "volumen",
+									"value": "15.5",
+									"description": "Volumen requerido"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contenedores By Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/estado/:estado",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								"estado",
+								":estado"
+							],
+							"variable": [
+								{
+									"key": "estado",
+									"value": "BORRADOR",
+									"description": "Valores: BORRADOR, PROGRAMADO, EN_TRANSITO, EN_DEPOSITO, ENTREGADO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Contenedor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idCliente\": 1,\n  \"peso\": 1200.50,\n  \"volumen\": 30.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Contenedor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peso\": 1100.0,\n  \"volumen\": 25.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Estado Contenedor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"estado\": \"PROGRAMADO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/estado/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								"estado",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cliente Contenedor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idCliente\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/cliente/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								"cliente",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contenedor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contenedores/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contenedores",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Envíos (Precios)",
+			"item": [
+				{
+					"name": "Get Precio By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Precio Actual (Último)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/ultimo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								"ultimo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Precios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Precio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rangoPesoBajo\": 50000,\n  \"rangoPesoMedio\": 150000,\n  \"multiplicadorBajo\": 1.0,\n  \"multiplicadorMedio\": 1.5,\n  \"multiplicadorAlto\": 2.0,\n  \"valorLitro\": 10,\n  \"cargoGestion\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Precio",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rangoPesoBajo\": 50000,\n  \"rangoPesoMedio\": 150000,\n  \"multiplicadorBajo\": 1.0,\n  \"multiplicadorMedio\": 1.5,\n  \"multiplicadorAlto\": 2.0,\n  \"valorLitro\": 12,\n  \"cargoGestion\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Precio",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/precios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"precios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Envíos (Solicitud)",
+			"item": [
+				{
+					"name": "Get Solicitud By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Solicitudes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Solicitud",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peso\": 1100.50,\n  \"volumen\": 40.0,\n  \"idCliente\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Solicitud",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fechaInicio\": \"2025-11-21T10:00:00\",\n  \"fechaFin\": \"2025-11-23T18:00:00\",\n  \"tiempoEstimadoHoras\": 48.0,\n  \"tiempoRealHoras\": null,\n  \"tarifa\": {\n    \"valorLitro\": 12,\n    \"costoBase\": 5000,\n    \"consumoAprox\": 150,\n    \"costoEstadia\": 2000,\n    \"costoEstimado\": 25000\n  },\n  \"idOrigen\": 1,\n  \"idDestino\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambio de Estado Solicitud",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nuevoEstado\": \"APROBADO\",\n  \"descripcion\": \"Aprobado por administración\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/:id/estado",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								":id",
+								"estado"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirmar Solicitud",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/envios/solicitud/:id/confirmar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"envios",
+								"solicitud",
+								":id",
+								"confirmar"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Tramos (Rutas)",
+			"item": [
+				{
+					"name": "Get Ruta By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/rutas/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"rutas",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Rutas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/rutas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"rutas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Ruta Tentativa",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idSolicitud\": 3,\n  \"ubicaciones\": [1, 3],\n  \"fechaHoraInicioEstimado\": \"2025-11-20T10:00:00\",\n  \"alternativa\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/rutas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"rutas",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Tramos (Tramos)",
+			"item": [
+				{
+					"name": "Get Tramo By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tramos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tramos By Ruta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/ruta/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								"ruta",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tramos By Transportista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/transportista/:dominio",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								"transportista",
+								":dominio"
+							],
+							"variable": [
+								{
+									"key": "dominio",
+									"value": "TEST-FLOTA-02"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asignar Camión",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dominioCamion\": \"TETE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/camion/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								"camion",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Iniciar Tramo",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dominioCamion\": \"TETE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/iniciar/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								"iniciar",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar Tramo",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dominioCamion\": \"TETE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tramos/tramos/finalizar/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tramos",
+								"tramos",
+								"finalizar",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Ubicaciones (Depositos)",
+			"item": [
+				{
+					"name": "Get Depósito By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/depositos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"depositos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Depósitos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/depositos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"depositos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Depósito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Deposito Toto\",\n  \"costoEstadiaDiario\": 5000.00,\n  \"idUbicacion\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/depositos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"depositos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Depósito",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Deposito Editado\",\n  \"costoEstadiaDiario\": 160.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/depositos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"depositos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Depósito",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/depositos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"depositos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Ubicaciones (General)",
+			"item": [
+				{
+					"name": "Get Ubicación By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Ubicaciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ubicaciones By List IDs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/lista?ids=1,2,3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								"lista"
+							],
+							"query": [
+								{
+									"key": "ids",
+									"value": "1,2,3",
+									"description": "Lista de IDs separados por coma"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Ubicación",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"direccion\": \"Av. Argentina 302, Neuquén\",\n  \"latitud\": -45.9516,\n  \"longitud\": -60.0591\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Ubicación",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"direccion\": \"Calle Falsa 123\",\n  \"latitud\": -31.420,\n  \"longitud\": -64.190\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ubicación",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/ubicaciones/ubicaciones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"ubicaciones",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{vault:authorization-secret}}",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "http://localhost:8082/api/login/oauth2/code/keycloak",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "http://localhost:8081/realms/TPI-Backend/protocol/openid-connect/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "http://localhost:8081/realms/TPI-Backend/protocol/openid-connect/auth",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8082",
+			"type": "string"
+		}
+	]
+}

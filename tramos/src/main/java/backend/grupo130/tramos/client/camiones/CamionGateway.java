@@ -27,7 +27,7 @@ public interface CamionGateway {
     @GetMapping("/consumo/promedio")
     CamionGetPromedioCombustibleActualResponse getConsumoPromedio();
 
-    @PutMapping("/disponibilidad/{dominio}")
+    @PatchMapping("/disponibilidad/{dominio}")
     CamionEditResponse cambiarDisponibilidad(
         @PathVariable String dominio,
         @RequestBody Map<String, Object> body

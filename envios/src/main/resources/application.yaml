@@ -1,56 +1,53 @@
 spring:
-  application:
-    name: envios
-  datasource:
-    url: jdbc:postgresql://localhost:6437/envios_db
-    username: envios
-    password: envios
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  clients:
-      usuarios:
-          url: http://localhost:8090/api/usuarios
-      camiones:
-          url: http://localhost:8093/api/camiones
-      tramos:
-          url: http://localhost:8092/api/tramos
-      ubicaciones:
-          url: http://localhost:8094/api/ubicaciones
-      contenedores:
-          url: http://localhost:8091/api/contenedores
+    application:
+        name: envios
+    datasource:
+        url: jdbc:postgresql://localhost:6437/envios_db
+        username: envios
+        password: envios
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    cloud:
+        openfeign:
+            httpclient:
+                hc5:
+                    enabled: true
+    clients:
+        usuarios:
+            url: http://localhost:8090/api/usuarios
+        camiones:
+            url: http://localhost:8093/api/camiones
+        tramos:
+            url: http://localhost:8092/api/tramos
+        ubicaciones:
+            url: http://localhost:8094/api/ubicaciones
+        contenedores:
+            url: http://localhost:8091/api/contenedores
 
 server:
-  port: 8095
-
-#security:
-#    oauth2:
-#        resourceserver:
-#            jwt:
-#                issuer-uri: http://keycloak:8081/realms/tpi-backend
+    port: 8095
 
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+    swagger-ui:
+        path: /swagger-ui.html
 
 feign:
     httpclient:
         enabled: true
 
 logging:
-    # 1. Le dice a Spring que use el archivo XML
     config: classpath:logback-spring.xml
 
-    # 2. Define los niveles
     level:
         root: INFO
-        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        backend.grupo130: DEBUG
         org.springframework: INFO
         org.hibernate: WARN
 

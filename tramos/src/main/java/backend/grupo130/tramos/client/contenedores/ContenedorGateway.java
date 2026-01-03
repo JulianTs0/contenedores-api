@@ -4,10 +4,7 @@ import backend.grupo130.tramos.client.contenedores.responses.ContenedorCambioDeE
 import backend.grupo130.tramos.client.contenedores.responses.ContenedorGetByIdResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -19,7 +16,7 @@ public interface ContenedorGateway {
         @PathVariable("id") Long id
     );
 
-    @PutMapping("/estado/{id}")
+    @PatchMapping("/estado/{id}")
     ContenedorCambioDeEstadoResponse cambioDeEstado(
         @PathVariable("id") Long id,
         @RequestBody @Valid Map<String, Object> body

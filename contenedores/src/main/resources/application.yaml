@@ -1,38 +1,41 @@
 spring:
-  application:
-    name: contenedores
-  datasource:
-    url: jdbc:postgresql://localhost:6433/contenedores_db
-    username: contenedores
-    password: contenedores
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  clients:
-    usuarios:
-      url: http://localhost:8090/api/usuarios
+    application:
+        name: contenedores
+    datasource:
+        url: jdbc:postgresql://localhost:6433/contenedores_db
+        username: contenedores
+        password: contenedores
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    clients:
+        usuarios:
+            url: http://localhost:8090/api/usuarios
+    cloud:
+        openfeign:
+            httpclient:
+                hc5:
+                    enabled: true
 
 server:
     port: 8091
 
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+    swagger-ui:
+        path: /swagger-ui.html
 
 logging:
-    # 1. Le dice a Spring que use el archivo XML
     config: classpath:logback-spring.xml
 
-    # 2. Define los niveles
     level:
         root: INFO
-        backend.grupo130: DEBUG # O el nivel que quieras para tu código
+        backend.grupo130: DEBUG
         org.springframework: INFO
         org.hibernate: WARN
 
