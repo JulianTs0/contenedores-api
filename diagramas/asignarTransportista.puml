@@ -11,18 +11,26 @@ control "UsuarioService" as US
 C -> CS: asignarTransportista(request)
 activate CS
 
+note right: Validar camion existe
+
 CS -> CR: getById(dominio)
 activate CR
 CR --> CS: camion
 deactivate CR
 
+note right: Validar camion disponible
+
 CS -> US: getById(idTransportista)
 activate US
+note right: Validar usuario existe y rol TRANSPORTISTA
 US --> CS: usuario
 deactivate US
 
+note right: Asignar transportista a camion
+
 CS -> CR: update(camion)
 activate CR
+CR --> CS: camionActualizado
 deactivate CR
 
 deactivate CS

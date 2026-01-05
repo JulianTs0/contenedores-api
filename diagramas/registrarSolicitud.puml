@@ -1,5 +1,5 @@
 @startuml
-title Diagrama de Secuencia - register 
+title Diagrama de Secuencia - register
 
 hide footbox
 
@@ -14,14 +14,17 @@ C -> SS: register(request)
 
 activate SS
 
+note right: Validar solicitud en estado BORRADOR
+
 group Try [Buscar Contenedor]
     SS -> CS: getByPesoVolumen(peso, volumen)
     activate CS
     CS --> SS: contenedor
     deactivate CS
-    
+
     SS -> CS: asignarCliente(idContenedor, idCliente)
     activate CS
+    note right: Validar rol CLIENTE
     CS -> US: getById(idCliente)
     activate US
     US --> CS: usuario
@@ -33,6 +36,7 @@ group Try [Buscar Contenedor]
 else Catch [ServiceError 404]
     SS -> CS: register(peso, volumen, idCliente)
     activate CS
+    note right: Validar rol CLIENTE
     CS -> US: getById(idCliente)
     activate US
     US --> CS: usuario
@@ -46,6 +50,8 @@ else Catch [ServiceError 404]
     CS --> SS: contenedor
     deactivate CS
 end
+
+note right: Crear seguimiento inicial (estado BORRADOR)
 
 SS -> STR: save(solicitud)
 

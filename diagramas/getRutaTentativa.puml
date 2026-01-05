@@ -18,6 +18,8 @@ C -> RS: getRutaTentativa(request)
 
 activate RS
 
+note right: Validar solicitud en BORRADOR
+
 RS -> ES: getSolicitudTrasladoById(idSolicitud)
 activate ES
 ES --> RS: solicitud
@@ -26,6 +28,7 @@ deactivate ES
 RS -> CS: getById(idContenedor)
 activate CS
     opt idCliente != null
+        note right: Validar rol CLIENTE
         CS -> US: getById(idCliente)
         activate US
         US --> CS: usuario
@@ -33,6 +36,11 @@ activate CS
     end
 CS --> RS: contenedor
 deactivate CS
+
+RS -> ES: getUltimosPrecios()
+activate ES
+ES --> RS: preciosNegocio
+deactivate ES
 
 RS -> CMS: getPromedioCostoBase(peso, volumen)
 activate CMS
@@ -52,27 +60,27 @@ deactivate RR
 alt rutaExiste
     RS -> TR: deleteByRutaId(idRuta)
 else nuevaRuta
+    note right: Crear ruta con cargosGestionFijo
     RS -> RR: save(ruta)
     activate RR
     RR --> RS: rutaGuardada
     deactivate RR
 end
 
-loop Para cada par de ubicaciones
-    RS -> UBS: getUbicacionById(idOrigen)
-    activate UBS
-    UBS --> RS: ubicacionOrigen
-    deactivate UBS
+RS -> UBS: getByListIds(ubicaciones)
+activate UBS
+UBS --> RS: listaUbicaciones
+deactivate UBS
 
-    RS -> UBS: getUbicacionById(idDestino)
-    activate UBS
-    UBS --> RS: ubicacionDestino
-    deactivate UBS
+loop Para cada par de ubicaciones (orden 0 to size-2)
+    note right: origen = ubicaciones[orden], destino = ubicaciones[orden+1]
 
     RS -> OSRM: calcularDistancia(origen, destino)
     activate OSRM
     OSRM --> RS: routeResponse
     deactivate OSRM
+
+    note right: Calcular tramo con distancia, tiempo, estado ESTIMADO
 end
 
 RS -> TR: saveAll(tramos)
@@ -80,7 +88,9 @@ activate TR
 TR --> RS: tramosGuardados
 deactivate TR
 
-RS -> ES: editSolicitud(requestEdit)
+note right: Calcular tarifa con costos base, consumo, estadías, distancia total
+
+RS -> ES: editSolicitud(tiempoEstimadoHoras, tarifa)
 activate ES
 ES --> RS: response
 deactivate ES

@@ -15,37 +15,56 @@ C -> TS: asignarCamion(request)
 
 activate TS
 
+note right: Validar tramo existe
+
 TS -> TR: getById(idTramo)
 activate TR
 TR --> TS: tramo
 deactivate TR
+
+note right: Validar tramo en estado ESTIMADO
+
+note right: Obtener ruta y solicitud
 
 TS -> ES: getSolicitudTrasladoById(idSolicitud)
 activate ES
 ES --> TS: solicitud
 deactivate ES
 
+note right: Validar solicitud CONFIRMADA
+
 TS -> CMS: getById(dominio)
 activate CMS
+    note right: Validar camion existe y disponible
     CMS -> US: getById(idTransportista)
     activate US
+    note right: Validar usuario existe y rol TRANSPORTISTA
     US --> CMS: usuario
     deactivate US
 CMS --> TS: camion
 deactivate CMS
+
+note right: Asignar camion a tramo, cambiar estado a ASIGNADO
+
+TS -> TR: update(tramo)
+activate TR
+TR --> TS: tramoActualizado
+deactivate TR
 
 TS -> TR: buscarPorRuta(idRuta)
 activate TR
 TR --> TS: listaTramos
 deactivate TR
 
+note right: Verificar si todos los tramos están ASIGNADOS
+
 opt Todos los tramos asignados
-    TS -> ES: cambioDeEstadoSolicitud(programado)
+    TS -> ES: cambioDeEstadoSolicitud(PROGRAMADO)
     activate ES
     ES --> TS: response
     deactivate ES
 
-    TS -> CS: cambioDeEstado(programado)
+    TS -> CS: cambioDeEstado(PROGRAMADO)
     activate CS
     CS --> TS: response
     deactivate CS

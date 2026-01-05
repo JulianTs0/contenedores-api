@@ -12,22 +12,32 @@ control "ContenedorService" as CS
 control "UbicacionService" as UBS
 
 C -> TS: registrarFinTramo(request)
+
 activate TS
+
+note right: Validar tramo existe, INICIADO, y pertenece al camion
 
 TS -> TR: getById(idTramo)
 activate TR
 TR --> TS: tramo
 deactivate TR
 
+note right: Obtener ruta y solicitud
+
 TS -> ES: getSolicitudTrasladoById(idSolicitud)
 activate ES
 ES --> TS: solicitud
 deactivate ES
 
+note right: Validar solicitud EN_TRANSITO
+
 TS -> CMS: getById(dominio)
 activate CMS
+note right: Validar camion existe
 CMS --> TS: camion
 deactivate CMS
+
+note right: Cambiar disponibilidad a true
 
 TS -> CMS: cambiarDisponibilidad(true)
 activate CMS
@@ -66,9 +76,11 @@ opt Ultimo Tramo
     TR --> TS: listaTramos
     deactivate TR
     
-    loop Calcular costo estadías
+    loop Calcular costo estadías reales
+        note right: Calcular días de estadía entre fin de tramo actual e inicio del siguiente
         TS -> UBS: getUbicacionById(idDestino)
         activate UBS
+        note right: Obtener costo diario del depósito
         UBS --> TS: ubicacion
         deactivate UBS
     end

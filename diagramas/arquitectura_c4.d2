@@ -1,0 +1,255 @@
+direction: right
+
+# ==========================================
+# 1. DEFINICIÓN DE CLASES Y ESTILOS (NUEVO)
+# ==========================================
+
+classes: {
+  # Estilo base para Microservicios (Hexágonos)
+  microservicio: {
+    shape: hexagon
+    style: {
+      stroke-width: 2
+      font-size: 14
+      shadow: true
+    }
+  }
+  
+  # Estilo base para Bases de Datos (Cilindros)
+  base_datos: {
+    shape: cylinder
+    style: {
+      stroke-width: 1
+      shadow: true
+    }
+  }
+
+  # Estilo para Infraestructura (Gateway/Auth)
+  infra: {
+    shape: package
+    style: {
+      fill: "#e3f2fd" # Azul muy claro
+      stroke: "#1565c0"
+      stroke-width: 2
+    }
+  }
+
+  # Estilo para Observabilidad
+  obs: {
+    shape: parallelogram
+    style: {
+      fill: "#f3e5f5" # Violeta muy claro
+      stroke: "#4a148c"
+    }
+  }
+}
+
+# ==========================================
+# 2. APLICACIÓN DE ESTILOS A TUS OBJETOS
+# ==========================================
+
+# --- Infraestructura ---
+Gateway: {
+  class: infra
+  label: "API Gateway\n(Spring Cloud)"
+}
+Keycloak: {
+  class: infra
+  label: "Keycloak\n(IAM)"
+}
+
+# --- Microservicios (Colores combinados con tus flechas) ---
+
+# Usuarios (Verde)
+Usuarios: {
+  class: microservicio
+  style: { fill: "#e8f5e8"; stroke: "#2e7d32" }
+}
+db_usuarios: {
+  class: base_datos
+  style: { fill: "#e8f5e8"; stroke: "#2e7d32" }
+}
+
+# Contenedores (Naranja)
+Contenedores: {
+  class: microservicio
+  style: { fill: "#fff3e0"; stroke: "#ef6c00" }
+}
+db_contenedores: {
+  class: base_datos
+  style: { fill: "#fff3e0"; stroke: "#ef6c00" }
+}
+
+# Tramos (Rosa/Rojo)
+Tramos: {
+  class: microservicio
+  style: { fill: "#fce4ec"; stroke: "#c2185b" }
+}
+db_tramos: {
+  class: base_datos
+  style: { fill: "#fce4ec"; stroke: "#c2185b" }
+}
+
+# Camiones (Verde Azulado/Teal)
+Camiones: {
+  class: microservicio
+  style: { fill: "#e0f2f1"; stroke: "#00695c" }
+}
+db_camiones: {
+  class: base_datos
+  style: { fill: "#e0f2f1"; stroke: "#00695c" }
+}
+
+# Ubicaciones (Amarillo/Lima)
+Ubicaciones: {
+  class: microservicio
+  style: { fill: "#f9fbe7"; stroke: "#9e9d24" }
+}
+db_ubicaciones: {
+  class: base_datos
+  style: { fill: "#f9fbe7"; stroke: "#9e9d24" }
+}
+
+# Envios (Violeta)
+Envios: {
+  class: microservicio
+  style: { fill: "#ede7f6"; stroke: "#512da8" }
+}
+db_envios: {
+  class: base_datos
+  style: { fill: "#ede7f6"; stroke: "#512da8" }
+}
+
+# --- Observabilidad ---
+Loki: { class: obs }
+Promtail: { class: obs }
+Grafana: { class: obs }
+
+# ==========================================
+# 3. TUS RELACIONES (INTACTAS)
+# ==========================================
+
+# 1. Gateway & Auth
+Gateway -> Keycloak: {
+  label: "Delega autenticación\nHTTP/OIDC"
+  style.stroke: "#1976d2"
+}
+
+Gateway -> Usuarios: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#388e3c"
+}
+Gateway -> Contenedores: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#f57c00"
+}
+Gateway -> Tramos: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#c2185b"
+}
+Gateway -> Camiones: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#00695c"
+}
+Gateway -> Ubicaciones: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#f9a825"
+}
+Gateway -> Envios: {
+  label: "Enruta\nHTTP"
+  style.stroke: "#673ab7"
+}
+
+# 2. Conexiones a BD (Internas)
+Usuarios -> db_usuarios: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#388e3c"
+}
+Contenedores -> db_contenedores: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#f57c00"
+}
+Tramos -> db_tramos: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#c2185b"
+}
+Camiones -> db_camiones: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#00695c"
+}
+Ubicaciones -> db_ubicaciones: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#f9a825"
+}
+Envios -> db_envios: {
+  label: "Lee/Escribe\nJDBC"
+  style.stroke: "#673ab7"
+}
+
+# 3. Comunicaciones Inter-Servicios (Feign Clients)
+
+# MS Contenedores -> Usuarios
+Contenedores -> Usuarios: {
+  label: "Valida cliente\nHTTP/JSON"
+  style.stroke: "#f57c00"
+}
+
+# MS Camiones -> Usuarios
+Camiones -> Usuarios: {
+  label: "Valida transportista\nHTTP/JSON"
+  style.stroke: "#00695c"
+}
+
+# MS Tramos -> Todos
+Tramos -> Usuarios: {
+  label: "Consulta usuarios\nHTTP/JSON"
+  style.stroke: "#c2185b"
+}
+Tramos -> Camiones: {
+  label: "Asigna camiones\nHTTP/JSON"
+  style.stroke: "#c2185b"
+}
+Tramos -> Envios: {
+  label: "Actualiza estado envío\nHTTP/JSON"
+  style.stroke: "#c2185b"
+}
+Tramos -> Ubicaciones: {
+  label: "Obtiene coordenadas\nHTTP/JSON"
+  style.stroke: "#c2185b"
+}
+Tramos -> Contenedores: {
+  label: "Verifica carga\nHTTP/JSON"
+  style.stroke: "#c2185b"
+}
+
+# MS Envíos -> Todos
+Envios -> Usuarios: {
+  label: "Consulta cliente\nHTTP/JSON"
+  style.stroke: "#673ab7"
+}
+Envios -> Camiones: {
+  label: "Consulta disponibilidad\nHTTP/JSON"
+  style.stroke: "#673ab7"
+}
+Envios -> Tramos: {
+  label: "Solicita ruta\nHTTP/JSON"
+  style.stroke: "#673ab7"
+}
+Envios -> Ubicaciones: {
+  label: "Valida origen/destino\nHTTP/JSON"
+  style.stroke: "#673ab7"
+}
+Envios -> Contenedores: {
+  label: "Asigna contenedor\nHTTP/JSON"
+  style.stroke: "#673ab7"
+}
+
+# 4. Observabilidad
+Promtail -> Loki: {
+  label: "Envía logs\nHTTP"
+  style.stroke: "#4a148c"
+}
+Grafana -> Loki: {
+  label: "Consulta\nHTTP"
+  style.stroke: "#4a148c"
+}

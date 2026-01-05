@@ -12,12 +12,31 @@ control "ContenedorService" as CS
 control "UsuarioServie" as US
 
 C -> TS: registrarInicioTramo(request)
+
 activate TS
+
+note right: Validar tramo existe, ASIGNADO, y pertenece al camion
 
 TS -> TR: getById(idTramo)
 activate TR
 TR --> TS: tramo
 deactivate TR
+
+note right: Obtener ruta y solicitud
+
+TS -> ES: getSolicitudTrasladoById(idSolicitud)
+activate ES
+ES --> TS: solicitud
+deactivate ES
+
+note right: Validar solicitud PROGRAMADA o EN_TRANSITO
+
+TS -> TR: buscarPorRuta(idRuta)
+activate TR
+TR --> TS: listaTramos
+deactivate TR
+
+note right: Validar tramo anterior FINALIZADO (si no es primero)
 
 TS -> ES: getSolicitudTrasladoById(idSolicitud)
 activate ES
@@ -31,8 +50,11 @@ deactivate TR
 
 TS -> CMS: getById(dominio)
 activate CMS
+note right: Validar camion existe y disponible
 CMS --> TS: camion
 deactivate CMS
+
+note right: Cambiar disponibilidad a false
 
 TS -> CMS: cambiarDisponibilidad(false)
 activate CMS
