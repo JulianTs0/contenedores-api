@@ -1,4 +1,3 @@
 *.zip
 ./.idea
 osrm-data
-./diagramas/
