@@ -1,8 +1,8 @@
 package backend.grupo130.tramos.dto.ruta.response;
 
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

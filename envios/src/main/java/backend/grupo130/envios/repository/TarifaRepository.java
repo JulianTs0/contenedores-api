@@ -1,9 +1,9 @@
 package backend.grupo130.envios.repository;
 
 import backend.grupo130.envios.data.PersistenceMapper;
-import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.domain.entity.Tarifa;
 import backend.grupo130.envios.data.models.TarifaModel;
-import backend.grupo130.envios.data.repository.PostgresTarifaRepositoryI;
+import backend.grupo130.envios.data.repository.TarifaRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TarifaRepository {
 
-    private final PostgresTarifaRepositoryI tarifaRepository;
+    private final TarifaRepositoryJpa tarifaRepository;
 
     public Tarifa getById(Long tarifaId){
         TarifaModel model = this.tarifaRepository.findById(tarifaId).orElse(null);

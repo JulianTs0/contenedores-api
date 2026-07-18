@@ -6,7 +6,7 @@ import backend.grupo130.contenedores.config.enums.Errores;
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import backend.grupo130.contenedores.config.enums.Rol;
 import backend.grupo130.contenedores.config.exceptions.ServiceError;
-import backend.grupo130.contenedores.data.entity.Contenedor;
+import backend.grupo130.contenedores.domain.entity.Contenedor;
 import backend.grupo130.contenedores.dto.ContenedorMapperDto;
 import backend.grupo130.contenedores.dto.request.AsignarClienteRequest;
 import backend.grupo130.contenedores.dto.request.CambioDeEstadoRequest;
@@ -66,6 +66,7 @@ public class ContenedorService {
                 kv("evento", "busqueda_cliente_contenedor"), 
                 kv("cliente_id", contenedor.getCliente().getIdUsuario())
             );
+
             usuario = this.usuarioClient.getById(contenedor.getCliente().getIdUsuario());
         }
 

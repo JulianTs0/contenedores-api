@@ -1,9 +1,9 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.data.PersistenceMapper;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.data.models.TramoModel;
-import backend.grupo130.tramos.data.repository.PostgresTramoRepositoryI;
+import backend.grupo130.tramos.data.repository.TramoRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TramoRepository {
 
-    private final PostgresTramoRepositoryI tramoRepository;
+    private final TramoRepositoryJpa tramoRepository;
 
     public Tramo getById(Long idTramo){
         TramoModel model = this.tramoRepository.findById(idTramo).orElse(null);

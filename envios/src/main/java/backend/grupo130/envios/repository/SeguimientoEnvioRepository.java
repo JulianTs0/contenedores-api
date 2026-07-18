@@ -1,9 +1,9 @@
 package backend.grupo130.envios.repository;
 
 import backend.grupo130.envios.data.PersistenceMapper;
-import backend.grupo130.envios.data.entity.SeguimientoEnvio;
+import backend.grupo130.envios.domain.entity.SeguimientoEnvio;
 import backend.grupo130.envios.data.models.SeguimientoEnvioModel;
-import backend.grupo130.envios.data.repository.PostgresSeguimientoEnvioRepositoryI;
+import backend.grupo130.envios.data.repository.SeguimientoEnvioRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SeguimientoEnvioRepository {
 
-    private final PostgresSeguimientoEnvioRepositoryI seguimientoRepository;
+    private final SeguimientoEnvioRepositoryJpa seguimientoRepository;
     private final PersistenceMapper persistenceMapper;
 
     public SeguimientoEnvio getById(Long seguimientoId){

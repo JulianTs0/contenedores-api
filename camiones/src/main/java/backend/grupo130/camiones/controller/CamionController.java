@@ -17,7 +17,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +30,6 @@ import java.math.BigDecimal;
 @RequestMapping("/api/camiones")
 @RequiredArgsConstructor
 @Validated
-@Data
 @Tag(name = "Gestión de Camiones", description = "API para la administración de flota, asignación de transportistas y cálculo de costos.")
 public class CamionController {
 

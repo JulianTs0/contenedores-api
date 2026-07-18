@@ -1,9 +1,9 @@
 package backend.grupo130.envios.data;
 
-import backend.grupo130.envios.data.entity.PreciosNegocio;
-import backend.grupo130.envios.data.entity.SeguimientoEnvio;
-import backend.grupo130.envios.data.entity.SolicitudTraslado;
-import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.domain.entity.PreciosNegocio;
+import backend.grupo130.envios.domain.entity.SeguimientoEnvio;
+import backend.grupo130.envios.domain.entity.SolicitudTraslado;
+import backend.grupo130.envios.domain.entity.Tarifa;
 import backend.grupo130.envios.data.models.PreciosNegocioModel;
 import backend.grupo130.envios.data.models.SeguimientoEnvioModel;
 import backend.grupo130.envios.data.models.SolicitudTrasladoModel;

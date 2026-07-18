@@ -1,9 +1,9 @@
 package backend.grupo130.envios.repository;
 
 import backend.grupo130.envios.data.PersistenceMapper;
-import backend.grupo130.envios.data.entity.SolicitudTraslado;
+import backend.grupo130.envios.domain.entity.SolicitudTraslado;
 import backend.grupo130.envios.data.models.SolicitudTrasladoModel;
-import backend.grupo130.envios.data.repository.PostgresSolicitudRepositoryI;
+import backend.grupo130.envios.data.repository.SolicitudRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SolicitudTrasladoRepository {
 
-    private final PostgresSolicitudRepositoryI solicitudRepository;
+    private final SolicitudRepositoryJpa solicitudRepository;
     private final PersistenceMapper persistenceMapper;
 
     public SolicitudTraslado getById(Long solicitudId){

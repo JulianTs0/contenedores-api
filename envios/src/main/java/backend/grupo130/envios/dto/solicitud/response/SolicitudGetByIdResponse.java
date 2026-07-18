@@ -1,7 +1,7 @@
 package backend.grupo130.envios.dto.solicitud.response;
 
-import backend.grupo130.envios.data.entity.SeguimientoEnvio;
-import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.domain.entity.SeguimientoEnvio;
+import backend.grupo130.envios.domain.entity.Tarifa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

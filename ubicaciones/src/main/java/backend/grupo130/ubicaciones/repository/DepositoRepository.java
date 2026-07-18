@@ -4,7 +4,7 @@ package backend.grupo130.ubicaciones.repository;
 import backend.grupo130.ubicaciones.data.PersistenceMapper;
 import backend.grupo130.ubicaciones.data.entity.Deposito;
 import backend.grupo130.ubicaciones.data.models.DepositoModel;
-import backend.grupo130.ubicaciones.data.repository.PostgresDepositoRepositoryI;
+import backend.grupo130.ubicaciones.data.repository.DepositoRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DepositoRepository {
 
-    private final PostgresDepositoRepositoryI depositoRepositoryI;
+    private final DepositoRepositoryJpa depositoRepositoryI;
 
     public Deposito getById(Long idDeposito){
         DepositoModel model = this.depositoRepositoryI.findById(idDeposito).orElse(null);

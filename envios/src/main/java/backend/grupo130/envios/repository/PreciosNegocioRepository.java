@@ -1,9 +1,9 @@
 package backend.grupo130.envios.repository;
 
 import backend.grupo130.envios.data.PersistenceMapper;
-import backend.grupo130.envios.data.entity.PreciosNegocio;
+import backend.grupo130.envios.domain.entity.PreciosNegocio;
 import backend.grupo130.envios.data.models.PreciosNegocioModel;
-import backend.grupo130.envios.data.repository.PostgresPreciosNegocioRepositoryI;
+import backend.grupo130.envios.data.repository.PreciosNegocioRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PreciosNegocioRepository {
 
-    private final PostgresPreciosNegocioRepositoryI preciosNegocioRepository;
+    private final PreciosNegocioRepositoryJpa preciosNegocioRepository;
 
     public PreciosNegocio getById(Long id) {
         PreciosNegocioModel model = this.preciosNegocioRepository.findById(id).orElse(null);

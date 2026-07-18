@@ -2,9 +2,9 @@ package backend.grupo130.contenedores.repository;
 
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
 import backend.grupo130.contenedores.data.PersistenceMapper;
-import backend.grupo130.contenedores.data.entity.Contenedor;
+import backend.grupo130.contenedores.domain.entity.Contenedor;
 import backend.grupo130.contenedores.data.models.ContenedorModel;
-import backend.grupo130.contenedores.data.repository.PostgresContenedorRepositoryI;
+import backend.grupo130.contenedores.data.repository.ContenedorRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ContenedorRepository {
 
-    private final PostgresContenedorRepositoryI contenedorRepository;
+    private final ContenedorRepositoryJpa contenedorRepository;
 
     public Contenedor getById(Long contenedorId){
         ContenedorModel model = this.contenedorRepository.findById(contenedorId).orElse(null);

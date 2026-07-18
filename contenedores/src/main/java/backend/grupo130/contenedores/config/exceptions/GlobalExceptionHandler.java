@@ -1,15 +1,16 @@
 package backend.grupo130.contenedores.config.exceptions;
 
 import backend.grupo130.contenedores.config.enums.Errores;
+import backend.grupo130.contenedores.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,30 +21,32 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceError.class)
-    public ResponseEntity<Map<String, Object>> handleServiceError(ServiceError ex) {
+    public ResponseEntity<ErrorResponse> handleServiceError(ServiceError ex) {
 
         log.warn("Error Controlado", kv("evento", "error_controlado"), kv("mensaje_externo", ex.getMensajeExterno()), kv("detalle", ex.getMessage()));
 
         HttpStatus status = HttpStatus.valueOf(ex.getHttpCode());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-
-        errorDetails.put("httpCode", ex.getHttpCode());
-        errorDetails.put("mensajeInterno", ex.getMessage());
-        errorDetails.put("mensajeExterno", ex.getMensajeExterno());
+        ErrorResponse errorDetails = ErrorResponse.builder()
+            .httpCode(ex.getHttpCode())
+            .mensajeInterno(ex.getMessage())
+            .mensajeExterno(ex.getMensajeExterno())
+            .timestamp(LocalDateTime.now())
+            .build();
 
         return ResponseEntity.status(status).body(errorDetails);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         log.error("ERROR INTERNO NO CONTROLADO", kv("evento", "error_no_controlado"), ex);
 
-        Map<String, Object> errorDetails = new HashMap<>();
-
-        errorDetails.put("httpCode", 500);
-        errorDetails.put("mensajeInterno", ex.getMessage());
-        errorDetails.put("mensajeExterno", Errores.ERROR_INTERNO.getMensaje());
+        ErrorResponse errorDetails = ErrorResponse.builder()
+            .httpCode(500)
+            .mensajeInterno(ex.getMessage())
+            .mensajeExterno(Errores.ERROR_INTERNO.getMensaje())
+            .timestamp(LocalDateTime.now())
+            .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }
@@ -56,6 +59,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> errorDetails = new HashMap<>();
 
         errorDetails.put("status", 400);
+        errorDetails.put("timestamp", LocalDateTime.now());
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
 
@@ -76,6 +80,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> errorDetails = new HashMap<>();
 
         errorDetails.put("status", 400);
+        errorDetails.put("timestamp", LocalDateTime.now());
 
         ex.getConstraintViolations().forEach(violation -> {
 

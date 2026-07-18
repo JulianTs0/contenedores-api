@@ -5,7 +5,7 @@ import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import backend.grupo130.camiones.config.enums.Errores;
 import backend.grupo130.camiones.config.enums.Rol;
 import backend.grupo130.camiones.config.exceptions.ServiceError;
-import backend.grupo130.camiones.data.entity.Camion;
+import backend.grupo130.camiones.domain.entity.Camion;
 import backend.grupo130.camiones.dto.CamionesMapperDto;
 import backend.grupo130.camiones.dto.request.*;
 import backend.grupo130.camiones.dto.response.*;
@@ -54,6 +54,7 @@ public class CamionService {
                 kv("evento", "busqueda_transportista"), 
                 kv("transportista_id", camion.getTransportista().getIdUsuario())
             );
+
             usuario = this.usuarioClient.getById(camion.getTransportista().getIdUsuario());
         }
 

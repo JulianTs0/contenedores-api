@@ -4,7 +4,7 @@ package backend.grupo130.ubicaciones.repository;
 import backend.grupo130.ubicaciones.data.PersistenceMapper;
 import backend.grupo130.ubicaciones.data.entity.Ubicacion;
 import backend.grupo130.ubicaciones.data.models.UbicacionModel;
-import backend.grupo130.ubicaciones.data.repository.PostgresUbicacionRepositoryI;
+import backend.grupo130.ubicaciones.data.repository.UbicacionRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UbicacionRepository {
 
-    private final PostgresUbicacionRepositoryI ubicacionRepository;
+    private final UbicacionRepositoryJpa ubicacionRepository;
 
     public Ubicacion getById(Long idUbicacion){
         UbicacionModel model = this.ubicacionRepository.findById(idUbicacion).orElse(null);

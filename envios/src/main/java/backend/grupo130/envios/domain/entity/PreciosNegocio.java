@@ -1,4 +1,4 @@
-package backend.grupo130.envios.data.entity;
+package backend.grupo130.envios.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

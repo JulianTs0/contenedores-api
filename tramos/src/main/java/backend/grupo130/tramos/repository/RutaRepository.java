@@ -1,9 +1,9 @@
 package backend.grupo130.tramos.repository;
 
 import backend.grupo130.tramos.data.PersistenceMapper;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
 import backend.grupo130.tramos.data.models.RutaTrasladoModel;
-import backend.grupo130.tramos.data.repository.PostgresRutaRepositoryI;
+import backend.grupo130.tramos.data.repository.RutaRepositoryJpa;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RutaRepository {
 
-    private final PostgresRutaRepositoryI rutaRepository;
+    private final RutaRepositoryJpa rutaRepository;
 
     public RutaTraslado getById(Long idRuta){
         RutaTrasladoModel model = this.rutaRepository.findById(idRuta).orElse(null);

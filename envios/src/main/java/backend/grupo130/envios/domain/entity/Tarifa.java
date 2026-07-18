@@ -1,4 +1,4 @@
-package backend.grupo130.envios.data.entity;
+package backend.grupo130.envios.domain.entity;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;

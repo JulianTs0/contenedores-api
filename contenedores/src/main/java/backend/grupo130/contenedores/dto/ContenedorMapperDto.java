@@ -2,7 +2,7 @@ package backend.grupo130.contenedores.dto;
 
 import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.config.enums.EstadoContenedor;
-import backend.grupo130.contenedores.data.entity.Contenedor;
+import backend.grupo130.contenedores.domain.entity.Contenedor;
 import backend.grupo130.contenedores.dto.request.AsignarClienteRequest;
 import backend.grupo130.contenedores.dto.request.CambioDeEstadoRequest;
 import backend.grupo130.contenedores.dto.request.EditRequest;

@@ -1,6 +1,6 @@
 package backend.grupo130.envios.dto.solicitud.request;
 
-import backend.grupo130.envios.data.entity.Tarifa;
+import backend.grupo130.envios.domain.entity.Tarifa;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.FutureOrPresent;

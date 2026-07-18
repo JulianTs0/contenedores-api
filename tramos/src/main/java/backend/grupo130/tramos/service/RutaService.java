@@ -14,8 +14,8 @@ import backend.grupo130.tramos.config.enums.Errores;
 import backend.grupo130.tramos.config.enums.EstadoTramo;
 import backend.grupo130.tramos.config.enums.TipoTramo;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.dto.osrm.response.RouteResponse;
 import backend.grupo130.tramos.dto.ruta.RutaMapperDto;
 import backend.grupo130.tramos.dto.ruta.request.RutaCrearTentativaRequest;
@@ -78,6 +78,7 @@ public class RutaService {
             log.debug("Buscando Solicitud asociada", 
                 kv("solicitud_id", ruta.getSolicitud().getIdSolicitud())
             );
+
             solicitud = this.enviosClient.getSolicitudTrasladoById(ruta.getSolicitud().getIdSolicitud());
         }
 

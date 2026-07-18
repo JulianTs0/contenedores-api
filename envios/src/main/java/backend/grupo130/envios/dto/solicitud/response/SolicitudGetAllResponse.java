@@ -1,6 +1,6 @@
 package backend.grupo130.envios.dto.solicitud.response;
 
-import backend.grupo130.envios.data.entity.SolicitudTraslado;
+import backend.grupo130.envios.domain.entity.SolicitudTraslado;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

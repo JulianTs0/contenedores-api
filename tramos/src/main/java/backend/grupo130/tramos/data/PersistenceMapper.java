@@ -4,8 +4,8 @@ package backend.grupo130.tramos.data;
 import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.data.models.RutaTrasladoModel;
 import backend.grupo130.tramos.data.models.TramoModel;
 

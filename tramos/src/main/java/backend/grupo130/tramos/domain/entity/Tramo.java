@@ -1,4 +1,4 @@
-package backend.grupo130.tramos.data.entity;
+package backend.grupo130.tramos.domain.entity;
 
 import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;

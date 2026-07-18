@@ -1,4 +1,4 @@
-package backend.grupo130.envios.data.entity;
+package backend.grupo130.envios.domain.entity;
 
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.enums.EstadoSolicitud;

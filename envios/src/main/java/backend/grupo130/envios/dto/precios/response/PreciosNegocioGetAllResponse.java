@@ -1,6 +1,6 @@
 package backend.grupo130.envios.dto.precios.response;
 
-import backend.grupo130.envios.data.entity.PreciosNegocio;
+import backend.grupo130.envios.domain.entity.PreciosNegocio;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

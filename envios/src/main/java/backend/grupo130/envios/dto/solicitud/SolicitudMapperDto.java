@@ -1,7 +1,7 @@
 package backend.grupo130.envios.dto.solicitud;
 
-import backend.grupo130.envios.data.entity.SeguimientoEnvio;
-import backend.grupo130.envios.data.entity.SolicitudTraslado;
+import backend.grupo130.envios.domain.entity.SeguimientoEnvio;
+import backend.grupo130.envios.domain.entity.SolicitudTraslado;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudCambioDeEstadoRequest;
 import backend.grupo130.envios.dto.solicitud.request.SolicitudEditRequest;
 import backend.grupo130.envios.dto.solicitud.response.SolicitudCambioDeEstadoResponse;

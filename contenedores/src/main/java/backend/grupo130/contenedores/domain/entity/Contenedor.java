@@ -1,4 +1,4 @@
-package backend.grupo130.contenedores.data.entity;
+package backend.grupo130.contenedores.domain.entity;
 
 import backend.grupo130.contenedores.client.usuarios.entity.Usuario;
 import backend.grupo130.contenedores.config.enums.Errores;

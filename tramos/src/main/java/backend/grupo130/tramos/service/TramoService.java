@@ -13,8 +13,8 @@ import backend.grupo130.tramos.client.ubicaciones.UbicacionesClient;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
 import backend.grupo130.tramos.config.enums.*;
 import backend.grupo130.tramos.config.exceptions.ServiceError;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.dto.tramo.TramoMapperDto;
 import backend.grupo130.tramos.dto.tramo.request.*;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
@@ -73,17 +73,19 @@ public class TramoService {
             log.debug("Buscando Camion asociado", 
                 kv("dominio_camion", tramo.getCamion().getDominio())
             );
+
             camion = this.camionClient.getById(tramo.getCamion().getDominio());
         }
         if(tramo.getOrigen() != null && tramo.getOrigen().getIdUbicacion() != null){
             log.debug("Buscando Ubicacion Origen", 
                 kv("origen_id", tramo.getOrigen().getIdUbicacion())
             );
+
             origen = this.ubicacionesClient.getUbicacionById(tramo.getOrigen().getIdUbicacion());
         }
         if(tramo.getDestino() != null && tramo.getDestino().getIdUbicacion() != null){
             log.debug("Buscando Ubicacion Destino", 
-                kv("destino_id", tramo.getDestino().getIdUbicacion())
+                kv("destino_id", destino.getIdUbicacion())
             );
             destino = this.ubicacionesClient.getUbicacionById(tramo.getDestino().getIdUbicacion());
         }

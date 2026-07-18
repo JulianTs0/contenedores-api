@@ -2,7 +2,7 @@ package backend.grupo130.tramos.dto.tramo;
 
 import backend.grupo130.tramos.client.camiones.entity.Camion;
 import backend.grupo130.tramos.client.ubicaciones.entity.Ubicacion;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.dto.tramo.request.*;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetAllResponse;
 import backend.grupo130.tramos.dto.tramo.response.TramoGetByIdResponse;

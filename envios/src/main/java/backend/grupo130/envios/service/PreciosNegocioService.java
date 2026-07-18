@@ -2,7 +2,7 @@ package backend.grupo130.envios.service;
 
 import backend.grupo130.envios.config.enums.Errores;
 import backend.grupo130.envios.config.exceptions.ServiceError;
-import backend.grupo130.envios.data.entity.PreciosNegocio;
+import backend.grupo130.envios.domain.entity.PreciosNegocio;
 import backend.grupo130.envios.dto.precios.PreciosNegocioMapperDto;
 import backend.grupo130.envios.dto.precios.request.PreciosNegocioCreateRequest;
 import backend.grupo130.envios.dto.precios.request.PreciosNegocioGetByIdRequest;

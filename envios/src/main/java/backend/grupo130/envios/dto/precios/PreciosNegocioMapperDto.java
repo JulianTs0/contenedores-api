@@ -1,6 +1,6 @@
 package backend.grupo130.envios.dto.precios;
 
-import backend.grupo130.envios.data.entity.PreciosNegocio;
+import backend.grupo130.envios.domain.entity.PreciosNegocio;
 import backend.grupo130.envios.dto.precios.request.PreciosNegocioCreateRequest;
 import backend.grupo130.envios.dto.precios.request.PreciosNegocioUpdateRequest;
 import backend.grupo130.envios.dto.precios.response.*;

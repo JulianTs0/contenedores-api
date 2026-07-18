@@ -2,8 +2,8 @@ package backend.grupo130.tramos.dto.ruta;
 
 import backend.grupo130.tramos.client.envios.entity.SolicitudTraslado;
 import backend.grupo130.tramos.client.envios.entity.Tarifa;
-import backend.grupo130.tramos.data.entity.RutaTraslado;
-import backend.grupo130.tramos.data.entity.Tramo;
+import backend.grupo130.tramos.domain.entity.RutaTraslado;
+import backend.grupo130.tramos.domain.entity.Tramo;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetAllResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetByIdResponse;
 import backend.grupo130.tramos.dto.ruta.response.RutaGetOpcionesResponse;

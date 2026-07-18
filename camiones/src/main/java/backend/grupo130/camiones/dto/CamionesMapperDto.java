@@ -1,7 +1,7 @@
 package backend.grupo130.camiones.dto;
 
 import backend.grupo130.camiones.client.usuarios.entity.Usuario;
-import backend.grupo130.camiones.data.entity.Camion;
+import backend.grupo130.camiones.domain.entity.Camion;
 import backend.grupo130.camiones.dto.request.AsignarTransportistaRequest;
 import backend.grupo130.camiones.dto.request.CambiarDisponibilidadRequest;
 import backend.grupo130.camiones.dto.request.EditRequest;

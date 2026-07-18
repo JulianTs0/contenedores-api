@@ -1,4 +1,4 @@
-package backend.grupo130.camiones.data.entity;
+package backend.grupo130.camiones.domain.entity;
 
 import backend.grupo130.camiones.client.usuarios.entity.Usuario;
 import lombok.AllArgsConstructor;
